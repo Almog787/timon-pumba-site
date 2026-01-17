@@ -3,160 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PUMBA | Breaking The Cage</title>
+    <title>PUMBA | The Yo-Yo Experience</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Heebo:wght@300;900&display=swap" rel="stylesheet">
     
-    <!-- Libraries -->
+    <!-- Libraries (גלילה חלקה + מנוע אנימציה) -->
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <style>
         :root {
-            --bg: #0a0a0a;
+            --bg: #050505;
             --text: #ffffff;
             --accent: #ffb900;
-            --gray: #666;
+            --gray: #444;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* ביטול סמן העכבר המקורי */
         html.has-custom-cursor, html.has-custom-cursor * { cursor: none !important; }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Heebo', sans-serif;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
         /* --- Custom Cursor --- */
-        .cursor-dot {
-            width: 8px; height: 8px;
-            background: var(--accent);
-            position: fixed; top: 0; left: 0;
-            border-radius: 50%; z-index: 10001;
-            pointer-events: none;
-        }
         .cursor-outline {
-            width: 40px; height: 40px;
+            width: 30px; height: 30px;
             border: 1px solid rgba(255,255,255,0.5);
             position: fixed; top: 0; left: 0;
             border-radius: 50%; z-index: 10000;
             pointer-events: none;
-            transition: transform 0.3s ease, background 0.3s ease;
+            mix-blend-mode: difference;
         }
 
-        /* --- Noise Overlay --- */
+        /* --- Noise Layer --- */
         .noise {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://grainy-gradients.vercel.app/noise.svg');
             opacity: 0.05; pointer-events: none; z-index: 9999;
         }
 
-        /* --- HUD Elements --- */
+        /* --- HUD (ממשק) --- */
         .hud {
             position: fixed; padding: 30px; z-index: 100;
             font-family: 'Syncopate', sans-serif; font-size: 10px;
-            text-transform: uppercase; color: var(--gray);
-            letter-spacing: 2px;
-        }
-        .hud.top-left { top: 0; left: 0; }
-        .hud.bottom-right { bottom: 0; right: 0; }
-
-        /* --- Typography Reveal --- */
-        .line-mask {
-            overflow: hidden;
-            display: block;
-            line-height: 1.2;
-        }
-        .line-mask span {
-            display: inline-block;
-            transform: translateY(110%);
-            will-change: transform;
+            text-transform: uppercase; color: var(--gray); letter-spacing: 2px;
         }
 
         /* --- Sections --- */
         section {
-            min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
             padding: 0 10%;
             position: relative;
+            overflow: hidden;
         }
 
-        .hero { text-align: center; }
-        .hero h1 {
+        /* --- Animations Styling --- */
+        .reveal-box { overflow: hidden; }
+        .reveal-box h1, .reveal-box h2 {
             font-family: 'Syncopate', sans-serif;
-            font-size: clamp(3rem, 12vw, 10rem);
-            margin-bottom: 20px;
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 1;
+            transform: translateY(110%); /* התחלה למטה */
         }
 
-        .hero p {
-            font-size: 1.2rem; color: var(--gray);
-            max-width: 500px; margin: 0 auto;
+        .fade-p {
+            font-size: 1.5rem;
+            color: var(--gray);
+            margin-top: 20px;
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
         }
 
-        /* --- Problem Grid --- */
-        .problem-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 100px;
-            margin-top: 50px;
+        /* --- Choice Cards --- */
+        .cards-flex {
+            display: flex; gap: 40px; margin-top: 50px;
+            width: 100%; justify-content: center;
         }
         .card {
-            border-top: 1px solid #333;
-            padding-top: 40px;
-        }
-        .card h3 { font-family: 'Syncopate', sans-serif; font-size: 2rem; margin-bottom: 20px; }
-        .card p { font-size: 1.1rem; color: var(--gray); line-height: 1.6; }
-
-        /* --- Tali Section --- */
-        .tali-flex {
-            display: flex;
-            align-items: center;
-            gap: 50px;
-        }
-        .tali-content { flex: 1; }
-        .tali-img-container {
-            flex: 1;
-            height: 600px;
-            overflow: hidden;
-            clip-path: inset(100% 0 0 0); /* התחלה למסיכה */
-        }
-        .tali-img-container img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            scale: 1.3;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--gray);
+            padding: 40px; border-radius: 20px; width: 400px;
+            transform: translateY(100px); opacity: 0;
         }
 
-        /* --- Buttons --- */
+        /* --- Tali Image --- */
+        .img-reveal-container {
+            width: 100%; max-width: 600px; height: 400px;
+            overflow: hidden; margin-top: 50px;
+            clip-path: inset(0% 100% 0% 0%); /* מסיכה מצד לצד */
+        }
+        .img-reveal-container img { width: 100%; height: 100%; object-fit: cover; scale: 1.5; }
+
         .mag-btn {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 25px 60px;
-            border: 1px solid white;
-            color: white;
-            text-decoration: none;
-            border-radius: 100px;
-            font-family: 'Syncopate', sans-serif;
-            font-size: 0.8rem;
-            transition: all 0.3s;
-        }
-        .mag-btn:hover {
-            background: white; color: black;
+            display: inline-block; margin-top: 50px;
+            padding: 25px 60px; border: 1px solid white;
+            color: white; text-decoration: none; border-radius: 100px;
+            font-family: 'Syncopate', sans-serif; font-size: 12px;
+            opacity: 0; transform: scale(0.8);
         }
 
         /* Mobile */
         @media (max-width: 768px) {
-            .problem-grid, .tali-flex { grid-template-columns: 1fr; flex-direction: column; }
-            .hero h1 { font-size: 4rem; }
-            .cursor-outline, .cursor-dot { display: none; }
+            .cards-flex { flex-direction: column; align-items: center; }
+            .card { width: 100%; }
+            .cursor-outline { display: none; }
             html.has-custom-cursor, html.has-custom-cursor * { cursor: auto !important; }
         }
     </style>
@@ -164,153 +128,121 @@
 <body class="has-custom-cursor">
 
     <div class="noise"></div>
-    <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
-
-    <div class="hud top-left">Pumba.Studio // 2026</div>
-    <div class="hud bottom-right">Scroll to break free</div>
+    <div class="hud" style="top:0; left:0;">PUMBA.STUDIO / INTERACTIVE</div>
+    <div class="hud" style="bottom:0; right:0;">SCROLL TO SCRUB</div>
 
     <main>
-        <!-- HERO -->
-        <section class="hero">
-            <h1 class="reveal">
-                <span class="line-mask"><span>BREAK THE</span></span>
-                <span class="line-mask"><span style="color: var(--accent);">CAGE.</span></span>
-            </h1>
-            <p class="reveal">
-                <span class="line-mask"><span>הגיע הזמן להפסיק לעבוד בשביל אריות אחרים.</span></span>
-                <span class="line-mask"><span>פומבה וטלי בונים אימפריות דיגיטליות.</span></span>
-            </p>
-            <a href="https://wa.me/972528226689" class="mag-btn">JOIN THE PRIDE</a>
+        <!-- SECTION 1: HERO -->
+        <section id="hero">
+            <div class="reveal-box">
+                <h1 id="heroTitle">BREAK THE<br><span style="color:var(--accent)">CAGE.</span></h1>
+            </div>
+            <p class="fade-p" id="heroDesc">הגיע הזמן להפסיק לעבוד בשביל אריות אחרים. פומבה וטלי בונים אימפריות דיגיטליות.</p>
         </section>
 
-        <!-- THE CHOICE -->
-        <section>
-            <h2 class="reveal" style="font-size: 4rem; margin-bottom: 50px;">
-                <span class="line-mask"><span>THE DUALITY</span></span>
-                <span class="line-mask"><span>OF THE JUNGLE</span></span>
-            </h2>
-            <div class="problem-grid">
-                <div class="card reveal">
+        <!-- SECTION 2: THE DUALITY -->
+        <section id="choice">
+            <div class="reveal-box">
+                <h2 id="choiceTitle">THE CHOICE</h2>
+            </div>
+            <div class="cards-flex">
+                <div class="card c1">
                     <h3>🚫 EMPLOYEE</h3>
-                    <p>למכור את הזמן שלך בשביל כסף של מישהו אחר. יש תקרה, יש בוס, ויש חוסר חופש מוחלט.</p>
+                    <p style="margin-top:10px; color:#888;">למכור את הזמן שלך בזול. אם אתה לא עובד - אתה לא אוכל.</p>
                 </div>
-                <div class="card reveal" style="border-top-color: var(--accent);">
-                    <h3>👑 OWNER</h3>
-                    <p>לבנות נכסים דיגיטליים שעובדים בשבילך. האתרים שנבנה ישרתו אותנו, אנחנו קובעים את המחיר.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- TALI SECTION -->
-        <section>
-            <div class="tali-flex">
-                <div class="tali-content">
-                    <h2 class="reveal" style="font-size: 3rem;">
-                        <span class="line-mask"><span>טלי, הכל</span></span>
-                        <span class="line-mask"><span style="color:var(--accent)">אפשר ללמוד.</span></span>
-                    </h2>
-                    <p style="margin-top: 30px;">
-                        אף אחד לא נולד יודע SEO. פומבה חשב ששרת זה סוג של שורש למאכל. הכל זה מיומנות, ומיומנות נרכשת בדם ויזע.
-                    </p>
-                </div>
-                <div class="tali-img-container reveal-img">
-                    <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" alt="Tali">
+                <div class="card c2" style="border-color:var(--accent);">
+                    <h3 style="color:var(--accent);">👑 OWNER</h3>
+                    <p style="margin-top:10px; color:#888;">לבנות נכסים דיגיטליים שעובדים בשבילך. אנחנו קובעים את המחיר.</p>
                 </div>
             </div>
         </section>
 
-        <!-- FINAL CTA -->
-        <section style="text-align: center;">
-            <h1 class="reveal">
-                <span class="line-mask"><span>ARE YOU</span></span>
-                <span class="line-mask"><span>READY?</span></span>
-            </h1>
-            <div style="display: flex; gap: 20px; justify-content: center;">
-                <a href="https://wa.me/972528226689" class="mag-btn">🎓 TALI: I'M READY</a>
-                <a href="https://wa.me/972528226689" class="mag-btn" style="border-color: var(--accent); color: var(--accent);">🐗 PUMBA: LET'S GO</a>
+        <!-- SECTION 3: TALI -->
+        <section id="tali">
+            <div class="reveal-box">
+                <h2 style="font-size: 5vw;">הכל אפשר ללמוד.</h2>
             </div>
+            <div class="img-reveal-container">
+                <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" alt="Tali">
+            </div>
+        </section>
+
+        <!-- SECTION 4: FINAL -->
+        <section id="final">
+            <div class="reveal-box">
+                <h1>READY?</h1>
+            </div>
+            <a href="https://wa.me/972528226689" class="mag-btn" id="finalBtn">JOIN THE PRIDE</a>
         </section>
     </main>
 
     <script>
-        // 1. Initialize Lenis (Smooth Scroll)
-        const lenis = new Lenis();
+        // 1. Initialize Lenis (גלילה חלקה יוקרתית)
+        const lenis = new Lenis({ lerp: 0.1 });
         function raf(time) {
             lenis.raf(time);
             requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
 
-        // 2. Custom Liquid Cursor
-        const dot = document.querySelector('.cursor-dot');
+        // 2. Custom Cursor (עוקב אחרי העכבר)
         const outline = document.querySelector('.cursor-outline');
-        
         window.addEventListener('mousemove', (e) => {
-            gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.1 });
-            gsap.to(outline, { x: e.clientX - 16, y: e.clientY - 16, duration: 0.4, ease: "power3.out" });
+            gsap.to(outline, { x: e.clientX - 15, y: e.clientY - 15, duration: 0.3 });
         });
 
-        // Cursor Hover Effects
-        document.querySelectorAll('a, button').forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                gsap.to(outline, { scale: 2, background: "rgba(255,255,255,0.1)", duration: 0.3 });
-            });
-            link.addEventListener('mouseleave', () => {
-                gsap.to(outline, { scale: 1, background: "transparent", duration: 0.3 });
-            });
-        });
-
-        // 3. GSAP Animations (ScrollTrigger)
+        // 3. GSAP Scroll Scrubbing Logic (היויו)
         gsap.registerPlugin(ScrollTrigger);
 
-        // Reveal Text Lines
-        document.querySelectorAll('.reveal').forEach(section => {
-            gsap.to(section.querySelectorAll('.line-mask span'), {
-                y: 0,
-                duration: 1.5,
-                ease: "power4.out",
-                stagger: 0.1,
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 80%",
-                }
-            });
-        });
-
-        // Reveal Image
-        gsap.to(".reveal-img", {
-            clipPath: "inset(0% 0 0 0)",
-            duration: 1.5,
-            ease: "power4.inOut",
+        // אנימציה לשקופית 1 (Hero)
+        const tlHero = gsap.timeline({
             scrollTrigger: {
-                trigger: ".reveal-img",
-                start: "top 80%",
+                trigger: "#hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1 // מקשר את האנימציה לגלגלת ביחס של 1:1
             }
         });
+        tlHero.to("#heroTitle", { y: -100, opacity: 0 })
+              .to("#heroDesc", { opacity: 1, y: -20 }, "<");
 
-        gsap.to(".reveal-img img", {
-            scale: 1,
-            duration: 2,
-            ease: "power2.out",
+        // אנימציה לשקופית 2 (הכרטיסים)
+        const tlChoice = gsap.timeline({
             scrollTrigger: {
-                trigger: ".reveal-img",
+                trigger: "#choice",
                 start: "top 80%",
+                end: "top 20%",
+                scrub: 1
             }
         });
+        tlChoice.to("#choiceTitle", { y: 0, duration: 1 })
+                .to(".c1", { y: 0, opacity: 1 }, "-=0.5")
+                .to(".c2", { y: 0, opacity: 1 }, "-=0.3");
 
-        // 4. Magnetic Buttons
-        document.querySelectorAll('.mag-btn').forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4 });
-            });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.4 });
-            });
+        // אנימציה לשקופית 3 (התמונה של טלי)
+        const tlTali = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#tali",
+                start: "top 80%",
+                end: "center center",
+                scrub: 1
+            }
         });
+        tlTali.to(".img-reveal-container", { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5 })
+              .to(".img-reveal-container img", { scale: 1, duration: 1.5 }, "<");
+
+        // אנימציה לשקופית 4 (כפתור סופי)
+        const tlFinal = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#final",
+                start: "top 90%",
+                end: "center center",
+                scrub: 1
+            }
+        });
+        tlFinal.to("#finalBtn", { opacity: 1, scale: 1, duration: 1 });
+
     </script>
 </body>
 </html>
