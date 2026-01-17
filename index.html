@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PUMBA | Perfect Focus Z-Scroll</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;800&family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>PUMBA | Infinite Z-Loop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Heebo:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #FFD700;
-            --accent: #bf5af2;
-            --bg: #030303;
-            --card: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            --accent: #00f2ff;
+            --purple: #bf5af2;
+            --bg: #000;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -20,262 +19,214 @@
         body {
             background-color: var(--bg);
             color: white;
-            font-family: 'Rubik', sans-serif;
+            font-family: 'Heebo', sans-serif;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            perspective: 1000px;
+            perspective: 1000px; /* עומק הראייה */
         }
 
-        /* --- רקע רשת --- */
-        .grid-bg {
+        /* --- רקע כוכבים נע --- */
+        #starfield {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
             z-index: -2;
-            pointer-events: none;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
-        #world {
+        .world {
             position: absolute;
             width: 100%; height: 100%;
             transform-style: preserve-3d;
-            will-change: transform;
         }
 
+        /* --- שקופית (Stage) --- */
         .stage {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 100%;
-            max-width: 1000px;
+            width: 90%;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             backface-visibility: hidden;
-            padding: 20px;
-            transition: opacity 0.5s ease; /* מעבר חלק בשינוי שקיפות */
+            pointer-events: none; /* מופעל רק כשהוא בפוקוס */
+            user-select: none;
         }
 
-        h1 { font-family: 'Heebo', sans-serif; font-weight: 900; line-height: 1; margin-bottom: 20px; }
-        .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .stage.active { pointer-events: auto; user-select: auto; }
+
+        /* --- עיצוב תוכן --- */
+        h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(2rem, 8vw, 5rem);
+            line-height: 1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
         }
 
-        .glow-btn {
-            padding: 20px 50px;
+        .gold { color: var(--primary); text-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
+        .cyan { color: var(--accent); text-shadow: 0 0 30px rgba(0, 242, 255, 0.5); }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .btn {
+            margin-top: 30px;
+            padding: 15px 40px;
             background: var(--primary);
             color: black;
-            font-weight: 800;
+            font-weight: 900;
             border-radius: 50px;
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-            cursor: pointer;
+            transition: 0.3s;
         }
-
-        .spotlight-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            width: 320px;
-            text-align: right;
-        }
-
-        .tali-wrapper {
-            background: linear-gradient(145deg, #111, #1a1a1a);
-            border: 1px solid #333;
-            border-radius: 30px;
-            padding: 40px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            max-width: 850px;
-        }
-
-        .tali-wrapper img { width: 280px; border-radius: 20px; }
-
-        .wa-card {
-            background: #222;
-            padding: 20px 40px;
-            border-radius: 20px;
-            text-decoration: none;
-            color: white;
-            border: 1px solid #333;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 10px;
-        }
+        .btn:hover { transform: scale(1.1); background: white; }
 
         /* --- HUD --- */
         .hud {
             position: fixed;
-            bottom: 30px; left: 50%;
+            bottom: 40px; left: 50%;
             transform: translateX(-50%);
             z-index: 100;
-            text-align: center;
+            opacity: 0.5;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
             pointer-events: none;
         }
-        .scroll-hint { font-size: 0.8rem; color: #555; letter-spacing: 2px; text-transform: uppercase; }
 
     </style>
 </head>
 <body>
 
-    <div class="grid-bg"></div>
+    <div id="starfield"></div>
 
-    <div id="world">
-        
-        <!-- STAGE 0 -->
-        <div class="stage" data-index="0">
-            <h1 style="font-size: clamp(3rem, 10vw, 6rem);">לשבור את <span class="gradient-text">הכלוב.</span></h1>
-            <p style="font-size: 1.5rem; color: #ccc; margin-bottom: 40px;">פומבה וטלי. המסע לחופש מתחיל עכשיו.</p>
-            <div class="glow-btn" onclick="goToStage(1)">התחל בצלילה</div>
-        </div>
-
-        <!-- STAGE 1 -->
-        <div class="stage" data-index="1">
-            <h1 class="gradient-text">הבחירה שלך.</h1>
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 30px;">
-                <div class="spotlight-card">
-                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">🚫 שכיר</h3>
-                    <p>עובד בשביל חלומות של אחרים. תקרה נמוכה. בוס על הראש.</p>
-                </div>
-                <div class="spotlight-card" style="border-color: var(--primary);">
-                    <h3 style="font-size: 1.8rem; margin-bottom: 10px; color: var(--primary);">👑 עצמאי</h3>
-                    <p>בונה נכס שעובד בשבילך. שליטה מלאה בחיים ובזמן.</p>
-                </div>
+    <div class="world" id="world">
+        <!-- השקופיות -->
+        <div class="stage" data-pos="0">
+            <h1 class="gold">BREAK<br>THE CAGE</h1>
+            <div class="glass-card">
+                <p style="font-size: 1.5rem;">טימון ופומבה מציגים: הדרך לחופש כלכלי מתחילה כאן.</p>
             </div>
         </div>
 
-        <!-- STAGE 2 -->
-        <div class="stage" data-index="2">
-            <div class="tali-wrapper">
-                <div style="text-align: right;">
-                    <h2 style="font-size: 2.2rem;">טלי, הכל אפשרי.</h2>
-                    <p style="color: #aaa; margin-top: 15px;">פומבה חשב ש"שרת" זה אוכל כשהתחלנו. אם הוא הצליח - כל אחד יכול. הטכניקה היא רק כלי, הרצון הוא המנוע.</p>
-                </div>
-                <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" alt="Tali">
+        <div class="stage" data-pos="1">
+            <h1 class="cyan">UNLIMITED<br>GROWTH</h1>
+            <div class="glass-card">
+                <p style="font-size: 1.5rem;">בניית נכסים דיגיטליים שעובדים בשבילכם 24/7 בלופ אינסופי.</p>
             </div>
         </div>
 
-        <!-- STAGE 3 -->
-        <div class="stage" data-index="3">
-            <h1 style="font-size: 3.5rem;">מי יוצא לחופשי?</h1>
-            <p style="margin-bottom: 40px; color: #888;">החלטה אחת מפרידה ביניכם לבין העסק שלכם.</p>
-            
-            <a href="https://wa.me/972528226689?text=אני בפנים!" class="wa-card">
-                <span style="font-size: 1.5rem;">🐗</span>
-                <div style="text-align: right;"><b>פומבה: נמאס לי להיות שכיר!</b></div>
-            </a>
-            <a href="https://wa.me/972528226689?text=אני רוצה ללמוד!" class="wa-card" style="border-color: var(--accent);">
-                <span style="font-size: 1.5rem;">🎓</span>
-                <div style="text-align: right;"><b>טלי: אני מוכנה ללמוד!</b></div>
-            </a>
+        <div class="stage" data-pos="2">
+            <h1 style="color: var(--purple);">TALI'S<br>VISION</h1>
+            <div class="glass-card">
+                <p style="font-size: 1.5rem;">הכל אפשר ללמוד. הטכנולוגיה היא רק כלי, הרצון שלכם הוא המנוע.</p>
+            </div>
         </div>
 
+        <div class="stage" data-pos="3">
+            <h1>READY TO<br>LEAP?</h1>
+            <div class="glass-card">
+                <p style="font-size: 1.2rem; margin-bottom: 20px;">ההחלטה בידיים שלך. אל תישאר שכיר בג'ונגל.</p>
+                <a href="https://wa.me/972528226689" class="btn">צא לחופשי עכשיו</a>
+            </div>
+        </div>
     </div>
 
-    <div class="hud">
-        <div class="scroll-hint">↡ השתמש בגלגלת למעבר בין תחנות ↡</div>
-    </div>
+    <div class="hud">SCROLL TO NAVIGATE INFINITY</div>
 
     <script>
+        const world = document.getElementById('world');
         const stages = document.querySelectorAll('.stage');
-        const Z_STEP = 3000; // המרחק בין השקופיות
-        
-        let currentStageIndex = 0;
-        let targetZ = 0;
-        let currentZ = 0;
-        let isScrolling = false;
+        const totalStages = stages.length;
+        const Z_GAP = 4000; // המרחק בין שקופיות
+        const totalDist = totalStages * Z_GAP;
 
-        // הגדרת מיקום התחלתי לכל שקופית
-        stages.forEach((stage, i) => {
-            stage.style.transform = `translate(-50%, -50%) translateZ(${i * -Z_STEP}px)`;
-        });
+        let virtualZ = 0; // המיקום הגלובלי (יכול לגדול לנצח)
+        let currentZ = 0; // המיקום המרוכך (Lerp)
+        let isMoving = false;
 
-        // פונקציית ניווט לשלב ספציפי
-        function goToStage(index) {
-            if (index < 0 || index >= stages.length) return;
-            currentStageIndex = index;
-            targetZ = currentStageIndex * Z_STEP;
-        }
-
-        // זיהוי גלילה חכם (Throttle)
-        window.addEventListener('wheel', (e) => {
-            if (isScrolling) return;
-            
-            if (e.deltaY > 50) { // גלגל מטה
-                if (currentStageIndex < stages.length - 1) {
-                    currentStageIndex++;
-                    lockScroll();
-                }
-            } else if (e.deltaY < -50) { // גלגל מעלה
-                if (currentStageIndex > 0) {
-                    currentStageIndex--;
-                    lockScroll();
-                }
-            }
-        });
-
-        // תמיכה בטלפון (Swipe)
-        let touchStartY = 0;
-        window.addEventListener('touchstart', e => touchStartY = e.touches[0].clientY);
-        window.addEventListener('touchend', e => {
-            if (isScrolling) return;
-            let touchEndY = e.changedTouches[0].clientY;
-            if (touchStartY - touchEndY > 50) { // Swipe Up -> Go Forward
-                if (currentStageIndex < stages.length - 1) { currentStageIndex++; lockScroll(); }
-            } else if (touchEndY - touchStartY > 50) { // Swipe Down -> Go Back
-                if (currentStageIndex > 0) { currentStageIndex--; lockScroll(); }
-            }
-        });
-
-        function lockScroll() {
-            isScrolling = true;
-            targetZ = currentStageIndex * Z_STEP;
-            // שחרור הגלילה אחרי שהאנימציה מסתיימת בערך
-            setTimeout(() => { isScrolling = false; }, 800);
-        }
-
-        // לולאת האנימציה (The Engine)
-        function animate() {
-            // החלקה יוקרתית (Lerp)
-            currentZ += (targetZ - currentZ) * 0.08;
+        // --- פונקציית העדכון המרכזית ---
+        function updateStages() {
+            // החלקה יוקרתית
+            currentZ += (virtualZ - currentZ) * 0.07;
 
             stages.forEach((stage, i) => {
-                const basePos = i * -Z_STEP;
-                const distance = basePos + currentZ;
+                const baseZ = i * Z_GAP;
+                
+                // חישוב מיקום יחסי עם מודולו כדי ליצור לופ
+                // הנוסחה הזו גורמת לשקופיות להופיע שוב ושוב במרחב
+                let z = (baseZ - currentZ) % totalDist;
 
-                // חישוב שקיפות וטשטוש
-                // הנקודה המתוקה היא distance = 0
-                let opacity = 1 - Math.abs(distance) / (Z_STEP / 1.5);
-                let blur = Math.abs(distance) / 100;
+                // תיקון למודולו שלילי (כדי שגלילה אחורה תעבוד)
+                if (z > totalDist / 2) z -= totalDist;
+                if (z < -totalDist / 2) z += totalDist;
 
+                // חישוב שקיפות ופוקוס
+                // אנחנו רוצים פוקוס מקסימלי ב-Z=0
+                const absZ = Math.abs(z);
+                let opacity = 1 - absZ / 2500;
+                let blur = absZ / 80;
+                let scale = 1 - absZ / 10000;
+
+                // החלת הסטייל
                 if (opacity < 0.01) {
-                    stage.style.visibility = 'hidden';
+                    stage.style.display = 'none';
+                    stage.classList.remove('active');
                 } else {
-                    stage.style.visibility = 'visible';
-                    stage.style.opacity = Math.min(1, opacity);
+                    stage.style.display = 'flex';
+                    stage.style.opacity = opacity;
                     stage.style.filter = `blur(${blur}px)`;
-                    stage.style.transform = `translate(-50%, -50%) translateZ(${distance}px)`;
+                    stage.style.transform = `translate(-50%, -50%) translateZ(${z}px) scale(${scale})`;
+                    
+                    if (absZ < 100) stage.classList.add('active');
+                    else stage.classList.remove('active');
                 }
             });
 
-            requestAnimationFrame(animate);
+            requestAnimationFrame(updateStages);
         }
 
-        animate();
+        // --- ניהול גלילה עם נעילה (Snap) ---
+        function handleScroll(delta) {
+            if (isMoving) return;
+
+            isMoving = true;
+            const direction = delta > 0 ? 1 : -1;
+            
+            // שינוי ה-Z הווירטואלי בדיוק במרחק של שקופית אחת
+            virtualZ += direction * Z_GAP;
+
+            // שחרור הנעילה אחרי סיום התנועה העיקרית
+            setTimeout(() => { isMoving = false; }, 600);
+        }
+
+        window.addEventListener('wheel', (e) => {
+            handleScroll(e.deltaY);
+        });
+
+        // תמיכה בטלפון (Swipe)
+        let touchStart = 0;
+        window.addEventListener('touchstart', e => touchStart = e.touches[0].clientY);
+        window.addEventListener('touchend', e => {
+            const touchEnd = e.changedTouches[0].clientY;
+            if (Math.abs(touchStart - touchEnd) > 50) {
+                handleScroll(touchStart - touchEnd);
+            }
+        });
+
+        // התחלה
+        updateStages();
+
     </script>
 </body>
 </html>
