@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PUMBA | Infinite Z-Loop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Heebo:wght@300;700;900&display=swap" rel="stylesheet">
+    <title>PUMBA & TALI | THE INFINITE JOURNEY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Assistant:wght@200;400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #FFD700;
-            --accent: #00f2ff;
-            --purple: #bf5af2;
-            --bg: #000;
+            --gold: #ffb900;
+            --purple: #9b51e0;
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,15 +24,15 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            perspective: 1000px; /* עומק הראייה */
+            perspective: 1000px;
         }
 
-        /* --- רקע כוכבים נע --- */
-        #starfield {
+        /* --- רקע כוכבים --- */
+        #stars {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -2;
             background: radial-gradient(circle at center, #111 0%, #000 100%);
+            z-index: -2;
         }
 
         .world {
@@ -40,19 +41,19 @@
             transform-style: preserve-3d;
         }
 
-        /* --- שקופית (Stage) --- */
+        /* --- שקופיות --- */
         .stage {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
-            max-width: 900px;
+            max-width: 1000px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             backface-visibility: hidden;
-            pointer-events: none; /* מופעל רק כשהוא בפוקוס */
+            pointer-events: none;
             user-select: none;
         }
 
@@ -60,130 +61,187 @@
 
         /* --- עיצוב תוכן --- */
         h1 {
-            font-family: 'Syncopate', sans-serif;
-            font-size: clamp(2rem, 8vw, 5rem);
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 900;
             line-height: 1;
             margin-bottom: 20px;
-            text-transform: uppercase;
+            color: white;
         }
 
-        .gold { color: var(--primary); text-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
-        .cyan { color: var(--accent); text-shadow: 0 0 30px rgba(0, 242, 255, 0.5); }
+        .gold-glow {
+            color: var(--gold);
+            text-shadow: 0 0 30px rgba(255, 185, 0, 0.5);
+        }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
+        .glass-box {
+            background: var(--glass);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
             padding: 40px;
             border-radius: 30px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-width: 800px;
         }
 
-        .btn {
+        p { font-size: 1.4rem; line-height: 1.6; color: #ddd; }
+
+        /* --- כרטיסי השוואה (שקופית 2) --- */
+        .choice-container {
+            display: flex;
+            gap: 20px;
             margin-top: 30px;
-            padding: 15px 40px;
-            background: var(--primary);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mini-card {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 20px;
+            width: 250px;
+            border-top: 4px solid #555;
+        }
+
+        .mini-card.premium { border-color: var(--gold); background: rgba(255, 185, 0, 0.05); }
+
+        /* --- תמונה (שקופית 3) --- */
+        .tali-img {
+            width: 300px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(155, 81, 224, 0.3);
+            border: 2px solid var(--purple);
+        }
+
+        /* --- כפתורים (שקופית 4) --- */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .wa-btn {
+            background: white;
             color: black;
-            font-weight: 900;
+            padding: 20px;
             border-radius: 50px;
             text-decoration: none;
-            display: inline-block;
+            font-weight: 900;
+            font-size: 1.2rem;
             transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        .btn:hover { transform: scale(1.1); background: white; }
+
+        .wa-btn.pumba { background: var(--gold); }
+        .wa-btn:hover { transform: scale(1.05); background: #eee; }
 
         /* --- HUD --- */
         .hud {
             position: fixed;
-            bottom: 40px; left: 50%;
+            bottom: 30px; left: 50%;
             transform: translateX(-50%);
             z-index: 100;
-            opacity: 0.5;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            pointer-events: none;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #555;
+            text-transform: uppercase;
         }
 
     </style>
 </head>
 <body>
 
-    <div id="starfield"></div>
+    <div id="stars"></div>
 
     <div class="world" id="world">
-        <!-- השקופיות -->
+        
+        <!-- שקופית 1: פתיחה -->
         <div class="stage" data-pos="0">
-            <h1 class="gold">BREAK<br>THE CAGE</h1>
-            <div class="glass-card">
-                <p style="font-size: 1.5rem;">טימון ופומבה מציגים: הדרך לחופש כלכלי מתחילה כאן.</p>
+            <h1 class="gold-glow">לשבור את<br>הכלוב.</h1>
+            <div class="glass-box">
+                <p>פומבה. טלי. תקשיבו טוב:<br>נגמרו הימים שאנחנו עובדים בשביל אריות אחרים.</p>
             </div>
+            <div style="margin-top: 30px; color: var(--gold); animation: bounce 2s infinite;">↡ גללו מטה ↡</div>
         </div>
 
+        <!-- שקופית 2: הבחירה -->
         <div class="stage" data-pos="1">
-            <h1 class="cyan">UNLIMITED<br>GROWTH</h1>
-            <div class="glass-card">
-                <p style="font-size: 1.5rem;">בניית נכסים דיגיטליים שעובדים בשבילכם 24/7 בלופ אינסופי.</p>
+            <h1>מעגל השכירים</h1>
+            <div class="choice-container">
+                <div class="mini-card">
+                    <h3 style="margin-bottom:10px;">🚫 שכיר</h3>
+                    <p style="font-size: 1rem;">מוכר זמן בכסף. בוס על הראש. תקרה נמוכה.</p>
+                </div>
+                <div class="mini-card premium">
+                    <h3 style="margin-bottom:10px; color: var(--gold);">👑 בעל עסק</h3>
+                    <p style="font-size: 1rem;">בונה נכס דיגיטלי. בוחר לקוחות. לוקח את כל הקופה.</p>
+                </div>
             </div>
         </div>
 
+        <!-- שקופית 3: טלי -->
         <div class="stage" data-pos="2">
-            <h1 style="color: var(--purple);">TALI'S<br>VISION</h1>
-            <div class="glass-card">
-                <p style="font-size: 1.5rem;">הכל אפשר ללמוד. הטכנולוגיה היא רק כלי, הרצון שלכם הוא המנוע.</p>
+            <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" class="tali-img" alt="Tali">
+            <h1 style="font-size: 3rem; color: var(--purple);">הכל אפשר ללמוד</h1>
+            <div class="glass-box">
+                <p style="font-size: 1.1rem;">טלי, אף אחד לא נולד כשהוא יודע SEO. פומבה חשב ששרת זה אוכל.<br><b>הכל זה מיומנות, ומיומנות לומדים.</b></p>
             </div>
         </div>
 
+        <!-- שקופית 4: סיום ו-CTA -->
         <div class="stage" data-pos="3">
-            <h1>READY TO<br>LEAP?</h1>
-            <div class="glass-card">
-                <p style="font-size: 1.2rem; margin-bottom: 20px;">ההחלטה בידיים שלך. אל תישאר שכיר בג'ונגל.</p>
-                <a href="https://wa.me/972528226689" class="btn">צא לחופשי עכשיו</a>
+            <h1 class="gold-glow">יוצאים לחופשי?</h1>
+            <p style="margin-bottom: 30px;">ההחלטה בידיים שלכם. מי קופץ ראשון?</p>
+            <div class="btn-group">
+                <a href="https://wa.me/972528226689?text=טימון! טלי כאן. אני מוכנה ללמוד." class="wa-btn">🎓 טלי: אני מוכנה ללמוד!</a>
+                <a href="https://wa.me/972528226689?text=טימון! פומבה כאן. בוא נבנה אימפריה." class="wa-btn pumba">🐗 פומבה: נמאס לי להיות שכיר!</a>
             </div>
         </div>
+
     </div>
 
-    <div class="hud">SCROLL TO NAVIGATE INFINITY</div>
+    <div class="hud">Infinite Z-Axis Loop // Pumba Studio 2026</div>
 
     <script>
-        const world = document.getElementById('world');
         const stages = document.querySelectorAll('.stage');
         const totalStages = stages.length;
-        const Z_GAP = 4000; // המרחק בין שקופיות
+        const Z_GAP = 5000; // מרחק בין שקופיות
         const totalDist = totalStages * Z_GAP;
 
-        let virtualZ = 0; // המיקום הגלובלי (יכול לגדול לנצח)
-        let currentZ = 0; // המיקום המרוכך (Lerp)
-        let isMoving = false;
+        let virtualZ = 0;
+        let currentZ = 0;
+        let isScrolling = false;
 
-        // --- פונקציית העדכון המרכזית ---
-        function updateStages() {
-            // החלקה יוקרתית
-            currentZ += (virtualZ - currentZ) * 0.07;
+        function update() {
+            // החלקה (Lerp)
+            currentZ += (virtualZ - currentZ) * 0.08;
 
             stages.forEach((stage, i) => {
                 const baseZ = i * Z_GAP;
                 
-                // חישוב מיקום יחסי עם מודולו כדי ליצור לופ
-                // הנוסחה הזו גורמת לשקופיות להופיע שוב ושוב במרחב
+                // חישוב מודולו ליצירת לופ אינסופי
                 let z = (baseZ - currentZ) % totalDist;
 
-                // תיקון למודולו שלילי (כדי שגלילה אחורה תעבוד)
+                // תיקון קפיצה ללופ חלק
                 if (z > totalDist / 2) z -= totalDist;
                 if (z < -totalDist / 2) z += totalDist;
 
-                // חישוב שקיפות ופוקוס
-                // אנחנו רוצים פוקוס מקסימלי ב-Z=0
+                // חישוב שקיפות וטשטוש (פוקוס ב-Z=0)
                 const absZ = Math.abs(z);
-                let opacity = 1 - absZ / 2500;
-                let blur = absZ / 80;
-                let scale = 1 - absZ / 10000;
+                let opacity = 1 - absZ / 3000;
+                let blur = absZ / 100;
+                let scale = 1 - absZ / 15000;
 
-                // החלת הסטייל
                 if (opacity < 0.01) {
-                    stage.style.display = 'none';
+                    stage.style.visibility = 'hidden';
                     stage.classList.remove('active');
                 } else {
-                    stage.style.display = 'flex';
+                    stage.style.visibility = 'visible';
                     stage.style.opacity = opacity;
                     stage.style.filter = `blur(${blur}px)`;
                     stage.style.transform = `translate(-50%, -50%) translateZ(${z}px) scale(${scale})`;
@@ -193,40 +251,37 @@
                 }
             });
 
-            requestAnimationFrame(updateStages);
+            requestAnimationFrame(update);
         }
 
-        // --- ניהול גלילה עם נעילה (Snap) ---
+        // ניהול גלילה (Snap)
         function handleScroll(delta) {
-            if (isMoving) return;
+            if (isScrolling) return;
+            isScrolling = true;
 
-            isMoving = true;
             const direction = delta > 0 ? 1 : -1;
-            
-            // שינוי ה-Z הווירטואלי בדיוק במרחק של שקופית אחת
             virtualZ += direction * Z_GAP;
 
-            // שחרור הנעילה אחרי סיום התנועה העיקרית
-            setTimeout(() => { isMoving = false; }, 600);
+            setTimeout(() => { isScrolling = false; }, 800);
         }
 
-        window.addEventListener('wheel', (e) => {
-            handleScroll(e.deltaY);
-        });
+        window.addEventListener('wheel', (e) => handleScroll(e.deltaY));
 
         // תמיכה בטלפון (Swipe)
-        let touchStart = 0;
-        window.addEventListener('touchstart', e => touchStart = e.touches[0].clientY);
+        let touchY = 0;
+        window.addEventListener('touchstart', e => touchY = e.touches[0].clientY);
         window.addEventListener('touchend', e => {
-            const touchEnd = e.changedTouches[0].clientY;
-            if (Math.abs(touchStart - touchEnd) > 50) {
-                handleScroll(touchStart - touchEnd);
-            }
+            const delta = touchY - e.changedTouches[0].clientY;
+            if (Math.abs(delta) > 50) handleScroll(delta);
         });
 
-        // התחלה
-        updateStages();
+        // אנימציית בונוס לכותרות
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
+        update();
     </script>
 </body>
 </html>
