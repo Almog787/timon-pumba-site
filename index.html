@@ -3,30 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PUMBA | The Digital Breakout</title>
+    <title>PUMBA | Breaking The Cage</title>
     
     <!-- פונטים יוקרתיים -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;900&family=Manrope:wght@200;800&display=swap" rel="stylesheet">
-
-    <!-- ספריות חיצוניות לאנימציה וגלילה (סטנדרט הייטק) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- GSAP - מנוע האנימציות של המקצוענים -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
 
     <style>
         :root {
-            --bg: #0c0c0c;
-            --text: #e5e5e5;
+            --bg: #0d0d0d;
+            --text: #ffffff;
             --accent: #ffb900; /* זהב פומבה */
-            --gray: #2a2a2a;
+            --subtext: #888;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none; /* מחביא עכבר רגיל */
+            cursor: none; /* מחביא את העכבר המקורי */
         }
 
         body {
@@ -34,10 +32,10 @@
             color: var(--text);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            line-height: 1.4;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- אפקט Noise (גרעיניות) --- */
+        /* --- שכבת רעש (Texture) --- */
         .noise {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -47,247 +45,286 @@
             z-index: 9999;
         }
 
-        /* --- סמן עכבר מותאם --- */
-        #cursor {
+        /* --- סמן עכבר מיוחד (Langarica Style) --- */
+        .cursor {
             position: fixed;
             width: 20px;
             height: 20px;
-            background: white;
+            background: #fff;
             border-radius: 50%;
             pointer-events: none;
             z-index: 10000;
             mix-blend-mode: difference;
-            transition: transform 0.3s ease;
+            transition: transform 0.15s ease-out;
         }
 
-        /* --- Layout --- */
-        section {
-            min-height: 100vh;
-            padding: 10vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        /* --- Typography --- */
-        .reveal-container {
+        /* --- טיפוגרפיה ואפקט Reveal --- */
+        .reveal-text {
             overflow: hidden;
             display: block;
         }
 
-        h1 {
-            font-family: 'Manrope', sans-serif;
-            font-size: clamp(3rem, 12vw, 10rem);
-            font-weight: 800;
+        .reveal-text span {
+            display: inline-block;
+            transform: translateY(100%);
+            transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .is-in-view .reveal-text span {
+            transform: translateY(0);
+        }
+
+        /* --- SECTION STYLING --- */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 100px 10%;
+            position: relative;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            background: linear-gradient(to bottom, rgba(13,13,13,0.5), var(--bg)),
+                        url('https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_59pm.png?w=1024') center/cover;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 700;
             line-height: 0.9;
-            letter-spacing: -0.05em;
             text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
         }
 
-        h2 {
-            font-size: clamp(2rem, 5vw, 4rem);
-            font-weight: 200;
-            margin-bottom: 2rem;
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--subtext);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .accent-color { color: var(--accent); }
-
-        /* --- Components --- */
-        .grid {
+        /* --- CARDS SECTION --- */
+        .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            margin-top: 5rem;
+            gap: 50px;
+            margin-top: 50px;
         }
 
-        .card {
-            border-top: 1px solid var(--gray);
-            padding-top: 2rem;
+        .langarica-card {
+            border-top: 1px solid #333;
+            padding-top: 40px;
+            transition: border-color 0.5s;
         }
 
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
+        .langarica-card:hover { border-color: var(--accent); }
+
+        .langarica-card h3 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
         }
 
-        .card p {
-            color: #888;
-            font-size: 1.1rem;
-            max-width: 400px;
+        .langarica-card p {
+            font-size: 1.2rem;
+            color: var(--subtext);
+            line-height: 1.6;
         }
 
+        .highlight { color: var(--accent); }
+
+        /* --- TALI SECTION --- */
         .tali-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
-            gap: 5vw;
+            gap: 100px;
         }
 
-        .tali-image-wrap {
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-
-        .tali-image-wrap img {
+        .tali-image {
             width: 100%;
-            filter: grayscale(100%) brightness(0.8);
-            transition: filter 0.5s ease;
+            aspect-ratio: 1;
+            background: url('https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585') center/cover;
+            filter: grayscale(100%);
+            transition: filter 1s ease;
         }
 
-        .tali-image-wrap:hover img {
-            filter: grayscale(0%) brightness(1);
-        }
+        .tali-section:hover .tali-image { filter: grayscale(0%); }
 
-        .btn-large {
+        /* --- CTA BUTTON --- */
+        .magnetic-btn {
             display: inline-block;
-            margin-top: 3rem;
-            font-size: 2rem;
-            text-decoration: none;
+            margin-top: 50px;
+            padding: 30px 80px;
+            border: 1px solid white;
             color: white;
-            border-bottom: 2px solid white;
-            padding-bottom: 10px;
-            transition: 0.3s;
+            text-decoration: none;
+            font-family: 'Syncopate', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 100px;
+            transition: background 0.3s, color 0.3s;
+            position: relative;
         }
 
-        .btn-large:hover {
-            color: var(--accent);
-            border-color: var(--accent);
-            transform: translateX(20px);
+        .magnetic-btn:hover {
+            background: white;
+            color: black;
         }
 
-        footer {
-            padding: 5rem 10vw;
-            border-top: 1px solid var(--gray);
-            text-align: center;
-            font-size: 0.8rem;
-            color: #444;
+        /* --- HUD (מעקב) --- */
+        .hud {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--subtext);
+            z-index: 1000;
         }
 
-        /* --- Mobile --- */
+        /* רספונסיביות */
         @media (max-width: 768px) {
-            .grid, .tali-section { grid-template-columns: 1fr; }
-            h1 { font-size: 4rem; }
+            .grid-container, .tali-section { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 4rem; }
+            .cursor { display: none; }
+            * { cursor: auto; }
         }
+
     </style>
 </head>
 <body>
 
     <div class="noise"></div>
-    <div id="cursor"></div>
+    <div class="cursor" id="cursor"></div>
 
-    <main>
-        <!-- HERO -->
-        <section class="hero">
-            <div class="reveal-container">
-                <h1 class="reveal-text">BREAK THE</h1>
-            </div>
-            <div class="reveal-container">
-                <h1 class="reveal-text accent-color">CAGE.</h1>
-            </div>
-            <p style="margin-top: 2rem; font-size: 1.5rem; font-weight: 200; max-width: 600px;">
-                פומבה. טלי. הגיע הזמן להפסיק לבנות חלומות של אחרים ולהתחיל לבנות נכסים משלכם.
-            </p>
-        </section>
+    <!-- HUD -->
+    <div class="hud">Pumba Systems © 2026 / Interactive Portfolio</div>
 
-        <!-- THE DILEMMA -->
-        <section>
-            <h2 class="reveal-text">הבחירה שלכם.</h2>
-            <div class="grid">
-                <div class="card reveal-up">
-                    <h3>🚫 שכירים</h3>
-                    <p>זמן שווה כסף. בוס על הראש. תקרה שאי אפשר לשבור. חיים בתוך כלוב של ביטחון מדמה.</p>
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <!-- HERO -->
+            <section class="hero">
+                <h1 class="reveal-text"><span>לשבור את</span><br><span class="highlight">הכלוב.</span></h1>
+                <p>הגיע הזמן להפסיק לעבוד בשביל אריות אחרים. פומבה וטלי בונים אימפריות דיגיטליות.</p>
+                <a href="https://wa.me/972528226689" class="magnetic-btn">בוא נשבור את הכלוב</a>
+            </section>
+
+            <!-- THE PROBLEM -->
+            <section>
+                <h2 class="reveal-text" style="font-size: 4rem;">אנחנו תקועים בתוך<br>מעגל השכירים.</h2>
+                <div class="grid-container">
+                    <div class="langarica-card">
+                        <h3>🚫 שכיר</h3>
+                        <p>למכור את הזמן שלך בשביל כסף של מישהו אחר. יש תקרה, יש בוס, ויש חוסר חופש מוחלט.</p>
+                    </div>
+                    <div class="langarica-card" style="border-top-color: var(--accent);">
+                        <h3>👑 בעל עסק</h3>
+                        <p>לבנות נכסים דיגיטליים שעובדים בשבילך. האתרים שנבנה ישרתו אותנו, אנחנו קובעים את המחיר.</p>
+                    </div>
                 </div>
-                <div class="card reveal-up">
-                    <h3>👑 בעלי עסק</h3>
-                    <p>נכסים דיגיטליים שעובדים בשבילכם. חופש לבחור לקוחות. כל הקופה נשארת אצלכם.</p>
+            </section>
+
+            <!-- TALI SECTION -->
+            <section class="tali-section">
+                <div>
+                    <h2 class="reveal-text" style="font-size: 3rem;">טלי, הכל<br><span style="color:var(--accent)">אפשר ללמוד.</span></h2>
+                    <p style="margin-top: 30px; font-size: 1.3rem;">אף אחד לא נולד יודע SEO או שיווק. פומבה חשב ששרת זה סוג של שורש למאכל. הכל זה מיומנות, ומיומנות נרכשת בדם ויזע (וצחוק).</p>
+                    <blockquote style="margin-top: 30px; border-right: 2px solid white; padding-right: 20px; font-style: italic;">
+                        "יש לך משהו שאי אפשר ללמד: שכל ישר ורעב להצליח."
+                    </blockquote>
                 </div>
-            </div>
-        </section>
+                <div class="tali-image"></div>
+            </section>
 
-        <!-- TALI -->
-        <section class="tali-section">
-            <div class="tali-image-wrap reveal-up">
-                <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" alt="Tali & Pumba">
-            </div>
-            <div>
-                <h2 class="reveal-text">טלי, הכל אפשרי.</h2>
-                <p style="font-size: 1.2rem; color: #aaa;">
-                    אף אחד לא נולד כשהוא יודע שיווק או SEO. פומבה חשב ששרת זה סוג של שורש למאכל. <br><br>
-                    <strong>הכל זו מיומנות נרכשת.</strong> יש לך את השכל הישר ואת הרעב. את הטכניקה אנחנו ננצח ביומיים.
-                </p>
-            </div>
-        </section>
+            <!-- FINAL CTA -->
+            <section style="text-align: center;">
+                <h2 class="reveal-text" style="font-size: 5rem;">READY TO LEAP?</h2>
+                <p>החלטה אחת מפרידה ביניכם לבין העצמאות שלכם.</p>
+                <div class="grid-container" style="max-width: 800px; margin: 50px auto;">
+                    <a href="https://wa.me/972528226689" class="magnetic-btn" style="padding: 20px; font-size: 0.8rem;">🐗 פומבה: נמאס לי להיות שכיר!</a>
+                    <a href="https://wa.me/972528226689" class="magnetic-btn" style="padding: 20px; font-size: 0.8rem; border-color: var(--accent); color: var(--accent);">🎓 טלי: אני מוכנה ללמוד!</a>
+                </div>
+            </section>
 
-        <!-- CTA -->
-        <section style="text-align: center;">
-            <h1 class="reveal-text">READY?</h1>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-                <a href="https://wa.me/972528226689?text=טלי כאן" class="btn-large">TALI: I'M IN</a>
-                <a href="https://wa.me/972528226689?text=פומבה כאן" class="btn-large accent-color">PUMBA: LET'S BUILD</a>
-            </div>
-        </section>
-    </main>
+            <footer style="padding: 50px; text-align: center; color: #333;">
+                Built with precision. No cages allowed.
+            </footer>
 
-    <footer>
-        © 2026 PUMBA CREATIVE AGENCY / INSPIRED BY LANGARICA
-    </footer>
+        </div>
+    </div>
 
     <script>
-        // --- 1. אתחול גלילה חלקה (Lenis) ---
-        const lenis = new Lenis();
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-
-        // --- 2. לוגיקת סמן עכבר ---
+        // --- 1. Custom Cursor Logic ---
         const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', (e) => {
             gsap.to(cursor, {
                 x: e.clientX,
                 y: e.clientY,
-                duration: 0.1,
-                ease: "power2.out"
+                duration: 0.1
             });
         });
 
-        // הגדלת עכבר ב-Hover
-        document.querySelectorAll('a, img, .card').forEach(el => {
+        document.querySelectorAll('a, button').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(4)');
             el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
         });
 
-        // --- 3. אנימציות חשיפה (GSAP ScrollTrigger) ---
-        gsap.registerPlugin(ScrollTrigger);
-
-        // חשיפת טקסט (מתוך מסיכה)
-        document.querySelectorAll('.reveal-text').forEach(text => {
-            gsap.from(text, {
-                y: 120,
-                skewY: 7,
-                duration: 1.5,
-                ease: "power4.out",
-                scrollTrigger: {
-                    trigger: text,
-                    start: "top 90%",
+        // --- 2. Text Reveal Logic (Intersection Observer) ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-in-view');
                 }
             });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
         });
 
-        // חשיפת אלמנטים מלמטה
-        document.querySelectorAll('.reveal-up').forEach(el => {
-            gsap.from(el, {
-                y: 100,
-                opacity: 0,
-                duration: 1.2,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: el,
-                    start: "top 85%",
-                }
+        // --- 3. Inertia Smooth Scroll (Simple Lerp Implementation) ---
+        // (דויד לנגריקה משתמש בספריות כבדות, אנחנו נשתמש במימוש קל ומהיר)
+        let current = 0;
+        let target = 0;
+        const ease = 0.075;
+
+        function smoothScroll() {
+            target = window.scrollY;
+            current = current + (target - current) * ease;
+            
+            // אנחנו לא מזיזים את ה-body אלא את ה-content
+            const content = document.getElementById('smooth-content');
+            // content.style.transform = `translateY(${-current}px)`;
+            
+            // בגלל שזה קוד קצר, נשתמש ב-GSAP ליציבות
+            requestAnimationFrame(smoothScroll);
+        }
+        // smoothScroll(); // ניתן להפעיל אם רוצים אינרציה מלאה, כרגע נשאיר גלילה טבעית חלקה
+
+        // --- 4. Magnetic Buttons ---
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                gsap.to(btn, {
+                    x: x * 0.3,
+                    y: y * 0.3,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
             });
         });
 
