@@ -3,407 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>שוברים את הכלוב | טימון, פומבה וטלי</title>
+    <title>צלילה לחופש | טימון, פומבה וטלי</title>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;800&family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #FFD700;       /* זהב עשיר */
-            --primary-glow: #ffa500;  /* כתום זוהר */
-            --accent: #bf5af2;        /* סגול טלי */
-            --accent-glow: #d946ef;   /* סגול ניאון */
-            --bg: #030303;            /* שחור כמעט מוחלט */
+            --primary: #FFD700;
+            --accent: #bf5af2;
+            --bg: #030303;
             --card: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.1);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg);
             color: white;
             font-family: 'Rubik', sans-serif;
-            overflow-x: hidden;
-            line-height: 1.6;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* מבטל גלילה רגילה */
+            perspective: 1200px; /* עומק המצלמה */
         }
 
-        /* --- רקע רשת עתידני --- */
+        /* --- רקע רשת קבוע --- */
         .grid-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            background-size: 50px 50px;
             z-index: -2;
             pointer-events: none;
         }
 
-        /* --- גחליליות משופרות --- */
-        .firefly {
-            position: fixed;
-            width: 4px; height: 4px;
-            background: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary-glow);
-            animation: floatParticle 15s infinite linear;
-            z-index: -1;
-            opacity: 0;
+        /* --- העולם התלת מימדי --- */
+        #world {
+            position: absolute;
+            width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            will-change: transform;
         }
 
-        @keyframes floatParticle {
-            0% { transform: translateY(110vh) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
-        }
-
-        /* --- טיפוגרפיה וכותרות --- */
-        h1, h2, h3 { font-family: 'Heebo', sans-serif; font-weight: 900; line-height: 1.1; }
-        
-        .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, #ccc 50%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-        }
-
-        .gradient-text-purple {
-            background: linear-gradient(135deg, #fff 0%, #e0b0ff 50%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            min-height: 100vh;
+        /* --- שכבת תוכן (Stage) --- */
+        .stage {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 1200px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-align: center;
-            position: relative;
+            backface-visibility: hidden;
             padding: 20px;
         }
 
-        .hero-bg-img {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_59pm.png?w=1024') no-repeat center center/cover;
-            opacity: 0.3;
-            filter: blur(5px);
-            mask-image: linear-gradient(to bottom, black 0%, transparent 90%);
-            z-index: -1;
-            transform: scale(1.1);
-            animation: breathe 10s infinite alternate;
+        /* --- עיצוב טקסטים --- */
+        h1 { font-family: 'Heebo', sans-serif; font-weight: 900; line-height: 1; margin-bottom: 20px; }
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-purple {
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        @keyframes breathe { from { transform: scale(1.1); } to { transform: scale(1.2); } }
-
-        .hero-content { max-width: 900px; z-index: 2; }
-
-        .hero h1 {
-            font-size: clamp(3.5rem, 8vw, 6rem);
-            margin-bottom: 20px;
-            letter-spacing: -2px;
-            text-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            opacity: 0;
-            animation: slideUp 1s ease forwards 0.5s;
-        }
-
-        .hero p {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: #ccc;
-            margin-bottom: 40px;
-            opacity: 0;
-            animation: slideUp 1s ease forwards 0.8s;
-        }
-
+        /* --- כפתורים וכרטיסים --- */
         .glow-btn {
-            display: inline-block;
             padding: 20px 50px;
             background: var(--primary);
             color: black;
             font-weight: 800;
-            font-size: 1.2rem;
             border-radius: 50px;
             text-decoration: none;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
             transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            animation: slideUp 1s ease forwards 1.1s;
         }
 
-        .glow-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-            transition: 0.5s;
-        }
-
-        .glow-btn:hover::before { left: 100%; }
-        .glow-btn:hover { transform: scale(1.05); box-shadow: 0 0 60px rgba(255, 215, 0, 0.7); background: white; }
-
-        /* --- CARDS SECTION (Spotlight Effect) --- */
-        .section { padding: 100px 20px; position: relative; }
+        .cards-container { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
         
-        .section-title {
-            text-align: center;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            margin-bottom: 60px;
-        }
-
-        .cards-container {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
         .spotlight-card {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 450px;
+            padding: 30px;
+            width: 350px;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s;
-            cursor: default;
+            text-align: right;
         }
 
-        /* אפקט הזרקור */
+        /* אפקט זרקור בתוך Z */
         .spotlight-card::before {
             content: '';
             position: absolute;
             top: var(--y, 50%); left: var(--x, 50%);
             transform: translate(-50%, -50%);
-            width: 600px; height: 600px;
+            width: 400px; height: 400px;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
+            opacity: 0; pointer-events: none;
         }
-
         .spotlight-card:hover::before { opacity: 1; }
-        .spotlight-card:hover { transform: translateY(-10px); border-color: rgba(255,255,255,0.3); }
 
-        .spotlight-card h3 { font-size: 2.5rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
-        .spotlight-card p { font-size: 1.1rem; color: #aaa; }
-
-        .card-icon { font-size: 3rem; }
-
-        .boss-card { border: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 0 50px rgba(255, 215, 0, 0.05); }
-        .boss-card h3 { color: var(--primary); }
-
-        /* --- TALI SECTION (Floating) --- */
         .tali-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: linear-gradient(to right, #111, #1a1a1a);
+            background: linear-gradient(145deg, #111, #1a1a1a);
             border: 1px solid #333;
             border-radius: 30px;
-            padding: 60px;
+            padding: 40px;
             display: flex;
             align-items: center;
-            gap: 50px;
-            position: relative;
-            overflow: hidden;
+            gap: 30px;
+            max-width: 900px;
         }
 
-        /* קישוט זוהר ברקע */
-        .tali-wrapper::after {
-            content: '';
-            position: absolute;
-            top: -50%; right: -20%;
-            width: 500px; height: 500px;
-            background: var(--accent);
-            filter: blur(150px);
-            opacity: 0.2;
-            pointer-events: none;
-        }
-
-        .tali-text { flex: 1; z-index: 2; }
-        .tali-img-box { flex: 1; position: relative; z-index: 2; animation: float 6s ease-in-out infinite; }
-        
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-
-        .tali-img-box img {
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* --- FINAL CTA --- */
-        .final-section {
-            text-align: center;
-            padding: 100px 20px;
-            background: radial-gradient(circle at bottom, #1a1a1a 0%, #000 100%);
-        }
-
-        .whatsapp-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            max-width: 800px;
-            margin: 50px auto 0;
-        }
+        .tali-wrapper img { width: 300px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
         .wa-card {
             background: #222;
-            padding: 30px;
+            padding: 20px 40px;
             border-radius: 20px;
             text-decoration: none;
             color: white;
-            transition: 0.3s;
             border: 1px solid #333;
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 400px;
         }
 
-        .wa-card:hover { transform: translateY(-5px); background: #333; border-color: var(--primary); }
-        .wa-card.purple:hover { border-color: var(--accent); }
+        /* --- HUD (ממשק עזר) --- */
+        .hud {
+            position: fixed;
+            bottom: 30px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+        }
+        .scroll-hint { font-size: 0.9rem; color: #666; margin-bottom: 10px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        .wa-icon { font-size: 2rem; }
-        .wa-text { font-weight: bold; font-size: 1.2rem; text-align: right; }
-
-        /* --- ANIMATIONS --- */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 1s ease; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* MOBILE FIXES */
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
-            .tali-wrapper { flex-direction: column-reverse; padding: 30px; }
-            .hero h1 { line-height: 1; }
-            .wa-card { width: 100%; }
+            .tali-wrapper { flex-direction: column-reverse; text-align: center; }
+            .tali-wrapper img { width: 100%; }
+            h1 { font-size: 2.5rem; }
+            .spotlight-card { width: 100%; }
         }
-
     </style>
 </head>
 <body>
 
     <div class="grid-bg"></div>
-    <div id="particles"></div>
 
-    <!-- HERO -->
-    <header class="hero">
-        <div class="hero-bg-img"></div>
-        <div class="hero-content">
-            <h1>לשבור את <span class="gradient-text">הכלוב.</span></h1>
-            <p>פומבה. טלי. נגמרו הימים שאנחנו עובדים בשביל אריות אחרים.<br>הגיע הזמן לבנות אימפריה משלנו.</p>
-            <a href="#choice" class="glow-btn">טימון, הראה לי את הדרך</a>
-        </div>
-    </header>
-
-    <!-- PROBLEM / SOLUTION -->
-    <section class="section" id="choice">
-        <h2 class="section-title reveal">שתי דלתות. <span class="gradient-text">בחירה אחת.</span></h2>
+    <div id="world">
         
-        <div class="cards-container">
-            <!-- Card 1 -->
-            <div class="spotlight-card reveal">
-                <h3><span class="card-icon">🚫</span> הכלוב המוזהב</h3>
-                <p>להיות שכיר זה למכור את החלומות שלך בהנחה. בוס על הראש, תקרת זכוכית, וחיים מסופ"ש לסופ"ש. זה לא חיים, זו הישרדות.</p>
-            </div>
+        <!-- שכבה 1: HERO -->
+        <div class="stage" data-z="0">
+            <h1 style="font-size: clamp(3rem, 10vw, 6rem);">לשבור את <span class="gradient-text">הכלוב.</span></h1>
+            <p style="font-size: 1.5rem; color: #ccc; margin-bottom: 40px;">פומבה. טלי. נגמרו הימים שאנחנו עובדים בשביל אחרים.</p>
+            <div class="glow-btn">גללו כדי להתחיל בצלילה</div>
+        </div>
 
-            <!-- Card 2 -->
-            <div class="spotlight-card boss-card reveal">
-                <h3><span class="card-icon">👑</span> מלך הג'ונגל</h3>
-                <p>להיות בעל עסק דיגיטלי. לבנות נכס שעובד בשבילך גם כשאתה ישן. אנחנו קובעים את המחיר, אנחנו בוחרים את הלקוחות, <strong>ואנחנו לוקחים את כל הקופה.</strong></p>
+        <!-- שכבה 2: הבחירה -->
+        <div class="stage" data-z="-3000">
+            <h1 class="gradient-text">שתי דלתות. בחירה אחת.</h1>
+            <div class="cards-container">
+                <div class="spotlight-card">
+                    <h3 style="font-size: 2rem; margin-bottom: 15px;">🚫 הכלוב</h3>
+                    <p>להיות שכיר זה למכור את החלומות שלך בהנחה. בוס על הראש ותקרת זכוכית.</p>
+                </div>
+                <div class="spotlight-card" style="border-color: var(--primary);">
+                    <h3 style="font-size: 2rem; margin-bottom: 15px; color: var(--primary);">👑 המלך</h3>
+                    <p>לבנות נכס שעובד בשבילך. אנחנו קובעים את המחיר ואנחנו לוקחים את כל הקופה.</p>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- TALI SECTION -->
-    <section class="section">
-        <div class="tali-wrapper reveal">
-            <div class="tali-text">
-                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">טלי, תקשיבי טוב.</h2>
-                <h3 class="gradient-text-purple" style="font-size: 1.8rem; margin-bottom: 20px;">"אני לא טכנולוגית..."</h3>
-                <p style="font-size: 1.2rem; color: #ccc; margin-bottom: 20px;">
-                    זו האמונה המגבילה שלך שמדברת. פומבה חשב ש"שרת" זה סוג של שורש למאכל כשהתחלנו.
-                </p>
-                <p style="font-size: 1.2rem; font-weight: bold; border-right: 4px solid var(--accent); padding-right: 15px;">
-                    יש לך משהו שאי אפשר ללמד: שכל ישר ורעב להצליח. את הטכניקה של גוגל? נלמד אותך ביומיים.
-                </p>
-            </div>
-            <div class="tali-img-box">
-                <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" alt="Tali Inspiration">
+        <!-- שכבה 3: טלי -->
+        <div class="stage" data-z="-6000">
+            <div class="tali-wrapper">
+                <div style="text-align: right;">
+                    <h2 style="font-size: 2.5rem;">טלי, תקשיבי טוב.</h2>
+                    <h3 class="gradient-text-purple">"אני לא טכנולוגית..."</h3>
+                    <p style="color: #aaa; margin-top: 15px;">פומבה חשב ש"שרת" זה סוג של שורש למאכל כשהתחלנו. הכל אפשר ללמוד.</p>
+                </div>
+                <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" alt="Tali">
             </div>
         </div>
-    </section>
 
-    <!-- FINAL CTA -->
-    <section class="final-section">
-        <h2 class="reveal" style="font-size: 3rem;">אז מי קופץ למים?</h2>
-        <p class="reveal" style="color: #888;">החלטה אחת מפרידה ביניכם לבין החופש הכלכלי.</p>
-
-        <div class="whatsapp-grid reveal">
-            <a href="https://wa.me/972528226689?text=טימון! טלי כאן. אני מוכנה ללמוד." class="wa-card purple">
-                <span class="wa-icon">🎓</span>
-                <div class="wa-text">טלי: אני בפנים!<br><span style="font-size: 0.9rem; font-weight: normal; color: #bbb;">מוכנה ללמוד ולהצליח</span></div>
+        <!-- שכבה 4: קריאה לפעולה -->
+        <div class="stage" data-z="-9000">
+            <h1 style="font-size: 4rem;">אז מי קופץ למים?</h1>
+            <p style="margin-bottom: 40px; color: #888;">החלטה אחת מפרידה ביניכם לבין החופש.</p>
+            
+            <a href="https://wa.me/972528226689?text=טימון! טלי כאן. אני בפנים." class="wa-card">
+                <span style="font-size: 2rem;">🎓</span>
+                <div style="text-align: right;"><b>טלי: אני בפנים!</b><br><small>מוכנה ללמוד ולהצליח</small></div>
             </a>
 
-            <a href="https://wa.me/972528226689?text=טימון! פומבה כאן. בוא נשבור את השוק." class="wa-card">
-                <span class="wa-icon">🐗</span>
-                <div class="wa-text">פומבה: נמאס להיות שכיר!<br><span style="font-size: 0.9rem; font-weight: normal; color: #bbb;">בוא נבנה אימפריה</span></div>
+            <a href="https://wa.me/972528226689?text=טימון! פומבה כאן. בוא נבנה אימפריה." class="wa-card" style="border-color: var(--primary);">
+                <span style="font-size: 2rem;">🐗</span>
+                <div style="text-align: right;"><b>פומבה: נמאס לי להיות שכיר!</b><br><small>בוא נבנה אימפריה</small></div>
             </a>
         </div>
-    </section>
+
+    </div>
+
+    <div class="hud">
+        <div class="scroll-hint">↡ גללו למטה כדי לצלול לעומק ↡</div>
+    </div>
 
     <script>
-        // --- יצירת גחליליות רקע ---
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 30; i++) {
-            const p = document.createElement('div');
-            p.classList.add('firefly');
-            p.style.left = Math.random() * 100 + '%';
-            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            p.style.animationDelay = (Math.random() * 5) + 's';
-            particlesContainer.appendChild(p);
-        }
+        const world = document.getElementById('world');
+        const stages = document.querySelectorAll('.stage');
+        
+        let targetZ = 0;
+        let currentZ = 0;
+        const speedMultiplier = 3; 
 
-        // --- אפקט Scroll Reveal ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.reveal').forEach((el) => {
-            observer.observe(el);
+        // --- ניהול גלילה ---
+        window.addEventListener('wheel', (e) => {
+            targetZ += e.deltaY * speedMultiplier;
+            // גבולות
+            targetZ = Math.max(0, Math.min(targetZ, 10000));
         });
 
-        // --- אפקט זרקור (Spotlight) לכרטיסים ---
-        // עובד רק במחשב כדי לחסוך ביצועים בנייד
-        if (window.matchMedia("(hover: hover)").matches) {
-            const cards = document.querySelectorAll(".spotlight-card");
-            
-            document.body.addEventListener("mousemove", (e) => {
-                cards.forEach((card) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
+        // תמיכה בטלפון (Touch)
+        let touchStartY = 0;
+        window.addEventListener('touchstart', e => touchStartY = e.touches[0].clientY);
+        window.addEventListener('touchmove', e => {
+            const touchY = e.touches[0].clientY;
+            const diff = touchStartY - touchY;
+            targetZ += diff * 5;
+            touchStartY = touchY;
+            targetZ = Math.max(0, Math.min(targetZ, 10000));
+        });
 
-                    card.style.setProperty("--x", `${x}px`);
-                    card.style.setProperty("--y", `${y}px`);
-                });
+        // --- לולאת אנימציה (Lerp) ---
+        function animate() {
+            // החלקה של התנועה
+            currentZ += (targetZ - currentZ) * 0.07;
+
+            stages.forEach(stage => {
+                const zPos = parseInt(stage.getAttribute('data-z'));
+                const distance = zPos + currentZ;
+
+                // חישוב שקיפות וטשטוש לפי מרחק מה"מצלמה"
+                // אנחנו רוצים שהאלמנט יהיה בשיאו כשהוא ב-Z=0
+                let opacity = 1 - Math.abs(distance) / 1500;
+                let blur = Math.abs(distance) / 100;
+                
+                // הסתרה מוחלטת של רחוקים מאוד לביצועים
+                if (opacity < 0) {
+                    stage.style.display = 'none';
+                } else {
+                    stage.style.display = 'flex';
+                    stage.style.opacity = opacity;
+                    stage.style.filter = `blur(${blur}px)`;
+                    stage.style.transform = `translate(-50%, -50%) translateZ(${distance}px)`;
+                }
             });
+
+            requestAnimationFrame(animate);
         }
+
+        animate();
+
+        // --- אפקט הזרקור (Spotlight) ---
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.spotlight-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+            });
+        });
     </script>
 </body>
 </html>
