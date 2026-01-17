@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>צלילה לחופש | טימון, פומבה וטלי</title>
+    <title>PUMBA | Perfect Focus Z-Scroll</title>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;800&family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -23,11 +23,11 @@
             font-family: 'Rubik', sans-serif;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* מבטל גלילה רגילה */
-            perspective: 1200px; /* עומק המצלמה */
+            overflow: hidden;
+            perspective: 1000px;
         }
 
-        /* --- רקע רשת קבוע --- */
+        /* --- רקע רשת --- */
         .grid-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -39,7 +39,6 @@
             pointer-events: none;
         }
 
-        /* --- העולם התלת מימדי --- */
         #world {
             position: absolute;
             width: 100%; height: 100%;
@@ -47,35 +46,28 @@
             will-change: transform;
         }
 
-        /* --- שכבת תוכן (Stage) --- */
         .stage {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             backface-visibility: hidden;
             padding: 20px;
+            transition: opacity 0.5s ease; /* מעבר חלק בשינוי שקיפות */
         }
 
-        /* --- עיצוב טקסטים --- */
         h1 { font-family: 'Heebo', sans-serif; font-weight: 900; line-height: 1; margin-bottom: 20px; }
         .gradient-text {
             background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .gradient-text-purple {
-            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
 
-        /* --- כפתורים וכרטיסים --- */
         .glow-btn {
             padding: 20px 50px;
             background: var(--primary);
@@ -83,34 +75,19 @@
             font-weight: 800;
             border-radius: 50px;
             text-decoration: none;
+            display: inline-block;
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-            transition: 0.3s;
+            cursor: pointer;
         }
 
-        .cards-container { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
-        
         .spotlight-card {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 30px;
-            width: 350px;
-            position: relative;
-            overflow: hidden;
+            width: 320px;
             text-align: right;
         }
-
-        /* אפקט זרקור בתוך Z */
-        .spotlight-card::before {
-            content: '';
-            position: absolute;
-            top: var(--y, 50%); left: var(--x, 50%);
-            transform: translate(-50%, -50%);
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-            opacity: 0; pointer-events: none;
-        }
-        .spotlight-card:hover::before { opacity: 1; }
 
         .tali-wrapper {
             background: linear-gradient(145deg, #111, #1a1a1a);
@@ -120,10 +97,10 @@
             display: flex;
             align-items: center;
             gap: 30px;
-            max-width: 900px;
+            max-width: 850px;
         }
 
-        .tali-wrapper img { width: 300px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .tali-wrapper img { width: 280px; border-radius: 20px; }
 
         .wa-card {
             background: #222;
@@ -135,29 +112,22 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 15px;
             width: 100%;
             max-width: 400px;
+            margin-bottom: 10px;
         }
 
-        /* --- HUD (ממשק עזר) --- */
+        /* --- HUD --- */
         .hud {
             position: fixed;
             bottom: 30px; left: 50%;
             transform: translateX(-50%);
             z-index: 100;
             text-align: center;
+            pointer-events: none;
         }
-        .scroll-hint { font-size: 0.9rem; color: #666; margin-bottom: 10px; animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .scroll-hint { font-size: 0.8rem; color: #555; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* --- MOBILE --- */
-        @media (max-width: 768px) {
-            .tali-wrapper { flex-direction: column-reverse; text-align: center; }
-            .tali-wrapper img { width: 100%; }
-            h1 { font-size: 2.5rem; }
-            .spotlight-card { width: 100%; }
-        }
     </style>
 </head>
 <body>
@@ -166,108 +136,137 @@
 
     <div id="world">
         
-        <!-- שכבה 1: HERO -->
-        <div class="stage" data-z="0">
+        <!-- STAGE 0 -->
+        <div class="stage" data-index="0">
             <h1 style="font-size: clamp(3rem, 10vw, 6rem);">לשבור את <span class="gradient-text">הכלוב.</span></h1>
-            <p style="font-size: 1.5rem; color: #ccc; margin-bottom: 40px;">פומבה. טלי. נגמרו הימים שאנחנו עובדים בשביל אחרים.</p>
-            <div class="glow-btn">גללו כדי להתחיל בצלילה</div>
+            <p style="font-size: 1.5rem; color: #ccc; margin-bottom: 40px;">פומבה וטלי. המסע לחופש מתחיל עכשיו.</p>
+            <div class="glow-btn" onclick="goToStage(1)">התחל בצלילה</div>
         </div>
 
-        <!-- שכבה 2: הבחירה -->
-        <div class="stage" data-z="-3000">
-            <h1 class="gradient-text">שתי דלתות. בחירה אחת.</h1>
-            <div class="cards-container">
+        <!-- STAGE 1 -->
+        <div class="stage" data-index="1">
+            <h1 class="gradient-text">הבחירה שלך.</h1>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 30px;">
                 <div class="spotlight-card">
-                    <h3 style="font-size: 2rem; margin-bottom: 15px;">🚫 הכלוב</h3>
-                    <p>להיות שכיר זה למכור את החלומות שלך בהנחה. בוס על הראש ותקרת זכוכית.</p>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">🚫 שכיר</h3>
+                    <p>עובד בשביל חלומות של אחרים. תקרה נמוכה. בוס על הראש.</p>
                 </div>
                 <div class="spotlight-card" style="border-color: var(--primary);">
-                    <h3 style="font-size: 2rem; margin-bottom: 15px; color: var(--primary);">👑 המלך</h3>
-                    <p>לבנות נכס שעובד בשבילך. אנחנו קובעים את המחיר ואנחנו לוקחים את כל הקופה.</p>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 10px; color: var(--primary);">👑 עצמאי</h3>
+                    <p>בונה נכס שעובד בשבילך. שליטה מלאה בחיים ובזמן.</p>
                 </div>
             </div>
         </div>
 
-        <!-- שכבה 3: טלי -->
-        <div class="stage" data-z="-6000">
+        <!-- STAGE 2 -->
+        <div class="stage" data-index="2">
             <div class="tali-wrapper">
                 <div style="text-align: right;">
-                    <h2 style="font-size: 2.5rem;">טלי, תקשיבי טוב.</h2>
-                    <h3 class="gradient-text-purple">"אני לא טכנולוגית..."</h3>
-                    <p style="color: #aaa; margin-top: 15px;">פומבה חשב ש"שרת" זה סוג של שורש למאכל כשהתחלנו. הכל אפשר ללמוד.</p>
+                    <h2 style="font-size: 2.2rem;">טלי, הכל אפשרי.</h2>
+                    <p style="color: #aaa; margin-top: 15px;">פומבה חשב ש"שרת" זה אוכל כשהתחלנו. אם הוא הצליח - כל אחד יכול. הטכניקה היא רק כלי, הרצון הוא המנוע.</p>
                 </div>
                 <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" alt="Tali">
             </div>
         </div>
 
-        <!-- שכבה 4: קריאה לפעולה -->
-        <div class="stage" data-z="-9000">
-            <h1 style="font-size: 4rem;">אז מי קופץ למים?</h1>
-            <p style="margin-bottom: 40px; color: #888;">החלטה אחת מפרידה ביניכם לבין החופש.</p>
+        <!-- STAGE 3 -->
+        <div class="stage" data-index="3">
+            <h1 style="font-size: 3.5rem;">מי יוצא לחופשי?</h1>
+            <p style="margin-bottom: 40px; color: #888;">החלטה אחת מפרידה ביניכם לבין העסק שלכם.</p>
             
-            <a href="https://wa.me/972528226689?text=טימון! טלי כאן. אני בפנים." class="wa-card">
-                <span style="font-size: 2rem;">🎓</span>
-                <div style="text-align: right;"><b>טלי: אני בפנים!</b><br><small>מוכנה ללמוד ולהצליח</small></div>
+            <a href="https://wa.me/972528226689?text=אני בפנים!" class="wa-card">
+                <span style="font-size: 1.5rem;">🐗</span>
+                <div style="text-align: right;"><b>פומבה: נמאס לי להיות שכיר!</b></div>
             </a>
-
-            <a href="https://wa.me/972528226689?text=טימון! פומבה כאן. בוא נבנה אימפריה." class="wa-card" style="border-color: var(--primary);">
-                <span style="font-size: 2rem;">🐗</span>
-                <div style="text-align: right;"><b>פומבה: נמאס לי להיות שכיר!</b><br><small>בוא נבנה אימפריה</small></div>
+            <a href="https://wa.me/972528226689?text=אני רוצה ללמוד!" class="wa-card" style="border-color: var(--accent);">
+                <span style="font-size: 1.5rem;">🎓</span>
+                <div style="text-align: right;"><b>טלי: אני מוכנה ללמוד!</b></div>
             </a>
         </div>
 
     </div>
 
     <div class="hud">
-        <div class="scroll-hint">↡ גללו למטה כדי לצלול לעומק ↡</div>
+        <div class="scroll-hint">↡ השתמש בגלגלת למעבר בין תחנות ↡</div>
     </div>
 
     <script>
-        const world = document.getElementById('world');
         const stages = document.querySelectorAll('.stage');
+        const Z_STEP = 3000; // המרחק בין השקופיות
         
+        let currentStageIndex = 0;
         let targetZ = 0;
         let currentZ = 0;
-        const speedMultiplier = 3; 
+        let isScrolling = false;
 
-        // --- ניהול גלילה ---
-        window.addEventListener('wheel', (e) => {
-            targetZ += e.deltaY * speedMultiplier;
-            // גבולות
-            targetZ = Math.max(0, Math.min(targetZ, 10000));
+        // הגדרת מיקום התחלתי לכל שקופית
+        stages.forEach((stage, i) => {
+            stage.style.transform = `translate(-50%, -50%) translateZ(${i * -Z_STEP}px)`;
         });
 
-        // תמיכה בטלפון (Touch)
+        // פונקציית ניווט לשלב ספציפי
+        function goToStage(index) {
+            if (index < 0 || index >= stages.length) return;
+            currentStageIndex = index;
+            targetZ = currentStageIndex * Z_STEP;
+        }
+
+        // זיהוי גלילה חכם (Throttle)
+        window.addEventListener('wheel', (e) => {
+            if (isScrolling) return;
+            
+            if (e.deltaY > 50) { // גלגל מטה
+                if (currentStageIndex < stages.length - 1) {
+                    currentStageIndex++;
+                    lockScroll();
+                }
+            } else if (e.deltaY < -50) { // גלגל מעלה
+                if (currentStageIndex > 0) {
+                    currentStageIndex--;
+                    lockScroll();
+                }
+            }
+        });
+
+        // תמיכה בטלפון (Swipe)
         let touchStartY = 0;
         window.addEventListener('touchstart', e => touchStartY = e.touches[0].clientY);
-        window.addEventListener('touchmove', e => {
-            const touchY = e.touches[0].clientY;
-            const diff = touchStartY - touchY;
-            targetZ += diff * 5;
-            touchStartY = touchY;
-            targetZ = Math.max(0, Math.min(targetZ, 10000));
+        window.addEventListener('touchend', e => {
+            if (isScrolling) return;
+            let touchEndY = e.changedTouches[0].clientY;
+            if (touchStartY - touchEndY > 50) { // Swipe Up -> Go Forward
+                if (currentStageIndex < stages.length - 1) { currentStageIndex++; lockScroll(); }
+            } else if (touchEndY - touchStartY > 50) { // Swipe Down -> Go Back
+                if (currentStageIndex > 0) { currentStageIndex--; lockScroll(); }
+            }
         });
 
-        // --- לולאת אנימציה (Lerp) ---
+        function lockScroll() {
+            isScrolling = true;
+            targetZ = currentStageIndex * Z_STEP;
+            // שחרור הגלילה אחרי שהאנימציה מסתיימת בערך
+            setTimeout(() => { isScrolling = false; }, 800);
+        }
+
+        // לולאת האנימציה (The Engine)
         function animate() {
-            // החלקה של התנועה
-            currentZ += (targetZ - currentZ) * 0.07;
+            // החלקה יוקרתית (Lerp)
+            currentZ += (targetZ - currentZ) * 0.08;
 
-            stages.forEach(stage => {
-                const zPos = parseInt(stage.getAttribute('data-z'));
-                const distance = zPos + currentZ;
+            stages.forEach((stage, i) => {
+                const basePos = i * -Z_STEP;
+                const distance = basePos + currentZ;
 
-                // חישוב שקיפות וטשטוש לפי מרחק מה"מצלמה"
-                // אנחנו רוצים שהאלמנט יהיה בשיאו כשהוא ב-Z=0
-                let opacity = 1 - Math.abs(distance) / 1500;
+                // חישוב שקיפות וטשטוש
+                // הנקודה המתוקה היא distance = 0
+                let opacity = 1 - Math.abs(distance) / (Z_STEP / 1.5);
                 let blur = Math.abs(distance) / 100;
-                
-                // הסתרה מוחלטת של רחוקים מאוד לביצועים
-                if (opacity < 0) {
-                    stage.style.display = 'none';
+
+                if (opacity < 0.01) {
+                    stage.style.visibility = 'hidden';
                 } else {
-                    stage.style.display = 'flex';
-                    stage.style.opacity = opacity;
+                    stage.style.visibility = 'visible';
+                    stage.style.opacity = Math.min(1, opacity);
                     stage.style.filter = `blur(${blur}px)`;
                     stage.style.transform = `translate(-50%, -50%) translateZ(${distance}px)`;
                 }
@@ -277,18 +276,6 @@
         }
 
         animate();
-
-        // --- אפקט הזרקור (Spotlight) ---
-        document.addEventListener('mousemove', (e) => {
-            const cards = document.querySelectorAll('.spotlight-card');
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--x', `${x}px`);
-                card.style.setProperty('--y', `${y}px`);
-            });
-        });
     </script>
 </body>
 </html>
