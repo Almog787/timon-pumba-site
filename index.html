@@ -2,268 +2,258 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>לשבור את הכלוב | פרויקט החופש</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PUMBA | המסע לחופש</title>
     
-    <!-- פונטים יוקרתיים -->
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Heebo:wght@300;900&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     
-    <!-- ספריות אנימציה וגלילה -->
-    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <style>
         :root {
-            --amber: #ffb900;
+            --gold: #ffb900;
             --purple: #9b51e0;
-            --red: #ff4b4b;
-            --dark: #0f0f0f;
-            --white: #ffffff;
-            --gray: #f4f4f4;
+            --bg: #050505;
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
         body {
-            font-family: 'Heebo', sans-serif;
-            background-color: var(--dark);
-            color: var(--white);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* --- הגדרות כלליות למקטעים --- */
-        section {
-            position: relative;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 100px 5%;
-            overflow: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* --- Hero Section --- */
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_59pm.png?w=1024') center/cover no-repeat fixed;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 900;
-            line-height: 1;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .hero p {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            font-weight: 400;
-            max-width: 800px;
-            margin: 0 auto 40px;
-        }
-
-        /* --- Buttons --- */
-        .btn {
-            display: inline-block;
-            padding: 20px 50px;
-            border-radius: 100px;
-            font-weight: 800;
-            font-size: 1.2rem;
-            text-decoration: none;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-amber { background-color: var(--amber); color: #000; }
-        .btn-black { background-color: #000; color: #fff; }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-
-        /* --- Problem Section --- */
-        .problem-section {
-            background-color: #000;
-            text-align: center;
-        }
-
-        .problem-title {
-            color: var(--red);
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            margin-bottom: 30px;
-        }
-
-        .columns {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
-        }
-
-        .col-card {
-            padding: 50px 30px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.5s;
-        }
-
-        .col-card.featured {
-            border: 4px solid var(--amber);
-        }
-
-        /* --- Tali Section --- */
-        .tali-section {
-            background-color: var(--white);
-            color: #000;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            padding: 0;
-        }
-
-        .tali-content {
-            padding: 100px 10%;
-        }
-
-        .tali-image {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
             height: 100vh;
-            background: url('https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585') center/cover no-repeat;
+            width: 100vw;
+            overflow: hidden;
+            perspective: 1200px;
         }
 
-        .purple-text { color: var(--purple); font-weight: 800; }
-
-        /* --- Final CTA --- */
-        .final-section {
-            background-color: #e0f7fa;
-            color: #000;
-            text-align: center;
+        /* --- תפאורה וממשק --- */
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05; pointer-events: none; z-index: 1000;
         }
 
-        /* --- Reveal Animations --- */
-        .reveal { opacity: 0; transform: translateY(50px); }
-
-        @media (max-width: 768px) {
-            .tali-section { grid-template-columns: 1fr; }
-            .tali-image { height: 400px; order: -1; }
-            .hero h1 { font-size: 3.5rem; }
+        .hud {
+            position: fixed; padding: 30px; z-index: 100;
+            font-family: 'Syncopate', sans-serif; font-size: 10px;
+            text-transform: uppercase; color: #444; letter-spacing: 2px;
         }
+
+        /* --- עולם ה-Z --- */
+        #world {
+            position: absolute; width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .stage {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%; max-width: 1000px;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; backface-visibility: hidden;
+            pointer-events: none; opacity: 0;
+        }
+
+        .stage.active { pointer-events: auto; }
+
+        /* --- טיפוגרפיה (Langarica Style) --- */
+        .mask { overflow: hidden; display: block; line-height: 1; }
+        .mask span { display: inline-block; transform: translateY(110%); transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+        .stage.active .mask span { transform: translateY(0); }
+
+        h1 { font-family: 'Syncopate', sans-serif; font-size: clamp(2.5rem, 8vw, 7rem); margin-bottom: 20px; }
+        .gold-text { color: var(--gold); }
+
+        /* --- כרטיסים ואלמנטים --- */
+        .glass-box {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 40px; border-radius: 30px;
+            margin-top: 30px; opacity: 0; transform: scale(0.9);
+            transition: 1s ease 0.3s;
+        }
+        .stage.active .glass-box { opacity: 1; transform: scale(1); }
+
+        .choice-flex { display: flex; gap: 20px; margin-top: 30px; flex-wrap: wrap; justify-content: center; }
+        .choice-card {
+            background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px;
+            width: 280px; border-top: 3px solid #333; text-align: right;
+        }
+        .choice-card.gold-border { border-top-color: var(--gold); }
+
+        .tali-img {
+            width: 280px; border-radius: 20px; margin-bottom: 30px;
+            box-shadow: 0 0 40px rgba(155, 81, 224, 0.2);
+            border: 1px solid var(--purple);
+        }
+
+        /* --- כפתורים --- */
+        .cta-btn {
+            background: var(--gold); color: black;
+            padding: 20px 50px; border-radius: 100px;
+            text-decoration: none; font-weight: 900; font-size: 1.2rem;
+            display: inline-block; transition: 0.3s;
+            box-shadow: 0 0 30px rgba(255, 185, 0, 0.3);
+        }
+        .cta-btn:hover { transform: scale(1.05); background: white; }
+
+        /* --- HUD Progress --- */
+        .progress-hud {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 10px; z-index: 100;
+        }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #333; transition: 0.3s; }
+        .dot.active { background: var(--gold); transform: scale(1.5); }
+
     </style>
 </head>
 <body>
 
-    <main id="main-content">
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="container">
-                <h1 class="reveal">לשבור את הכלוב.</h1>
-                <p class="reveal">פומבה. טלי. תקשיבו טוב: נגמרו הימים שאנחנו עובדים בשביל אחרים.</p>
-                <div class="reveal">
-                    <a href="https://wa.me/972528226689?text=טימון, אני מקשיב. איך שוברים את הכלוב?" class="btn btn-amber">טימון, אנחנו איתך! איך עושים את זה? 👇</a>
+    <div class="noise"></div>
+    <div class="hud" style="top:0; right:0;">PUMBA.SYSTEMS // v4.0</div>
+    <div class="hud" style="bottom:0; left:0;">SCROLL TO DIVE</div>
+
+    <div id="world">
+        
+        <!-- שלב 0: פתיחה -->
+        <div class="stage" data-z="0">
+            <h1 class="mask"><span>לשבור את</span></h1>
+            <h1 class="mask"><span class="gold-text">הכלוב.</span></h1>
+            <div class="glass-box">
+                <p style="font-size: 1.4rem;">נגמרו הימים שאנחנו עובדים בשביל אריות אחרים.<br>הגיע הזמן לבנות אימפריה משלנו.</p>
+            </div>
+        </div>
+
+        <!-- שלב 1: הבעיה -->
+        <div class="stage" data-z="-4000">
+            <h1 class="mask"><span>המעגל</span></h1>
+            <h1 class="mask"><span>האכזרי.</span></h1>
+            <div class="choice-flex">
+                <div class="choice-card">
+                    <h3 style="margin-bottom:10px;">🚫 שכיר</h3>
+                    <p>מוכר זמן בכסף. בוס על הראש. תקרה נמוכה.</p>
+                </div>
+                <div class="choice-card gold-border">
+                    <h3 style="margin-bottom:10px; color: var(--gold);">👑 בעל עסק</h3>
+                    <p>בונה נכס דיגיטלי. קובע מחיר. לוקח את כל הקופה.</p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Problem Section -->
-        <section class="problem-section">
-            <div class="container">
-                <h2 class="problem-title reveal">אנחנו תקועים במעגל השכירים</h2>
-                <p class="reveal" style="font-size: 1.4rem;">אתם יודעים איך זה עובד בג'ונגל הרגיל: אתם צדים בשביל הבוס, הוא מקבל את הסטייק, ואתם מקבלים את העצמות.</p>
-                
-                <div class="columns">
-                    <div class="col-card reveal">
-                        <h3>🚫 להיות שכיר</h3>
-                        <p>למכור את הזמן שלך בשביל כסף. אם אתה לא עובד, אתה לא אוכל. יש תקרה, יש בוס, ויש עצבים.</p>
-                    </div>
-                    <div class="col-card featured reveal">
-                        <h3 style="color: var(--amber);">👑 להיות בעל עסק</h3>
-                        <p>לבנות נכס. האתרים שנבנה יעבדו בשבילנו. אנחנו קובעים את המחיר ואנחנו לוקחים את כל הקופה.</p>
-                    </div>
-                </div>
-                <p class="reveal" style="margin-top: 50px; font-style: italic; font-size: 1.5rem;">הגיע הזמן לפטר את הבוס. (גם אם הבוס הוא אריה).</p>
+        <!-- שלב 2: טלי -->
+        <div class="stage" data-z="-8000">
+            <img src="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_58pm.png?w=585" class="tali-img" alt="Tali">
+            <h1 class="mask"><span style="color: var(--purple);">טלי, הכל</span></h1>
+            <h1 class="mask"><span>אפשרי.</span></h1>
+            <div class="glass-box">
+                <p>אף אחד לא נולד יודע SEO. פומבה חשב ששרת זה אוכל.<br>הכל זה מיומנות, ומיומנות לומדים.</p>
             </div>
-        </section>
+        </div>
 
-        <!-- Tali Section -->
-        <section class="tali-section">
-            <div class="tali-content">
-                <h2 class="reveal" style="font-size: 3rem; line-height: 1.1;">טלי, זה מוקדש לך: <br><span class="purple-text">הכל אפשר ללמוד. הכל.</span></h2>
-                <br>
-                <p class="reveal" style="font-size: 1.2rem;">אני יודע מה את חושבת: "אבל אני לא יודעת SEO, אני לא יודעת שיווק". אז מה? אף אחד לא נולד כשהוא יודע.</p>
-                <br>
-                <p class="reveal">גם פומבה לא ידע מה זה "שרת" כשהוא נולד. הכל זה מיומנות, ומיומנות לומדים. יש לך שכל ישר ורצון להצליח - וזה מה שחשוב.</p>
+        <!-- שלב 3: חופש -->
+        <div class="stage" data-z="-12000">
+            <h1 class="mask"><span>מי יוצא</span></h1>
+            <h1 class="mask"><span class="gold-text">לחופשי?</span></h1>
+            <p style="margin-bottom: 40px; color: #888;">החלטה אחת מפרידה ביניכם לבין החופש הכלכלי.</p>
+            <div style="display: flex; flex-direction: column; gap: 15px; width: 100%; align-items: center;">
+                <a href="https://wa.me/972528226689?text=אני מוכנה ללמוד!" class="cta-btn" style="background: white; color: black; border: 1px solid var(--purple);">🎓 טלי: אני מוכנה ללמוד!</a>
+                <a href="https://wa.me/972528226689?text=נמאס לי להיות שכיר!" class="cta-btn">🐗 פומבה: אני בפנים!</a>
             </div>
-            <div class="tali-image reveal"></div>
-        </section>
+        </div>
 
-        <!-- Final CTA -->
-        <section class="final-section">
-            <div class="container">
-                <h2 class="reveal" style="font-size: 3rem;">שלושה אנשים שיוצאים לחופשי</h2>
-                <p class="reveal" style="font-size: 1.3rem;">אנחנו מקימים את העסק הזה כדי שתהיה לנו שליטה על החיים שלנו.</p>
-                
-                <div class="columns" style="max-width: 800px; margin-left: auto; margin-right: auto;">
-                    <div class="reveal">
-                        <a href="https://wa.me/972528226689?text=טימון, זו טלי. אני מוכנה ללמוד!" class="btn btn-black" style="width: 100%;">טלי: אני מוכנה ללמוד! 🎓</a>
-                    </div>
-                    <div class="reveal">
-                        <a href="https://wa.me/972528226689?text=טימון, נמאס לי להיות שכיר! בוא נבנה עסק!" class="btn btn-amber" style="width: 100%;">פומבה: נמאס לי להיות שכיר! 🐗</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+    </div>
+
+    <div class="progress-hud" id="dots"></div>
 
     <script>
-        // 1. אתחול גלילה חלקה (Lenis)
-        const lenis = new Lenis();
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
+        const stages = document.querySelectorAll('.stage');
+        const dotsContainer = document.getElementById('dots');
+        const Z_STEP = 4000;
+        
+        let currentStage = 0;
+        let virtualZ = 0;
+        let currentZ = 0;
+        let isScrolling = false;
 
-        // 2. אתחול GSAP ScrollTrigger
-        gsap.registerPlugin(ScrollTrigger);
+        // יצירת נקודות ניווט
+        stages.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dotsContainer.appendChild(dot);
+        });
 
-        // 3. אנימציית חשיפה לכל האלמנטים עם הקלאס 'reveal'
-        document.querySelectorAll('.reveal').forEach((el) => {
-            gsap.to(el, {
-                scrollTrigger: {
-                    trigger: el,
-                    start: "top 85%", // מתחיל כשהאלמנט נכנס ל-85% מגובה המסך
-                    toggleActions: "play none none none"
-                },
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: "power4.out"
+        const dots = document.querySelectorAll('.dot');
+
+        function update() {
+            currentZ += (virtualZ - currentZ) * 0.08;
+
+            stages.forEach((stage, i) => {
+                const baseZ = parseInt(stage.getAttribute('data-z'));
+                const distance = baseZ + currentZ;
+
+                // חישוב שקיפות וטשטוש (Perfect Focus)
+                const absDist = Math.abs(distance);
+                let opacity = 1 - absDist / 2000;
+                let blur = absDist / 50;
+
+                if (opacity < 0) {
+                    stage.style.visibility = 'hidden';
+                } else {
+                    stage.style.visibility = 'visible';
+                    stage.style.opacity = opacity;
+                    stage.style.filter = `blur(${blur}px)`;
+                    stage.style.transform = `translate(-50%, -50%) translateZ(${distance}px)`;
+                }
+
+                // הפעלת קלאס Active כשהשלב בפוקוס
+                if (absDist < 500) {
+                    stage.classList.add('active');
+                    currentStage = i;
+                    updateDots(i);
+                } else {
+                    stage.classList.remove('active');
+                }
             });
+
+            requestAnimationFrame(update);
+        }
+
+        function updateDots(index) {
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function handleScroll(delta) {
+            if (isScrolling) return;
+            isScrolling = true;
+
+            if (delta > 0 && currentStage < stages.length - 1) {
+                virtualZ += Z_STEP;
+            } else if (delta < 0 && currentStage > 0) {
+                virtualZ -= Z_STEP;
+            }
+
+            setTimeout(() => { isScrolling = false; }, 800);
+        }
+
+        window.addEventListener('wheel', (e) => handleScroll(e.deltaY));
+
+        // תמיכה בטלפון (Swipe)
+        let touchStart = 0;
+        window.addEventListener('touchstart', e => touchStart = e.touches[0].clientY);
+        window.addEventListener('touchend', e => {
+            const delta = touchStart - e.changedTouches[0].clientY;
+            if (Math.abs(delta) > 50) handleScroll(delta);
         });
 
-        // 4. אפקט Parallax מיוחד לתמונה של טלי
-        gsap.to(".tali-image", {
-            scrollTrigger: {
-                trigger: ".tali-section",
-                scrub: true,
-                start: "top bottom",
-                end: "bottom top"
-            },
-            backgroundPosition: "center 20%",
-            ease: "none"
-        });
+        update();
     </script>
 </body>
 </html>
