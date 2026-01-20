@@ -1,134 +1,48 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-18YM6QFN0C');
-    </script>
-    <meta name="google-site-verification" content="OrJ99zXpus_GMOqnEmZI1sJSos31nitrKKtMX8o49KM" />
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צור קשר | טימון ופומבה פתרונות דיגיטליים</title>
+    <title>צור קשר | טימון ופומבה</title>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --amber: #ffb900;
-            --dark: #0f0f0f;
-            --light-bg: #1a1a1a;
-            --white: #ffffff;
-            --green: #25D366;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
-
-        header {
-            padding: 20px 5%; background: rgba(15, 15, 15, 0.95);
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .logo { font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
-        .highlight { color: var(--amber); }
-        .nav-link { color: var(--white); text-decoration: none; margin-left: 20px; font-weight: bold; transition: 0.3s; }
-
-        /* נתיב תמונה מותאם לתיקייה פנימית */
-        .contact-page {
-            min-height: 90vh;
-            display: flex; align-items: center; justify-content: center;
-            padding: 50px 5%;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('../images/hero.jpg') center/cover;
-        }
-
-        .contact-container {
-            background: var(--light-bg);
-            padding: 40px; border-radius: 20px;
-            max-width: 900px; width: 100%;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .contact-info h1 { font-family: 'Rubik', sans-serif; font-size: 2.5rem; margin-bottom: 20px; }
-        .contact-info p { color: #ccc; margin-bottom: 30px; line-height: 1.6; }
-        
-        .form-group { margin-bottom: 15px; }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%; padding: 15px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px; color: var(--white);
-            font-family: 'Heebo', sans-serif; font-size: 1rem;
-        }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--amber); }
-
-        .submit-btn {
-            background-color: var(--amber); color: var(--dark);
-            padding: 15px; border: none; border-radius: 8px;
-            font-weight: bold; font-size: 1.1rem; cursor: pointer;
-            transition: 0.3s; margin-top: 10px; width: 100%;
-        }
-        .submit-btn:hover { transform: scale(1.02); }
-
-        @media (max-width: 768px) {
-            .contact-container { grid-template-columns: 1fr; padding: 20px; }
-        }
+        :root { --amber: #ffb900; --dark: #0f0f0f; --light-bg: #1a1a1a; --white: #ffffff; }
+        body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); margin: 0; }
+        .contact-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: url('../images/hero.jpg') center/cover; padding: 20px; }
+        .contact-container { background: var(--light-bg); padding: 40px; border-radius: 20px; max-width: 600px; width: 100%; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        input, textarea, select { width: 100%; padding: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 8px; color: white; font-size: 1rem; }
+        .submit-btn { width: 100%; padding: 15px; background: var(--amber); color: var(--dark); border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        .submit-btn:hover { opacity: 0.9; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #ccc; text-decoration: none; }
     </style>
 </head>
 <body>
 
-<header>
-    <a href="../" class="logo">טימון<span class="highlight">ופומבה</span></a>
-    <nav>
-        <a href="../" class="nav-link">חזרה לדף הבית</a>
-    </nav>
-</header>
-
 <section class="contact-page">
     <div class="contact-container">
-        
-        <div class="contact-info">
-            <h1>בואו נדבר תכל'ס</h1>
-            <p>השאירו פרטים ונחזור אליכם בהקדם עם פתרון.</p>
-            <div style="margin-top: 30px;">
-                <p>📧 נחזור אליכם למייל תוך יום עסקים.</p>
-            </div>
-        </div>
+        <h1 style="text-align: center; font-family: 'Rubik';">בואו נדבר תכל'ס</h1>
+        <p style="text-align: center; color: #aaa; margin-bottom: 30px;">מלאו פרטים ונחזור אליכם בהקדם.</p>
 
-        <!-- טופס -->
-        <form class="contact-form" action="https://formspree.io/f/xkqjqbvz" method="POST">
-            <div class="form-group">
-                <label>שם מלא</label>
-                <input type="text" name="name" required placeholder="השם שלך">
-            </div>
-
-            <div class="form-group">
-                <label>אימייל לחזרה</label>
-                <input type="email" name="email" required placeholder="your@email.com">
-            </div>
-            
-            <div class="form-group">
-                <label>נושא הפנייה</label>
-                <select name="service">
-                    <option value="אוטומציה לאקסל">אוטומציה לאקסל</option>
-                    <option value="בניית אתר">בניית אתר/חנות</option>
-                    <option value="תקלה">תקלה טכנית</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>הודעה</label>
-                <textarea name="message" rows="4" placeholder="תארו בקצרה מה אתם צריכים..."></textarea>
-            </div>
-
+        <!-- Formspree - להחליף את הקוד כאן -->
+        <form action="https://formspree.io/f/xkqjqbvz" method="POST">
+            <input type="text" name="name" required placeholder="שם מלא">
+            <input type="email" name="email" required placeholder="אימייל">
+            <select name="service">
+                <option value="אוטומציה">אוטומציה לאקסל</option>
+                <option value="אתר">בניית אתר</option>
+                <option value="תקלה">תקלה טכנית</option>
+            </select>
+            <textarea name="message" rows="4" placeholder="הודעה..."></textarea>
             <button type="submit" class="submit-btn">שלח פנייה 🚀</button>
         </form>
+        
+        <a href="../" class="back-link">חזרה לדף הבית</a>
     </div>
 </section>
 
