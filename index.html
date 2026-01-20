@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <!-- 1. Google Analytics -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -10,7 +10,7 @@
       gtag('config', 'G-18YM6QFN0C');
     </script>
     
-    <!-- 2. Google Search Console -->
+    <!-- Google Search Console -->
     <meta name="google-site-verification" content="OrJ99zXpus_GMOqnEmZI1sJSos31nitrKKtMX8o49KM" />
 
     <meta charset="UTF-8">
@@ -18,12 +18,6 @@
     
     <title>טימון ופומבה | אוטומציה לאקסל, בניית אתרים ופתרונות דיגיטליים</title>
     <meta name="description" content="מומחים באוטומציה לאקסל וגוגל שיטס, בניית חנויות דיגיטליות בהתאמה אישית ופתרון תקלות באתרים קיימים.">
-    <meta name="keywords" content="אוטומציה באקסל, גוגל שיטס לעסקים, בניית אתרים, חנות דיגיטלית, תיקון אתרים">
-
-    <meta property="og:title" content="טימון ופומבה | פתרונות אוטומציה ודיגיטל">
-    <meta property="og:description" content="נמאס לכם לעבוד ידנית באקסל? צריכים חנות אינטרנטית? אנחנו הכתובת.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_59pm.png?w=1024">
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
 
@@ -42,60 +36,32 @@
             --white: #ffffff;
             --green: #25D366;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
 
-        body {
-            font-family: 'Heebo', sans-serif;
-            background-color: var(--dark);
-            color: var(--white);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* --- Components --- */
         section { padding: 80px 5%; position: relative; }
         .container { max-width: 1200px; margin: 0 auto; }
         h1, h2, h3 { font-family: 'Rubik', sans-serif; }
         .highlight { color: var(--amber); }
 
-        .btn {
-            display: inline-block;
-            padding: 15px 35px;
-            border-radius: 8px;
-            font-weight: 800;
-            text-decoration: none;
-            transition: 0.3s;
-            cursor: pointer;
-            border: none;
-            font-size: 1.1rem;
-        }
-
+        .btn { display: inline-block; padding: 15px 35px; border-radius: 8px; font-weight: 800; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1.1rem; }
         .btn-amber { background-color: var(--amber); color: var(--dark); }
         .btn-green { background-color: var(--green); color: var(--white); }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .btn:hover { transform: translateY(-3px); }
 
-        /* --- Header --- */
         header {
-            position: fixed;
-            top: 0; width: 100%;
-            padding: 20px 5%;
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; top: 0; width: 100%; padding: 20px 5%;
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(10px);
+            z-index: 100; display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .logo { font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
-        
         .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-link { color: white; text-decoration: none; font-weight: bold; transition: 0.3s; }
         .nav-link:hover { color: var(--amber); }
 
-        /* --- Hero --- */
         .hero {
-            min-height: 100vh;
-            display: flex; align-items: center; justify-content: center; text-align: center;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center;
             background: linear-gradient(to bottom, rgba(0,0,0,0.7), var(--dark)), 
                         url('./images/hero.jpg') center/cover no-repeat fixed;
             padding-top: 100px;
@@ -103,43 +69,17 @@
         .hero h1 { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 20px; line-height: 1.2; }
         .hero p { font-size: 1.3rem; max-width: 700px; margin: 0 auto 40px; color: #ddd; }
 
-        /* --- Services Grid --- */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .service-card {
-            background: var(--light-bg);
-            padding: 40px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-        }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; }
+        .service-card { background: var(--light-bg); padding: 40px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         .service-card:hover { border-color: var(--amber); transform: translateY(-5px); }
-        
-        .service-card.main-service {
-            border: 2px solid var(--green);
-            background: linear-gradient(145deg, #1a1a1a, #0f2b1d);
-        }
-
+        .service-card.main-service { border: 2px solid var(--green); background: linear-gradient(145deg, #1a1a1a, #0f2b1d); }
         .service-icon { font-size: 2.5rem; margin-bottom: 20px; }
-        .service-card h3 { font-size: 1.5rem; margin-bottom: 15px; }
         .service-card ul { list-style: none; margin-bottom: 20px; color: #ccc; }
         .service-card li { margin-bottom: 8px; display: flex; align-items: center; }
         .service-card li::before { content: "•"; color: var(--amber); margin-left: 10px; font-size: 1.5rem; }
 
-        /* --- About Section --- */
-        .split-section {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;
-        }
-        .about-img {
-            height: 500px;
-            background: url('./images/1tali.jpg') center/cover no-repeat;
-            border-radius: 20px;
-        }
+        .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .about-img { height: 500px; background: url('./images/1tali.jpg') center/cover no-repeat; border-radius: 20px; }
 
         .reveal { opacity: 0; transform: translateY(40px); }
 
@@ -153,83 +93,77 @@
 <body>
 
 <header>
-    <a href="#" class="logo">טימון<span class="highlight">ופומבה</span></a>
+    <a href="./" class="logo">טימון<span class="highlight">ופומבה</span></a>
     
     <div class="nav-links">
-        <a href="excel-automation.html" class="nav-link">אוטומציה לאקסל</a>
+        <!-- קישורים נקיים לתיקיות -->
+        <a href="./excel-automation/" class="nav-link">אוטומציה לאקסל</a>
         <a href="#services" class="nav-link">שירותים נוספים</a>
-        <a href="contact.html" class="nav-link">צור קשר</a>
+        <a href="./contact/" class="nav-link">צור קשר</a>
     </div>
 
-    <a href="contact.html" class="btn btn-amber" style="padding: 10px 20px; font-size: 0.9rem;">שיחת ייעוץ</a>
+    <a href="./contact/" class="btn btn-amber" style="padding: 10px 20px; font-size: 0.9rem;">שיחת ייעוץ</a>
 </header>
 
 <main>
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1 class="reveal">הפסיקו לעבוד ידנית. <br><span class="highlight">תנו לטכנולוגיה לעבוד בשבילכם.</span></h1>
-            <p class="reveal">מומחים באוטומציה לאקסל וגוגל שיטס, בניית חנויות דיגיטליות ופתרון תקלות מורכבות. אנחנו הופכים כאב ראש טכני לשקט נפשי.</p>
+            <p class="reveal">מומחים באוטומציה לאקסל וגוגל שיטס, בניית חנויות דיגיטליות ופתרון תקלות מורכבות.</p>
             <div class="reveal">
-                <!-- הכפתור הראשי מוביל לדף האוטומציות -->
-                <a href="excel-automation.html" class="btn btn-green">איך עושים אוטומציה באקסל? 📊</a>
+                <!-- הפניה לתיקיית excel-automation -->
+                <a href="./excel-automation/" class="btn btn-green">איך עושים אוטומציה באקסל? 📊</a>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
     <section id="services">
         <div class="container">
             <h2 class="reveal" style="text-align: center; font-size: 2.5rem; margin-bottom: 20px;">ההתמחות שלנו</h2>
-            <p class="reveal" style="text-align: center; color: #aaa; margin-bottom: 40px;">בחר את הפתרון שהעסק שלך צריך כרגע</p>
             
             <div class="services-grid">
-                
                 <!-- שירות 1: אוטומציה -->
                 <div class="service-card main-service reveal">
                     <div class="service-icon">📊</div>
                     <h3 style="color: var(--green);">אוטומציה לאקסל וגוגל שיטס</h3>
                     <p style="margin-bottom: 15px; font-weight: bold;">חוסכים לכם שעות של עבודה שחורה בכל יום.</p>
                     <ul>
-                        <li>בניית דשבורדים ניהוליים מתקדמים</li>
-                        <li>נוסחאות מורכבות וסקריפטים אוטומטיים</li>
-                        <li>חיבור נתונים בין מערכות שונות</li>
+                        <li>בניית דשבורדים ניהוליים</li>
+                        <li>נוסחאות מורכבות וסקריפטים</li>
+                        <li>חיבור נתונים בין מערכות</li>
                     </ul>
-                    <!-- קישור לעמוד המורחב החדש -->
-                    <a href="excel-automation.html" class="btn btn-green" style="width:100%; text-align:center;">למידע נוסף על אקסל</a>
+                    <a href="./excel-automation/" class="btn btn-green" style="width:100%; text-align:center;">למידע נוסף על אקסל</a>
                 </div>
 
-                <!-- שירות 2: בניית אתרים וחנויות -->
+                <!-- שירות 2: בניית אתרים -->
                 <div class="service-card reveal">
                     <div class="service-icon">🛍️</div>
                     <h3>בניית חנויות דיגיטליות</h3>
-                    <p style="margin-bottom: 15px;">חנות שנראית טוב זה נחמד, חנות שמוכרת זה חובה.</p>
+                    <p style="margin-bottom: 15px;">חנות שמוכרת זה חובה.</p>
                     <ul>
-                        <li>בניית חנויות E-commerce בהתאמה אישית</li>
-                        <li>עיצוב חווית משתמש (UX/UI) שממיר</li>
-                        <li>התאמה מלאה למובייל ולגוגל (SEO)</li>
+                        <li>בניית חנויות E-commerce</li>
+                        <li>עיצוב חווית משתמש (UX/UI)</li>
+                        <li>התאמה מלאה למובייל ו-SEO</li>
                     </ul>
-                    <a href="contact.html" class="btn btn-amber" style="width:100%; text-align:center;">בואו נבנה חנות</a>
+                    <a href="./contact/" class="btn btn-amber" style="width:100%; text-align:center;">בואו נבנה חנות</a>
                 </div>
 
-                <!-- שירות 3: פתרון תקלות -->
+                <!-- שירות 3: תקלות -->
                 <div class="service-card reveal">
                     <div class="service-icon">🔧</div>
                     <h3>טיפול באתרים ובעיות דיגיטליות</h3>
-                    <p style="margin-bottom: 15px;">האתר נפל? התוסף עושה בעיות? אנחנו ה"הנדימן" הדיגיטלי שלכם.</p>
+                    <p style="margin-bottom: 15px;">אנחנו ה"הנדימן" הדיגיטלי שלכם.</p>
                     <ul>
-                        <li>תיקון באגים ותקלות קריטיות באתר</li>
-                        <li>שיפור מהירות אתר (Site Speed)</li>
-                        <li>תחזוקה שוטפת ואבטחה</li>
+                        <li>תיקון באגים ותקלות קריטיות</li>
+                        <li>שיפור מהירות אתר</li>
+                        <li>תחזוקה ואבטחה</li>
                     </ul>
-                    <a href="contact.html" class="btn btn-amber" style="width:100%; text-align:center; background: transparent; border: 1px solid var(--amber); color: var(--amber);">יש לי תקלה טכנית</a>
+                    <a href="./contact/" class="btn btn-amber" style="width:100%; text-align:center; background: transparent; border: 1px solid var(--amber); color: var(--amber);">יש לי תקלה טכנית</a>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <!-- Why Us / About -->
     <section style="background: var(--white); color: var(--dark);">
         <div class="container split-section">
             <div class="about-img reveal"></div>
@@ -238,36 +172,12 @@
                 <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px;">
                     בעולם הדיגיטלי של היום, כל דקה שאתם מתעסקים בטבלאות אקסל ידניות או מנסים לתקן באג באתר – היא דקה שאתם לא מרוויחים בה כסף.
                 </p>
-                <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 30px;">
-                    אנחנו בטימון ופומבה מבינים את זה. המטרה שלנו היא אחת: **לפנות לכם את הזמן**. אנחנו לוקחים את ה"כאב ראש" הטכני, בונים לכם מערכות שעובדות על אוטומט, ומשאירים אתכם לעשות את מה שאתם טובים בו – לנהל את העסק.
-                </p>
                 <div style="display: flex; gap: 20px;">
                     <div>
                         <h4 style="font-size: 1.5rem; color: var(--amber);">100%</h4>
                         <p>התאמה לצרכי העסק</p>
                     </div>
-                    <div>
-                        <h4 style="font-size: 1.5rem; color: var(--green);">SEO</h4>
-                        <p>בנייה מותאמת לגוגל</p>
-                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section style="background: var(--light-bg);">
-        <div class="container" style="max-width: 800px; text-align: center;">
-            <h2 class="reveal" style="margin-bottom: 40px;">שאלות נפוצות</h2>
-            
-            <div class="reveal" style="text-align: right; background: var(--dark); padding: 20px; margin-bottom: 15px; border-radius: 8px;">
-                <strong>האם אתם עובדים עם קבצי אקסל קיימים?</strong>
-                <p style="color: #ccc; margin-top: 5px;">בוודאי. אנחנו לוקחים את הקובץ הקיים, משפרים אותו, מוסיפים אוטומציות והופכים אותו לכלי עבודה יעיל.</p>
-            </div>
-
-            <div class="reveal" style="text-align: right; background: var(--dark); padding: 20px; margin-bottom: 15px; border-radius: 8px;">
-                <strong>כמה זמן לוקח לבנות חנות דיגיטלית?</strong>
-                <p style="color: #ccc; margin-top: 5px;">תלוי במורכבות. חנות בסיסית יכולה להיות באוויר תוך שבועיים. חנות מורכבת בהתאמה אישית יכולה לקחת כחודש.</p>
             </div>
         </div>
     </section>
