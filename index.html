@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <!-- 1. Google Analytics (מעקב גולשים) -->
+    <!-- 1. Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-18YM6QFN0C');
     </script>
     
-    <!-- 2. Google Search Console (אימות בעלות לאתר) -->
+    <!-- 2. Google Search Console -->
     <meta name="google-site-verification" content="OrJ99zXpus_GMOqnEmZI1sJSos31nitrKKtMX8o49KM" />
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>לשבור את הכלוב | פרויקט החופש</title>
     
-    <!-- הגדרות שיתוף -->
-    <meta property="og:title" content="לשבור את הכלוב | פרויקט החופש">
-    <meta property="og:description" content="טימון, פומבה וטלי: נגמרו הימים שאנחנו עובדים בשביל אחרים. בואו לבנות נכס.">
+    <!-- SEO Title & Description: קריטי לקידום בגוגל -->
+    <title>טימון ופומבה | אוטומציה לאקסל, בניית אתרים ופתרונות דיגיטליים</title>
+    <meta name="description" content="מומחים באוטומציה לאקסל וגוגל שיטס, בניית חנויות דיגיטליות בהתאמה אישית ופתרון תקלות באתרים קיימים. תנו לנו לנהל את הטכנולוגיה, אתם תנהלו את העסק.">
+    <meta name="keywords" content="אוטומציה באקסל, גוגל שיטס לעסקים, בניית אתרים, חנות דיגיטלית, תיקון אתרים, פיתוח לוורדפרס, דשבורדים לעסקים">
+
+    <!-- הגדרות שיתוף לרשתות חברתיות -->
+    <meta property="og:title" content="טימון ופומבה | פתרונות אוטומציה ודיגיטל">
+    <meta property="og:description" content="נמאס לכם לעבוד ידנית באקסל? צריכים חנות אינטרנטית? אנחנו הכתובת.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_59pm.png?w=1024">
     
     <!-- אייקון אריה -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
 
-    <!-- פונטים -->
+    <!-- פונטים וספריות -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&display=swap" rel="stylesheet">
-
-    <!-- ספריות אנימציה -->
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -40,18 +41,13 @@
     <style>
         :root {
             --amber: #ffb900;
-            --purple: #9b51e0;
-            --red: #ff4b4b;
             --dark: #0f0f0f;
+            --light-bg: #1a1a1a;
             --white: #ffffff;
-            --gray: #f4f4f4;
+            --green: #25D366; /* צבע אקסל/וואטסאפ */
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Heebo', sans-serif;
@@ -61,241 +57,268 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        section {
-            position: relative;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 100px 5%;
-            overflow: hidden;
-        }
+        /* --- Components --- */
+        section { padding: 80px 5%; position: relative; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1, h2, h3 { font-family: 'Rubik', sans-serif; }
+        .highlight { color: var(--amber); }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* --- Hero Section --- */
-        .hero {
-            /* hero.jpg */
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('./images/hero.jpg') center/cover no-repeat fixed;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .hero p {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            font-weight: 400;
-            max-width: 800px;
-            margin: 0 auto 40px;
-        }
-
-        /* --- Buttons --- */
         .btn {
             display: inline-block;
-            padding: 20px 50px;
-            border-radius: 100px;
+            padding: 15px 35px;
+            border-radius: 8px;
             font-weight: 800;
-            font-size: 1.2rem;
             text-decoration: none;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+            transition: 0.3s;
             cursor: pointer;
             border: none;
-            text-align: center;
+            font-size: 1.1rem;
         }
 
-        .btn-amber { background-color: var(--amber); color: #000; }
-        .btn-black { background-color: #000; color: #fff; }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .btn-amber { background-color: var(--amber); color: var(--dark); }
+        .btn-green { background-color: var(--green); color: var(--white); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
-        /* --- Problem Section --- */
-        .problem-section {
-            background-color: #000;
-            text-align: center;
+        /* --- Header --- */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 20px 5%;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+        .logo { font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
 
-        .problem-title {
-            color: var(--red);
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            margin-bottom: 30px;
+        /* --- Hero --- */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), var(--dark)), 
+                        url('./images/hero.jpg') center/cover no-repeat fixed;
+            padding-top: 100px;
         }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 20px; line-height: 1.2; }
+        .hero p { font-size: 1.3rem; max-width: 700px; margin: 0 auto 40px; color: #ddd; }
 
-        .columns {
+        /* --- Services Grid --- */
+        .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
-            margin-top: 60px;
+            margin-top: 50px;
         }
 
-        .col-card {
-            padding: 50px 30px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.5s;
+        .service-card {
+            background: var(--light-bg);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+        .service-card:hover { border-color: var(--amber); transform: translateY(-5px); }
+        
+        /* הדגשה לכרטיס הראשי (אקסל) */
+        .service-card.main-service {
+            border: 2px solid var(--green);
+            background: linear-gradient(145deg, #1a1a1a, #0f2b1d);
         }
 
-        .col-card.featured {
-            border: 4px solid var(--amber);
-            background: rgba(255, 185, 0, 0.05);
-        }
+        .service-icon { font-size: 2.5rem; margin-bottom: 20px; }
+        .service-card h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        .service-card ul { list-style: none; margin-bottom: 20px; color: #ccc; }
+        .service-card li { margin-bottom: 8px; display: flex; align-items: center; }
+        .service-card li::before { content: "•"; color: var(--amber); margin-left: 10px; font-size: 1.5rem; }
 
-        /* --- Tali Section --- */
-        .tali-section {
-            background-color: var(--white);
-            color: #000;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            padding: 0;
-            min-height: 100vh;
+        /* --- About Section (Split) --- */
+        .split-section {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;
         }
-
-        .tali-content {
-            padding: 80px 10%;
-        }
-
-        .tali-image {
-            height: 100%;
-            min-height: 100vh;
-            /* 1tali.jpg */
+        .about-img {
+            height: 500px;
             background: url('./images/1tali.jpg') center/cover no-repeat;
+            border-radius: 20px;
         }
 
-        .purple-text { color: var(--purple); font-weight: 800; }
+        /* --- Sticky WhatsApp --- */
+        .sticky-whatsapp {
+            position: fixed; bottom: 30px; left: 30px;
+            background-color: var(--green);
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 1000;
+            transition: 0.3s; animation: pulse 2s infinite;
+        }
+        .sticky-whatsapp:hover { transform: scale(1.1); }
+        .sticky-whatsapp svg { width: 35px; fill: white; }
 
-        /* --- Final CTA --- */
-        .final-section {
-            background-color: #e0f7fa;
-            color: #000;
-            text-align: center;
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
-        /* --- Reveal Animations --- */
-        .reveal { opacity: 0; transform: translateY(50px); }
+        .reveal { opacity: 0; transform: translateY(40px); }
 
-        @media (max-width: 768px) {
-            .tali-section { grid-template-columns: 1fr; display: flex; flex-direction: column-reverse; }
-            .tali-image { height: 400px; width: 100%; min-height: 400px; }
-            .hero h1 { font-size: 3rem; }
-            .tali-content { padding: 50px 5%; }
+        @media (max-width: 900px) {
+            .split-section { grid-template-columns: 1fr; }
+            .about-img { height: 350px; order: -1; }
         }
     </style>
 </head>
 <body>
 
-<main id="main-content">
-    <!-- Hero Section -->
+<header>
+    <a href="#" class="logo">טימון<span class="highlight">ופומבה</span> פתרונות דיגיטליים</a>
+    <a href="https://wa.me/972528226689" class="btn btn-amber" style="padding: 10px 20px; font-size: 0.9rem;">שיחת ייעוץ</a>
+</header>
+
+<main>
+    <!-- Hero Section: מיקוד בפתרון בעיות -->
     <section class="hero">
         <div class="container">
-            <h1 class="reveal">לשבור את הכלוב.</h1>
-            <p class="reveal">פומבה. טלי. תקשיבו טוב: נגמרו הימים שאנחנו עובדים בשביל אחרים.</p>
+            <h1 class="reveal">הפסיקו לעבוד ידנית. <br><span class="highlight">תנו לטכנולוגיה לעבוד בשבילכם.</span></h1>
+            <p class="reveal">מומחים באוטומציה לאקסל וגוגל שיטס, בניית חנויות דיגיטליות ופתרון תקלות מורכבות. אנחנו הופכים כאב ראש טכני לשקט נפשי.</p>
             <div class="reveal">
-                <a href="https://wa.me/972528226689?text=טימון, אני מקשיב. איך שוברים את הכלוב?" target="_blank" class="btn btn-amber">טימון, אנחנו איתך! איך עושים את זה? 👇</a>
+                <a href="https://wa.me/972528226689?text=היי, אני צריך עזרה עם אוטומציה באקסל/שיטס" class="btn btn-green">אני צריך אוטומציה לאקסל 📊</a>
+                <a href="#services" class="btn btn-amber" style="margin-right: 15px; background: transparent; border: 2px solid var(--amber); color: var(--amber);">שירותים נוספים</a>
             </div>
         </div>
     </section>
 
-    <!-- Problem Section -->
-    <section class="problem-section">
+    <!-- Services Section -->
+    <section id="services">
         <div class="container">
-            <h2 class="problem-title reveal">אנחנו תקועים במעגל השכירים</h2>
-            <p class="reveal" style="font-size: 1.4rem;">אתם יודעים איך זה עובד בג'ונגל הרגיל: אתם צדים בשביל הבוס, הוא מקבל את הסטייק, ואתם מקבלים את העצמות.</p>
+            <h2 class="reveal" style="text-align: center; font-size: 2.5rem; margin-bottom: 20px;">ההתמחות שלנו</h2>
+            <p class="reveal" style="text-align: center; color: #aaa; margin-bottom: 40px;">בחר את הפתרון שהעסק שלך צריך כרגע</p>
             
-            <div class="columns">
-                <div class="col-card reveal">
-                    <h3>🚫 להיות שכיר</h3>
-                    <p>למכור את הזמן שלך בשביל כסף. אם אתה לא עובד, אתה לא אוכל. יש תקרה, יש בוס, ויש עצבים.</p>
+            <div class="services-grid">
+                
+                <!-- שירות 1: אוטומציה (הכי מבוקש) -->
+                <div class="service-card main-service reveal">
+                    <div class="service-icon">📊</div>
+                    <h3 style="color: var(--green);">אוטומציה לאקסל וגוגל שיטס</h3>
+                    <p style="margin-bottom: 15px; font-weight: bold;">חוסכים לכם שעות של עבודה שחורה בכל יום.</p>
+                    <ul>
+                        <li>בניית דשבורדים ניהוליים מתקדמים</li>
+                        <li>נוסחאות מורכבות וסקריפטים אוטומטיים</li>
+                        <li>חיבור נתונים בין מערכות שונות</li>
+                        <li>ניקוי וסידור מסדי נתונים מבולגנים</li>
+                    </ul>
+                    <a href="https://wa.me/972528226689?text=היי, מעניין אותי לשמוע על פתרונות אקסל" class="btn btn-green" style="width:100%; text-align:center;">חסכו לי זמן עבודה</a>
                 </div>
-                <div class="col-card featured reveal">
-                    <h3 style="color: var(--amber);">👑 להיות בעל עסק</h3>
-                    <p>לבנות נכס. האתרים שנבנה יעבדו בשבילנו. אנחנו קובעים את המחיר ואנחנו לוקחים את כל הקופה.</p>
+
+                <!-- שירות 2: בניית אתרים וחנויות -->
+                <div class="service-card reveal">
+                    <div class="service-icon">🛍️</div>
+                    <h3>בניית חנויות דיגיטליות</h3>
+                    <p style="margin-bottom: 15px;">חנות שנראית טוב זה נחמד, חנות שמוכרת זה חובה.</p>
+                    <ul>
+                        <li>בניית חנויות E-commerce בהתאמה אישית</li>
+                        <li>עיצוב חווית משתמש (UX/UI) שממיר</li>
+                        <li>התאמה מלאה למובייל ולגוגל (SEO)</li>
+                        <li>חיבור לסליקה ולמערכות משלוחים</li>
+                    </ul>
+                    <a href="https://wa.me/972528226689?text=היי, אני רוצה לבנות חנות דיגיטלית" class="btn btn-amber" style="width:100%; text-align:center;">בואו נבנה חנות</a>
                 </div>
+
+                <!-- שירות 3: פתרון תקלות ודיגיטל -->
+                <div class="service-card reveal">
+                    <div class="service-icon">🔧</div>
+                    <h3>טיפול באתרים ובעיות דיגיטליות</h3>
+                    <p style="margin-bottom: 15px;">האתר נפל? התוסף עושה בעיות? אנחנו ה"הנדימן" הדיגיטלי שלכם.</p>
+                    <ul>
+                        <li>תיקון באגים ותקלות קריטיות באתר</li>
+                        <li>שיפור מהירות אתר (Site Speed)</li>
+                        <li>תחזוקה שוטפת ואבטחה</li>
+                        <li>פתרונות טכניים יצירתיים לכל בעיה</li>
+                    </ul>
+                    <a href="https://wa.me/972528226689?text=היי, יש לי תקלה באתר שאני צריך עזרה איתה" class="btn btn-amber" style="width:100%; text-align:center; background: transparent; border: 1px solid var(--amber); color: var(--amber);">יש לי תקלה טכנית</a>
+                </div>
+
             </div>
-            <p class="reveal" style="margin-top: 50px; font-style: italic; font-size: 1.5rem;">הגיע הזמן לפטר את הבוס. (גם אם הבוס הוא אריה).</p>
         </div>
     </section>
 
-    <!-- Tali Section -->
-    <section class="tali-section">
-        <div class="tali-content">
-            <h2 class="reveal" style="font-size: 3rem; line-height: 1.1;">טלי, זה מוקדש לך: <br><span class="purple-text">הכל אפשר ללמוד. הכל.</span></h2>
-            <br>
-            <p class="reveal" style="font-size: 1.2rem;">אני יודע מה את חושבת: "אבל אני לא יודעת SEO, אני לא יודעת שיווק". אז מה? אף אחד לא נולד כשהוא יודע.</p>
-            <br>
-            <p class="reveal">גם פומבה לא ידע מה זה "שרת" כשהוא נולד. הכל זה מיומנות, ומיומנות לומדים. יש לך שכל ישר ורצון להצליח - וזה מה שחשוב.</p>
-        </div>
-        <div class="tali-image reveal"></div>
-    </section>
-
-    <!-- Final CTA -->
-    <section class="final-section">
-        <div class="container">
-            <h2 class="reveal" style="font-size: 3rem;">שלושה אנשים שיוצאים לחופשי</h2>
-            <p class="reveal" style="font-size: 1.3rem;">אנחנו מקימים את העסק הזה כדי שתהיה לנו שליטה על החיים שלנו.</p>
-            
-            <div class="columns" style="max-width: 800px; margin-left: auto; margin-right: auto;">
-                <div class="reveal">
-                    <a href="https://wa.me/972528226689?text=טימון, זו טלי. אני מוכנה ללמוד!" target="_blank" class="btn btn-black" style="width: 100%;">טלי: אני מוכנה ללמוד! 🎓</a>
-                </div>
-                <div class="reveal">
-                    <a href="https://wa.me/972528226689?text=טימון, נמאס לי להיות שכיר! בוא נבנה עסק!" target="_blank" class="btn btn-amber" style="width: 100%;">פומבה: נמאס לי להיות שכיר! 🐗</a>
+    <!-- Why Us / About -->
+    <section style="background: var(--white); color: var(--dark);">
+        <div class="container split-section">
+            <div class="about-img reveal"></div>
+            <div class="reveal">
+                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">למה בעלי עסקים בוחרים בנו?</h2>
+                <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px;">
+                    בעולם הדיגיטלי של היום, כל דקה שאתם מתעסקים בטבלאות אקסל ידניות או מנסים לתקן באג באתר – היא דקה שאתם לא מרוויחים בה כסף.
+                </p>
+                <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 30px;">
+                    אנחנו בטימון ופומבה מבינים את זה. המטרה שלנו היא אחת: **לפנות לכם את הזמן**. אנחנו לוקחים את ה"כאב ראש" הטכני, בונים לכם מערכות שעובדות על אוטומט, ומשאירים אתכם לעשות את מה שאתם טובים בו – לנהל את העסק.
+                </p>
+                <div style="display: flex; gap: 20px;">
+                    <div>
+                        <h4 style="font-size: 1.5rem; color: var(--amber);">100%</h4>
+                        <p>התאמה לצרכי העסק</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.5rem; color: var(--green);">SEO</h4>
+                        <p>בנייה מותאמת לגוגל</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- FAQ Section -->
+    <section style="background: var(--light-bg);">
+        <div class="container" style="max-width: 800px; text-align: center;">
+            <h2 class="reveal" style="margin-bottom: 40px;">שאלות נפוצות</h2>
+            
+            <div class="reveal" style="text-align: right; background: var(--dark); padding: 20px; margin-bottom: 15px; border-radius: 8px;">
+                <strong>האם אתם עובדים עם קבצי אקסל קיימים?</strong>
+                <p style="color: #ccc; margin-top: 5px;">בוודאי. אנחנו לוקחים את הקובץ הקיים, משפרים אותו, מוסיפים אוטומציות והופכים אותו לכלי עבודה יעיל.</p>
+            </div>
+
+            <div class="reveal" style="text-align: right; background: var(--dark); padding: 20px; margin-bottom: 15px; border-radius: 8px;">
+                <strong>כמה זמן לוקח לבנות חנות דיגיטלית?</strong>
+                <p style="color: #ccc; margin-top: 5px;">תלוי במורכבות. חנות בסיסית יכולה להיות באוויר תוך שבועיים. חנות מורכבת בהתאמה אישית יכולה לקחת כחודש.</p>
+            </div>
+
+            <div class="reveal" style="text-align: right; background: var(--dark); padding: 20px; margin-bottom: 15px; border-radius: 8px;">
+                <strong>האם האתרים שאתם בונים מותאמים לקידום (SEO)?</strong>
+                <p style="color: #ccc; margin-top: 5px;">חד משמעית. כל שורת קוד שאנחנו כותבים נלקחת בחשבון עבור גוגל. מהירות, מבנה נכון ותגיות מתאימות.</p>
+            </div>
+
+        </div>
+    </section>
+
 </main>
 
+<!-- Sticky WhatsApp -->
+<a href="https://wa.me/972528226689?text=היי, אשמח לפרטים על השירותים שלכם" target="_blank" class="sticky-whatsapp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16"/></svg>
+</a>
+
 <script>
-    // 1. אתחול גלילה חלקה (Lenis)
     const lenis = new Lenis();
-    function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
 
-    // 2. אתחול GSAP ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
-
-    // 3. אנימציית חשיפה
     document.querySelectorAll('.reveal').forEach((el) => {
         gsap.to(el, {
-            scrollTrigger: {
-                trigger: el,
-                start: "top 85%", 
-                toggleActions: "play none none none"
-            },
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power4.out"
+            scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+            opacity: 1, y: 0, duration: 1, ease: "power4.out"
         });
     });
-
-    // 4. אפקט Parallax לתמונה של טלי (רק במחשב)
-    if (window.innerWidth > 768) {
-        gsap.to(".tali-image", {
-            scrollTrigger: {
-                trigger: ".tali-section",
-                scrub: true,
-                start: "top bottom",
-                end: "bottom top"
-            },
-            backgroundPosition: "center 20%",
-            ease: "none"
+    
+    // Smooth scroll for anchors
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
         });
-    }
+    });
 </script>
+
 </body>
 </html>
