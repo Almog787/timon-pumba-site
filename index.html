@@ -17,7 +17,7 @@
     <meta name="description" content="מומחים באוטומציה לאקסל, בניית אתרים ופתרון תקלות טכניות. תנו לטכנולוגיה לעבוד בשבילכם.">
     <meta name="google-site-verification" content="OrJ99zXpus_GMOqnEmZI1sJSos31nitrKKtMX8o49KM" />
     
-    <!-- Schema.org for Google -->
+    <!-- Schema.org -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -51,6 +51,7 @@
         .btn { display: inline-block; padding: 15px 35px; border-radius: 8px; font-weight: 800; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1.1rem; }
         .btn-amber { background-color: var(--amber); color: var(--dark); }
         .btn-green { background-color: var(--green); color: var(--white); }
+        .btn-outline { border: 2px solid var(--amber); color: var(--amber); background: transparent; }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
         /* Header */
@@ -216,7 +217,7 @@
     requestAnimationFrame(raf);
 
     gsap.registerPlugin(ScrollTrigger);
-    // תיקון: שימוש ב-from כדי שהטקסט לא יהיה מוסתר אם JS נכשל
+    // שימוש ב-from כדי למנוע היעלמות טקסט
     document.querySelectorAll('.reveal').forEach((el) => {
         gsap.from(el, {
             scrollTrigger: { trigger: el, start: "top 90%" },
