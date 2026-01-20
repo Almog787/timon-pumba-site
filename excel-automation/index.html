@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אוטומציה לאקסל | טימון ופומבה</title>
-    <!-- Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אוטומציה חכמה | הופכים אקסל לכלי עבודה עוצמתי</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
-    
-    <!-- Libraries -->
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -18,267 +15,252 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --amber: #ffb900; --dark: #0f0f0f; --light-bg: #1a1a1a; --white: #ffffff; --green: #25D366; --red-loss: #ff4b4b; }
+        :root {
+            --amber: #ffb900;
+            --dark: #0a0a0a;
+            --light-bg: #151515;
+            --green: #25D366;
+            --white: #ffffff;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
         
-        section { padding: 80px 5%; position: relative; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        section { padding: 100px 5%; }
+        .container { max-width: 1100px; margin: 0 auto; }
         h1, h2, h3 { font-family: 'Rubik', sans-serif; }
-        .btn { display: inline-block; padding: 15px 35px; border-radius: 8px; font-weight: 800; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1.1rem; }
-        .btn-green { background-color: var(--green); color: white; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
-        .btn-green:hover { transform: translateY(-3px); }
-        .btn-outline { border: 2px solid var(--white); color: var(--white); margin-right: 15px; }
 
-        header { padding: 20px 5%; background: rgba(15, 15, 15, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: fixed; top: 0; width: 100%; z-index: 100; }
-        .logo { font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
-        
-        .hero { min-height: 70vh; display: flex; align-items: center; text-align: center; justify-content: center; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../images/hero.jpg') center/cover; padding-top: 100px; }
-        .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 20px; line-height: 1.2; }
+        /* --- Data Flow Animation --- */
+        .data-animation {
+            height: 100px; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 40px;
+        }
+        .data-node {
+            width: 15px; height: 15px; background: var(--amber); border-radius: 2px; opacity: 0.3;
+        }
 
-        /* Calculator Styles */
-        .roi-section { background: linear-gradient(145deg, #0a0a0a, #151515); padding: 80px 5%; border-top: 1px solid #333; border-bottom: 1px solid #333; }
-        .calculator-wrapper { display: grid; grid-template-columns: 1.2fr 1fr; gap: 50px; background: #1a1a1a; padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .control-group { margin-bottom: 35px; }
-        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .label-row label { font-weight: bold; color: #ddd; font-size: 1.1rem; }
-        .val-display { font-weight: 900; color: var(--amber); background: rgba(255,185,0,0.1); padding: 5px 15px; border-radius: 6px; min-width: 80px; text-align: center; font-size: 1.2rem; }
-        
-        input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; cursor: pointer; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: #333; border-radius: 5px; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 28px; width: 28px; border-radius: 50%; background: var(--amber); margin-top: -10px; box-shadow: 0 0 15px rgba(255,185,0,0.4); transition: 0.2s; }
-        .range-labels { display: flex; justify-content: space-between; font-size: 0.9rem; color: #666; margin-top: 8px; }
+        /* --- Calculator Wrapper --- */
+        .logic-grid {
+            display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start;
+        }
 
-        .calc-results-card { background: #252525; padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center; text-align: center; }
-        .big-money { font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 900; color: var(--red-loss); line-height: 1; margin-bottom: 20px; text-shadow: 0 0 30px rgba(255, 75, 75, 0.15); }
-        .waste-stat { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 30px; font-size: 1.1rem; color: #ccc; }
-        .pulse-btn { animation: pulse-green 2s infinite; font-size: 1.2rem; }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+        .inputs-panel {
+            background: var(--light-bg); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);
+        }
 
-        /* Before/After Slider */
-        .ba-slider { position: relative; width: 100%; max-width: 800px; height: 400px; margin: 0 auto; overflow: hidden; border-radius: 16px; border: 2px solid var(--amber); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .ba-image-img { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background-size: cover; background-position: center; }
-        .ba-resize { position: absolute; top: 0; left: 0; height: 100%; width: 50%; overflow: hidden; border-right: 2px solid var(--white); z-index: 10; }
-        .ba-resize .ba-image-img { width: 800px; height: 100%; } /* Important: keep image fixed size inside container */
-        .ba-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: var(--amber); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; color: black; z-index: 20; cursor: col-resize; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .control-group { margin-bottom: 30px; }
+        .label-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; }
+        .val-display { color: var(--amber); }
 
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 50px; }
-        .feature-item { background: var(--light-bg); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .feature-icon { font-size: 2.5rem; margin-bottom: 15px; }
-        .cross-sell { background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%); border-top: 1px solid var(--amber); margin-top: 50px; }
-        .cross-sell h2 { color: var(--amber); }
+        input[type=range] { width: 100%; cursor: pointer; accent-color: var(--amber); }
 
-        @media (max-width: 900px) {
-            .calculator-wrapper { grid-template-columns: 1fr; gap: 30px; padding: 20px; }
-            .hero h1 { font-size: 2.5rem; }
-            .ba-resize .ba-image-img { width: 100vw; } 
-            .ba-slider { height: 300px; }
+        /* --- Result Insights --- */
+        .insights-panel {
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        .insight-card {
+            background: rgba(255,255,255,0.03); padding: 25px; border-radius: 15px; border-right: 4px solid var(--amber);
+            transition: 0.3s;
+        }
+
+        .insight-card h4 { color: var(--amber); margin-bottom: 8px; font-size: 1.2rem; }
+        .insight-card p { font-size: 1rem; color: #bbb; line-height: 1.5; }
+
+        .big-result {
+            font-size: 3.5rem; font-weight: 900; color: #ff4b4b; margin: 20px 0;
+        }
+
+        .btn { display: inline-block; padding: 18px 40px; border-radius: 12px; font-weight: 800; text-decoration: none; text-align: center; font-size: 1.2rem; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-green { background: var(--green); color: white; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
+        .btn-green:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(37, 211, 102, 0.4); }
+
+        /* --- Comparison Section --- */
+        .comparison-table {
+            width: 100%; border-collapse: collapse; margin-top: 50px; background: #111; border-radius: 15px; overflow: hidden;
+        }
+        .comparison-table th, .comparison-table td { padding: 20px; text-align: center; border: 1px solid #222; }
+        .comparison-table th { background: #1a1a1a; color: var(--amber); }
+        .bad { color: #ff4b4b; }
+        .good { color: var(--green); font-weight: bold; }
+
+        @media (max-width: 850px) {
+            .logic-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <a href="../" class="logo">טימון<span style="color:var(--amber);">ופומבה</span></a>
-    <a href="../" style="color: white; text-decoration: none; font-weight: bold;">חזרה לדף הבית ←</a>
+<header style="padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; top:0; width:100%; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); z-index: 100;">
+    <a href="../" style="font-weight: 900; color: white; text-decoration: none; font-size: 1.4rem;">טימון<span style="color:var(--amber);">ופומבה</span></a>
+    <a href="../" style="color: white; text-decoration: none; font-weight: bold;">← חזרה הביתה</a>
 </header>
 
 <main>
-    <section class="hero">
+    <!-- Hero Section -->
+    <section style="text-align: center; padding-top: 150px;">
         <div class="container">
-            <h1 class="reveal">הפסיקו להיות העבדים של האקסל.</h1>
-            <p class="reveal" style="font-size: 1.3rem; margin-bottom: 40px;">אנחנו בונים בוטים שעושים את העבודה ב-3 שניות.</p>
-            <a href="../contact/" class="btn btn-green reveal">בואו נבנה אוטומציה 📊</a>
+            <!-- Data Flow Animation Placeholder -->
+            <div class="data-animation" id="dataFlow">
+                <div class="data-node"></div><div class="data-node"></div><div class="data-node"></div>
+                <div class="data-node"></div><div class="data-node"></div><div class="data-node"></div>
+            </div>
+
+            <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 20px;">האם אתה מנהל את העסק, <br><span style="color:var(--amber);">או מנהל טבלאות?</span></h1>
+            <p style="font-size: 1.3rem; color: #aaa; max-width: 800px; margin: 0 auto;">
+                אוטומציה היא לא רק "חיסכון בכסף". היא הדרך שלך להפסיק לעשות עבודה של רובוט, ולהתחיל לעשות עבודה של מנהל.
+            </p>
         </div>
     </section>
 
-    <!-- ROI Calculator -->
-    <section class="roi-section">
+    <!-- Interactive Logic Section -->
+    <section style="background: #0f0f0f; border-top: 1px solid #222;">
         <div class="container">
-            <h2 class="reveal" style="text-align: center; margin-bottom: 10px;">מחשבון בזבוז משאבים</h2>
-            <p class="reveal" style="text-align: center; color: #888; margin-bottom: 50px;">הזיזו את הסליידרים וגלו כמה כסף נשרף.</p>
-            
-            <div class="calculator-wrapper reveal">
-                <div class="calc-controls">
+            <div class="logic-grid">
+                
+                <!-- Inputs -->
+                <div class="inputs-panel">
+                    <h3 style="margin-bottom: 30px;">נתוני הפעילות שלך:</h3>
+                    
                     <div class="control-group">
-                        <div class="label-row"><label>שעות עבודה ידנית ביום</label><span class="val-display" id="hoursVal">2</span></div>
-                        <input type="range" id="hours" min="0.5" max="12" step="0.5" value="2" oninput="updateCalc()">
-                        <div class="range-labels"><span>30 דק'</span><span>12 שעות</span></div>
+                        <div class="label-row"><label>שעות עבודה ידנית (ביום)</label><span class="val-display" id="hVal">2</span></div>
+                        <input type="range" id="hInput" min="0.5" max="10" step="0.5" value="2" oninput="updateLogic()">
                     </div>
+
                     <div class="control-group">
-                        <div class="label-row"><label>עלות שעה לעובד</label><span class="val-display" id="rateVal">50 ₪</span></div>
-                        <input type="range" id="rate" min="30" max="600" step="10" value="50" oninput="updateCalc()">
-                        <div class="range-labels"><span>30 ₪</span><span>600 ₪</span></div>
+                        <div class="label-row"><label>שכר שעתי ממוצע</label><span class="val-display" id="rVal">60 ₪</span></div>
+                        <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateLogic()">
                     </div>
+
                     <div class="control-group">
-                        <div class="label-row"><label>מספר עובדים</label><span class="val-display" id="empVal">1</span></div>
-                        <input type="range" id="emp" min="1" max="20" step="1" value="1" oninput="updateCalc()">
-                        <div class="range-labels"><span>1</span><span>20</span></div>
+                        <div class="label-row"><label>מספר עובדים במשימה</label><span class="val-display" id="eVal">1</span></div>
+                        <input type="range" id="eInput" min="1" max="20" step="1" value="1" oninput="updateLogic()">
                     </div>
                 </div>
 
-                <div class="calc-results-card">
-                    <h3>הפסד כספי שנתי:</h3>
-                    <div class="big-money" id="yearlyLoss">0 ₪</div>
-                    <div class="waste-stat">
-                        <span>📉 זמן מבוזבז:</span>
-                        <strong id="daysWasted" style="color: #fff;">0 ימי עבודה בשנה!</strong>
+                <!-- Logical Results -->
+                <div class="insights-panel">
+                    <div class="insight-card">
+                        <h4>🔴 המחיר הכלכלי הישיר</h4>
+                        <p>העסק שלך "שורף" <strong id="moneyLoss" style="color:white;">0</strong> ₪ בכל שנה על פעולות טכניות שרובוט יכול לעשות בחינם.</p>
                     </div>
-                    <div class="chart-container" style="position: relative; height:180px; width:100%; margin-bottom: 20px;">
-                        <canvas id="roiChart"></canvas>
+
+                    <div class="insight-card" style="border-right-color: #555;">
+                        <h4>⚠️ מחיר הטעויות (הנסתר)</h4>
+                        <p>בעבודה ידנית יש הסתברות של 5% לטעות אנוש. סטטיסטית, אתה חווה כ-<strong id="errorStat" style="color:white;">0</strong> תקלות נתונים בשנה שעלולות לעלות ביוקר.</p>
                     </div>
-                    <a href="../contact/" class="btn btn-green pulse-btn" style="width: 100%;">אני רוצה לחסוך את הכסף הזה 💰</a>
+
+                    <div class="insight-card" style="border-right-color: var(--green);">
+                        <h4>🚀 פוטנציאל הצמיחה</h4>
+                        <p>בזמן שיתפנה, תוכל להשקיע <strong id="timeBonus" style="color:white;">0</strong> שעות בשנה בחיזוק הקשר עם הלקוחות ובפיתוח העסק.</p>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="margin-bottom: 15px; font-weight: bold;">השורה התחתונה:</p>
+                        <div class="big-result" id="totalResult">0 ₪</div>
+                        <a href="../contact/" class="btn btn-green">אני רוצה להחזיר את השליטה לעסק 📈</a>
+                    </div>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Before/After Slider -->
+    <!-- Comparison Section -->
     <section>
         <div class="container">
-            <h2 class="reveal" style="text-align: center; margin-bottom: 20px;">ההבדל בין כאוס לשליטה</h2>
-            <p class="reveal" style="text-align: center; color: #888; margin-bottom: 40px;">גררו את הסליידר כדי לראות את השינוי.</p>
-            
-            <div class="ba-slider reveal">
-                <!-- תמונה אחרי (השתמשתי בתמונה קיימת כדוגמה - תחליף בגרף נקי) -->
-                <div class="ba-image-img" style="background-image: url('../images/hero.jpg');"></div>
-                
-                <!-- תמונה לפני (השתמשתי בתמונה קיימת כדוגמה - תחליף באקסל מבולגן) -->
-                <div class="ba-resize" id="baResize">
-                    <div class="ba-image-img" style="background-image: url('../images/1tali.jpg');"></div>
-                </div>
-                
-                <span class="ba-handle" id="baHandle"><span>⬌</span></span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section>
-        <div class="container">
-            <h2 class="reveal" style="text-align: center; font-size: 2.5rem;">מה אנחנו עושים?</h2>
-            <div class="features-grid">
-                <div class="feature-item reveal">
-                    <div class="feature-icon">🤖</div>
-                    <h3>חיסול עבודה ידנית</h3>
-                    <p>במקום העתק-הדבק, אנחנו כותבים קוד שעושה הכל לבד.</p>
-                </div>
-                <div class="feature-item reveal">
-                    <div class="feature-icon">📈</div>
-                    <h3>דשבורדים ניהוליים</h3>
-                    <p>הופכים טבלאות לגרפים צבעוניים שנותנים תמונת מצב.</p>
-                </div>
-                <div class="feature-item reveal">
-                    <div class="feature-icon">🔗</div>
-                    <h3>סנכרון מערכות</h3>
-                    <p>חיבור בין אקסל לאתר, לוואטסאפ או ל-CRM.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="cross-sell">
-        <div class="container" style="text-align: center;">
-            <h2 class="reveal">הנתונים מסודרים? עכשיו בואו נציג אותם.</h2>
-            <p class="reveal" style="margin: 20px 0;">אנחנו גם בונים אתרים וחנויות דיגיטליות.</p>
-            <a href="../contact/" class="btn btn-outline" style="border-color: var(--amber); color: var(--amber);">צריכים עזרה עם האתר?</a>
+            <h2 style="text-align: center; margin-bottom: 40px;">למה לעבור לאוטומציה?</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>פרמטר</th>
+                        <th>עבודה ידנית (היום)</th>
+                        <th>אוטומציה (טימון ופומבה)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>זמן ביצוע</td>
+                        <td class="bad">שעות / ימים</td>
+                        <td class="good">שניות בודדות</td>
+                    </tr>
+                    <tr>
+                        <td>דיוק נתונים</td>
+                        <td class="bad">תלוי בריכוז של העובד</td>
+                        <td class="good">100% דיוק מתמטי</td>
+                    </tr>
+                    <tr>
+                        <td>יכולת שדרוג</td>
+                        <td class="bad">דורש עוד כוח אדם</td>
+                        <td class="good">גדל יחד עם העסק ללא עלות נוספת</td>
+                    </tr>
+                    <tr>
+                        <td>השפעה על העובד</td>
+                        <td class="bad">שחיקה ותסכול</td>
+                        <td class="good">פניות למשימות חשובות באמת</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 </main>
 
 <script>
-    let myChart = null;
-
-    // --- Chart + Calc Logic ---
-    function initChart() {
-        const ctx = document.getElementById('roiChart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['הוצאה קיימת', 'עם אוטומציה'],
-                datasets: [{
-                    data: [0, 0],
-                    backgroundColor: ['rgba(255, 75, 75, 0.8)', 'rgba(37, 211, 102, 0.8)'],
-                    borderColor: ['rgba(255, 75, 75, 1)', 'rgba(37, 211, 102, 1)'],
-                    borderWidth: 1, borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { display: false }, x: { ticks: { color: '#ccc', font: {family: 'Heebo'} }, grid: {display: false} } }
-            }
+    // --- Animation Logic ---
+    function animateData() {
+        gsap.to(".data-node", {
+            y: "random(-20, 20)",
+            x: "random(-10, 10)",
+            opacity: 1,
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            stagger: 0.1,
+            ease: "sine.inOut"
         });
     }
 
-    function updateCalc() {
-        const hours = parseFloat(document.getElementById('hours').value);
-        const rate = parseInt(document.getElementById('rate').value);
-        const emp = parseInt(document.getElementById('emp').value);
+    // --- Calculator Logic ---
+    function updateLogic() {
+        const h = parseFloat(document.getElementById('hInput').value);
+        const r = parseInt(document.getElementById('rInput').value);
+        const e = parseInt(document.getElementById('eInput').value);
 
-        document.getElementById('hoursVal').innerText = hours;
-        document.getElementById('rateVal').innerText = rate + ' ₪';
-        document.getElementById('empVal').innerText = emp;
+        document.getElementById('hVal').innerText = h;
+        document.getElementById('rVal').innerText = r + ' ₪';
+        document.getElementById('eVal').innerText = e;
 
-        const totalHoursYear = hours * emp * 22 * 12;
-        const currentCost = totalHoursYear * rate;
-        const newCost = currentCost * 0.1;
-        const daysWasted = Math.round(totalHoursYear / 9);
+        // חישובים
+        const annualHours = h * e * 22 * 12;
+        const annualMoney = annualHours * r;
+        const errors = Math.round(annualHours * 0.05); // הנחה של 5% טעויות לשעה
 
-        document.getElementById('yearlyLoss').innerText = currentCost.toLocaleString() + ' ₪';
-        document.getElementById('daysWasted').innerText = daysWasted + ' ימי עבודה בשנה!';
-
-        if (myChart) {
-            myChart.data.datasets[0].data = [currentCost, newCost];
-            myChart.update();
-        }
-    }
-
-    // --- Slider Logic ---
-    function initSlider() {
-        const slider = document.querySelector('.ba-slider');
-        const resize = document.getElementById('baResize');
-        const handle = document.getElementById('baHandle');
+        // עדכון תצוגה
+        document.getElementById('moneyLoss').innerText = annualMoney.toLocaleString();
+        document.getElementById('errorStat').innerText = errors.toLocaleString();
+        document.getElementById('timeBonus').innerText = annualHours.toLocaleString();
+        document.getElementById('totalResult').innerText = annualMoney.toLocaleString() + ' ₪';
         
-        if(!slider) return;
-        let isDragging = false;
-
-        function move(e) {
-            if (!isDragging) return;
-            let clientX = e.clientX || e.touches[0].clientX;
-            let rect = slider.getBoundingClientRect();
-            let x = clientX - rect.left;
-            if (x < 0) x = 0;
-            if (x > rect.width) x = rect.width;
-            let percentage = (x / rect.width) * 100;
-            resize.style.width = percentage + "%";
-            handle.style.left = percentage + "%";
-        }
-
-        handle.addEventListener('mousedown', () => isDragging = true);
-        handle.addEventListener('touchstart', () => isDragging = true);
-        window.addEventListener('mouseup', () => isDragging = false);
-        window.addEventListener('touchend', () => isDragging = false);
-        slider.addEventListener('mousemove', move);
-        slider.addEventListener('touchmove', move);
+        // אפקט פעימה לתוצאה
+        gsap.fromTo("#totalResult", {scale: 1.1}, {scale: 1, duration: 0.3});
     }
 
-    // --- Init All ---
+    // --- Init ---
     window.addEventListener('load', () => {
-        initChart();
-        updateCalc();
-        initSlider();
-    });
+        animateData();
+        updateLogic();
+        
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
 
-    const lenis = new Lenis();
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
-
-    gsap.registerPlugin(ScrollTrigger);
-    document.querySelectorAll('.reveal').forEach((el) => {
-        gsap.from(el, {
-            scrollTrigger: { trigger: el, start: "top 90%" },
-            opacity: 0, y: 50, duration: 1, ease: "power4.out"
+        gsap.registerPlugin(ScrollTrigger);
+        document.querySelectorAll('.insight-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: { trigger: card, start: "top 90%" },
+                x: i % 2 === 0 ? 50 : -50,
+                opacity: 0,
+                duration: 0.8
+            });
         });
     });
 </script>
