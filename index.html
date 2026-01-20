@@ -88,7 +88,6 @@
         }
         .logo { font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
         
-        /* תפריט ניווט */
         .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-link { color: white; text-decoration: none; font-weight: bold; transition: 0.3s; }
         .nav-link:hover { color: var(--amber); }
@@ -142,30 +141,12 @@
             border-radius: 20px;
         }
 
-        /* --- Sticky WhatsApp --- */
-        .sticky-whatsapp {
-            position: fixed; bottom: 30px; left: 30px;
-            background-color: var(--green);
-            width: 60px; height: 60px; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 1000;
-            transition: 0.3s; animation: pulse 2s infinite;
-        }
-        .sticky-whatsapp:hover { transform: scale(1.1); }
-        .sticky-whatsapp svg { width: 35px; fill: white; }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-        }
-
         .reveal { opacity: 0; transform: translateY(40px); }
 
         @media (max-width: 900px) {
             .split-section { grid-template-columns: 1fr; }
             .about-img { height: 350px; order: -1; }
-            .nav-links { display: none; } /* במובייל נסתיר את התפריט הרגיל כדי לא להעמיס */
+            .nav-links { display: none; }
         }
     </style>
 </head>
@@ -176,7 +157,6 @@
     
     <div class="nav-links">
         <a href="#services" class="nav-link">שירותים</a>
-        <!-- הקישור לעמוד החדש -->
         <a href="contact.html" class="nav-link">צור קשר</a>
     </div>
 
@@ -190,7 +170,6 @@
             <h1 class="reveal">הפסיקו לעבוד ידנית. <br><span class="highlight">תנו לטכנולוגיה לעבוד בשבילכם.</span></h1>
             <p class="reveal">מומחים באוטומציה לאקסל וגוגל שיטס, בניית חנויות דיגיטליות ופתרון תקלות מורכבות. אנחנו הופכים כאב ראש טכני לשקט נפשי.</p>
             <div class="reveal">
-                <!-- שיניתי את הכפתור שיוביל לעמוד צור קשר החדש -->
                 <a href="contact.html" class="btn btn-green">אני צריך אוטומציה לאקסל 📊</a>
             </div>
         </div>
@@ -294,11 +273,6 @@
     </section>
 
 </main>
-
-<!-- Sticky WhatsApp -->
-<a href="https://wa.me/972528226689?text=היי, אשמח לפרטים על השירותים שלכם" target="_blank" class="sticky-whatsapp">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16"/></svg>
-</a>
 
 <script>
     const lenis = new Lenis();
