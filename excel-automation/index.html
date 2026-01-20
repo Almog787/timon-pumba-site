@@ -1,19 +1,12 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-18YM6QFN0C');
-    </script>
-    <meta name="google-site-verification" content="OrJ99zXpus_GMOqnEmZI1sJSos31nitrKKtMX8o49KM" />
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אוטומציה לאקסל וגוגל שיטס | טימון ופומבה</title>
-    <meta name="description" content="הפכו את האקסל שלכם לתוכנה חכמה. בניית דשבורדים, מאקרו, VBA וחיבור נתונים אוטומטי.">
+    <title>אוטומציה לאקסל | טימון ופומבה</title>
+    <!-- Google Analytics & Meta from main page -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&display=swap" rel="stylesheet">
@@ -22,112 +15,90 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <style>
-        :root {
-            --amber: #ffb900;
-            --dark: #0f0f0f;
-            --light-bg: #1a1a1a;
-            --white: #ffffff;
-            --green: #25D366;
-        }
-
+        /* CSS זהה לעמוד הראשי לשמירה על אחידות */
+        :root { --amber: #ffb900; --dark: #0f0f0f; --light-bg: #1a1a1a; --white: #ffffff; --green: #25D366; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
-        
         section { padding: 80px 5%; position: relative; }
         .container { max-width: 1200px; margin: 0 auto; }
-        h1, h2, h3 { font-family: 'Rubik', sans-serif; }
-        .highlight { color: var(--green); }
+        h1, h2 { font-family: 'Rubik', sans-serif; }
         .btn { display: inline-block; padding: 15px 35px; border-radius: 8px; font-weight: 800; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1.1rem; }
-        .btn-green { background-color: var(--green); color: white; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+        .btn-green { background-color: var(--green); color: white; }
         .btn-green:hover { transform: translateY(-3px); }
-        .btn-outline { border: 2px solid var(--white); color: var(--white); margin-right: 15px; }
-
+        
         header { padding: 20px 5%; background: rgba(15, 15, 15, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: fixed; top: 0; width: 100%; z-index: 100; }
         .logo { font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
         
-        /* שימו לב לנתיב התמונה: ../images/hero.jpg */
-        .hero {
-            min-height: 80vh; display: flex; align-items: center; text-align: center; justify-content: center;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../images/hero.jpg') center/cover;
-            padding-top: 100px;
-        }
+        .hero { min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../images/hero.jpg') center/cover; padding-top: 100px; }
         .hero h1 { font-size: 3.5rem; margin-bottom: 20px; }
 
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 50px; }
-        .feature-item { background: var(--light-bg); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .feature-icon { font-size: 2.5rem; margin-bottom: 15px; }
-
-        .cross-sell { background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%); border-top: 1px solid var(--amber); margin-top: 50px; }
-        .cross-sell h2 { color: var(--amber); }
-
-        .reveal { opacity: 0; transform: translateY(30px); }
+        /* Calculator Styles */
+        .calculator-box { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: #222; padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); margin-top: 30px; }
+        .calc-inputs input { width: 100%; padding: 15px; background: #111; border: 1px solid #444; color: white; border-radius: 8px; font-size: 1.1rem; margin-bottom: 20px; }
+        .calc-inputs label { display: block; margin-bottom: 10px; font-weight: bold; }
+        .result-number { font-size: 3rem; font-weight: 900; color: var(--amber); line-height: 1.2; }
+        
+        @media (max-width: 768px) { .calculator-box { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="../" class="logo">טימון<span class="highlight">ופומבה</span></a>
-    <a href="../" style="color: white; text-decoration: none; font-weight: bold;">חזרה לדף הבית</a>
+    <a href="../" class="logo">טימון<span style="color:var(--amber);">ופומבה</span></a>
+    <a href="../" style="color: white; text-decoration: none;">חזרה הביתה</a>
 </header>
 
 <main>
     <section class="hero">
         <div class="container">
-            <h1 class="reveal">הפסיקו להיות העבדים <br>של ה-<span class="highlight">Excel</span> שלכם.</h1>
-            <p class="reveal" style="font-size: 1.3rem; max-width: 800px; margin: 0 auto 40px; color: #ccc;">
-                רוב העסקים מבזבזים 10 שעות בשבוע על "העתק-הדבק" וסידור טבלאות. <br>
-                אנחנו בונים בוטים ונוסחאות שעושים את העבודה הזו ב-3 שניות בדיוק.
-            </p>
-            <div class="reveal">
-                <!-- הפניה לתיקיית contact (תיקייה אחות, לכן ../contact/) -->
-                <a href="../contact/" class="btn btn-green">בואו נבנה אוטומציה 📊</a>
-            </div>
+            <h1 class="reveal">הפסיקו להיות העבדים של האקסל.</h1>
+            <p class="reveal" style="font-size: 1.3rem; margin-bottom: 40px;">אנחנו בונים בוטים שעושים את העבודה ב-3 שניות.</p>
+            <a href="../contact/" class="btn btn-green reveal">בואו נבנה אוטומציה 📊</a>
         </div>
     </section>
 
+    <!-- ROI Calculator -->
     <section>
         <div class="container">
-            <h2 class="reveal" style="text-align: center; font-size: 2.5rem;">מה זה בעצם "אוטומציה לאקסל"?</h2>
-            <div class="features-grid">
-                <div class="feature-item reveal">
-                    <div class="feature-icon">🤖</div>
-                    <h3>חיסול עבודה ידנית</h3>
-                    <p>במקום שתעתיקו נתונים מקובץ לקובץ, אנחנו כותבים קוד (VBA/Script) שעושה את זה לבד.</p>
+            <h2 class="reveal" style="text-align: center;">כמה כסף אתם מפסידים על עבודה ידנית?</h2>
+            
+            <div class="calculator-box reveal">
+                <div class="calc-inputs">
+                    <label>שעות ביום על אקסל?</label>
+                    <input type="number" id="hours" placeholder="לדוגמה: 2" oninput="calculateROI()">
+                    <label>שכר שעתי (כולל עלויות)?</label>
+                    <input type="number" id="rate" placeholder="לדוגמה: 50" oninput="calculateROI()">
                 </div>
-                <div class="feature-item reveal">
-                    <div class="feature-icon">📈</div>
-                    <h3>דשבורדים ניהוליים</h3>
-                    <p>הופכים מספרים יבשים לגרפים צבעוניים שמראים רווח והפסד בזמן אמת.</p>
-                </div>
-                <div class="feature-item reveal">
-                    <div class="feature-icon">🔗</div>
-                    <h3>סנכרון בין מערכות</h3>
-                    <p>חיבור הלידים מהאתר או מהפייסבוק ישירות לתוך טבלה מסודרת.</p>
+                <div class="calc-results">
+                    <h3>הפסד חודשי:</h3>
+                    <div class="result-number" id="monthlyLoss">0 ₪</div>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #333;">
+                        <h3>חיסכון שנתי פוטנציאלי:</h3>
+                        <div class="result-number" id="yearlyLoss" style="color: var(--green);">0 ₪</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section class="cross-sell">
-        <div class="container" style="text-align: center;">
-            <h2 class="reveal">הנתונים מסודרים? עכשיו בואו נציג אותם.</h2>
-            <p class="reveal" style="margin: 20px 0;">אנחנו גם בונים אתרים וחנויות דיגיטליות.</p>
-            <a href="../contact/" class="btn btn-outline" style="border-color: var(--amber); color: var(--amber);">צריכים עזרה עם האתר?</a>
         </div>
     </section>
 </main>
 
 <script>
+    function calculateROI() {
+        const h = document.getElementById('hours').value || 0;
+        const r = document.getElementById('rate').value || 0;
+        const monthly = h * r * 22; // 22 work days
+        const yearly = monthly * 12;
+        document.getElementById('monthlyLoss').innerText = monthly.toLocaleString() + ' ₪';
+        document.getElementById('yearlyLoss').innerText = yearly.toLocaleString() + ' ₪';
+    }
+
     const lenis = new Lenis();
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
 
     gsap.registerPlugin(ScrollTrigger);
     document.querySelectorAll('.reveal').forEach((el) => {
-        gsap.to(el, {
-            scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
-            opacity: 1, y: 0, duration: 1, ease: "power4.out"
-        });
+        gsap.from(el, { scrollTrigger: { trigger: el, start: "top 90%" }, opacity: 0, y: 50, duration: 1 });
     });
 </script>
 
