@@ -18,7 +18,8 @@
     
     <title>טימון ופומבה | אוטומציה לאקסל, בניית אתרים ופתרונות דיגיטליים</title>
     <meta name="description" content="מומחים באוטומציה לאקסל וגוגל שיטס, בניית חנויות דיגיטליות בהתאמה אישית ופתרון תקלות באתרים קיימים.">
-    
+    <meta name="keywords" content="אוטומציה באקסל, גוגל שיטס לעסקים, בניית אתרים, חנות דיגיטלית, תיקון אתרים">
+
     <!-- Open Graph -->
     <meta property="og:title" content="טימון ופומבה | פתרונות אוטומציה ודיגיטל">
     <meta property="og:description" content="נמאס לכם לעבוד ידנית באקסל? צריכים חנות אינטרנטית? אנחנו הכתובת.">
@@ -173,9 +174,9 @@
         .footer-col a:hover { color: var(--amber); }
         .copyright { text-align: center; border-top: 1px solid #222; padding-top: 20px; }
 
-        /* --- Animations (תוקן: ביטלנו את ההסתרה ב-CSS) --- */
+        /* --- Animations --- */
         .reveal { 
-            /* opacity: 0;  <-- שורה זו נמחקה כדי שהטקסט יופיע תמיד */
+            /* הסתרת ברירת המחדל בוטלה כדי למנוע טקסט נעלם */
         }
 
         @media (max-width: 900px) {
@@ -366,6 +367,8 @@
                     <li><a href="./contact/">צור קשר</a></li>
                     <li><a href="#">הצהרת נגישות</a></li>
                     <li><a href="#">מדיניות פרטיות</a></li>
+                    <!-- כאן הוספנו את כפתור הבדיקה -->
+                    <li><a href="./page-lo-kayam" style="color: #444; font-size: 0.8rem;">[בדיקת דף 404]</a></li>
                 </ul>
             </div>
         </div>
@@ -382,31 +385,10 @@
 
     gsap.registerPlugin(ScrollTrigger);
     
-    // תיקון קריטי: שינינו את האנימציה כך שהיא תיקח אלמנט גלוי ותזיז אותו,
-    // במקום לקחת אלמנט נסתר ולנסות להציג אותו.
-    // זה מבטיח שהטקסט תמיד יופיע.
+    // אנימציה בטוחה: במקום להציג אלמנט נסתר, אנחנו לוקחים אלמנט ו"מפילים" אותו
     document.querySelectorAll('.reveal').forEach((el) => {
         gsap.from(el, {
             scrollTrigger: {
                 trigger: el,
-                start: "top 90%", // מתחיל כשהאלמנט בתחתית המסך
-                toggleActions: "play none none none"
-            },
-            opacity: 0,  // מתחילים משקיפות 0
-            y: 50,       // מתחילים 50 פיקסלים למטה
-            duration: 1,
-            ease: "power4.out"
-        });
-    });
-    
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if(target) target.scrollIntoView({ behavior: 'smooth' });
-        });
-    });
-</script>
-
-</body>
-</html>
+                start: "top 90%", 
+                toggleActions: "play n
