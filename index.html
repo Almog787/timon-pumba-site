@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>לשבור את הכלוב | פרויקט החופש</title>
     
-    <!-- הגדרות לשיתוף בוואטסאפ (SEO) -->
-    <!-- הערה: כדי שהתמונה תופיע בוואטסאפ, יש להחליף את הכתובת למטה לכתובת המלאה של האתר שלך בגיטהב -->
+    <!-- הגדרות לשיתוף (וואטסאפ/פייסבוק) -->
     <meta property="og:title" content="לשבור את הכלוב | פרויקט החופש">
     <meta property="og:description" content="טימון, פומבה וטלי: נגמרו הימים שאנחנו עובדים בשביל אחרים. בואו לבנות נכס.">
     <meta property="og:type" content="website">
-    <!-- כשיהיה לך את הכתובת הסופית של האתר, שים אותה כאן במקום הלינק הזה -->
+    <!-- הערה: כדי שהתמונה תופיע בוואטסאפ, בעתיד תצטרך לשים כאן את הכתובת המלאה של האתר שלך -->
     <meta property="og:image" content="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_59pm.png?w=1024">
     
     <!-- אייקון אריה ללשונית -->
@@ -21,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&display=swap" rel="stylesheet">
 
-    <!-- ספריות אנימציה וגלילה (Lenis + GSAP) -->
+    <!-- ספריות אנימציה וגלילה -->
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -70,7 +69,7 @@
 
         /* --- Hero Section --- */
         .hero {
-            /* כאן מוגדרת תמונת הרקע הראשית מהתיקייה שלך */
+            /* שילוב התמונה hero.jpg */
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
                         url('./images/hero.jpg') center/cover no-repeat fixed;
             text-align: center;
@@ -158,7 +157,7 @@
         .tali-image {
             height: 100%;
             min-height: 100vh;
-            /* כאן מוגדרת התמונה של טלי מהתיקייה שלך */
+            /* שילוב התמונה tali.jpg */
             background: url('./images/tali.jpg') center/cover no-repeat;
         }
 
@@ -258,12 +257,12 @@
     // 2. אתחול GSAP ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
 
-    // 3. אנימציית חשיפה (Reveal)
+    // 3. אנימציית חשיפה
     document.querySelectorAll('.reveal').forEach((el) => {
         gsap.to(el, {
             scrollTrigger: {
                 trigger: el,
-                start: "top 85%", // מתחיל כשהאלמנט נכנס ל-85% מגובה המסך
+                start: "top 85%", 
                 toggleActions: "play none none none"
             },
             opacity: 1,
@@ -273,20 +272,10 @@
         });
     });
 
-    // 4. אפקט Parallax לתמונה של טלי
-    // מופעל רק במסכים רחבים (לא מובייל)
+    // 4. אפקט Parallax לתמונה של טלי (רק במחשב)
     if (window.innerWidth > 768) {
         gsap.to(".tali-image", {
             scrollTrigger: {
                 trigger: ".tali-section",
                 scrub: true,
                 start: "top bottom",
-                end: "bottom top"
-            },
-            backgroundPosition: "center 20%",
-            ease: "none"
-        });
-    }
-</script>
-</body>
-</html>
