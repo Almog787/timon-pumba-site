@@ -18,9 +18,8 @@
     
     <title>טימון ופומבה | אוטומציה לאקסל, בניית אתרים ופתרונות דיגיטליים</title>
     <meta name="description" content="מומחים באוטומציה לאקסל וגוגל שיטס, בניית חנויות דיגיטליות בהתאמה אישית ופתרון תקלות באתרים קיימים.">
-    <meta name="keywords" content="אוטומציה באקסל, גוגל שיטס לעסקים, בניית אתרים, חנות דיגיטלית, תיקון אתרים">
-
-    <!-- Open Graph / Facebook -->
+    
+    <!-- Open Graph -->
     <meta property="og:title" content="טימון ופומבה | פתרונות אוטומציה ודיגיטל">
     <meta property="og:description" content="נמאס לכם לעבוד ידנית באקסל? צריכים חנות אינטרנטית? אנחנו הכתובת.">
     <meta property="og:type" content="website">
@@ -128,7 +127,7 @@
         .service-card li { margin-bottom: 8px; display: flex; align-items: center; }
         .service-card li::before { content: "•"; color: var(--amber); margin-left: 10px; font-size: 1.5rem; }
 
-        /* --- Portfolio (New) --- */
+        /* --- Portfolio --- */
         .portfolio-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-top: 40px;
         }
@@ -146,7 +145,7 @@
         .portfolio-item:hover .portfolio-overlay { transform: translateY(0); }
         .portfolio-item:hover .portfolio-bg { transform: scale(1.1); }
 
-        /* --- Testimonials (New) --- */
+        /* --- Testimonials --- */
         .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
         .review-card {
             background: linear-gradient(145deg, #1a1a1a, #222); padding: 30px; border-radius: 16px;
@@ -164,7 +163,7 @@
         .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
         .about-img { height: 500px; background: url('./images/1tali.jpg') center/cover no-repeat; border-radius: 20px; }
 
-        /* --- Footer (New) --- */
+        /* --- Footer --- */
         footer { background: #000; padding: 60px 5% 20px; border-top: 1px solid #222; color: #888; font-size: 0.9rem; margin-top: 50px; }
         .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; margin-bottom: 30px; }
         .footer-col h4 { color: var(--white); margin-bottom: 15px; font-size: 1.1rem; }
@@ -174,8 +173,10 @@
         .footer-col a:hover { color: var(--amber); }
         .copyright { text-align: center; border-top: 1px solid #222; padding-top: 20px; }
 
-        /* --- Animations --- */
-        .reveal { opacity: 0; transform: translateY(40px); }
+        /* --- Animations (תוקן: ביטלנו את ההסתרה ב-CSS) --- */
+        .reveal { 
+            /* opacity: 0;  <-- שורה זו נמחקה כדי שהטקסט יופיע תמיד */
+        }
 
         @media (max-width: 900px) {
             .split-section { grid-template-columns: 1fr; }
@@ -380,4 +381,32 @@
     requestAnimationFrame(raf);
 
     gsap.registerPlugin(ScrollTrigger);
-    document.querySe
+    
+    // תיקון קריטי: שינינו את האנימציה כך שהיא תיקח אלמנט גלוי ותזיז אותו,
+    // במקום לקחת אלמנט נסתר ולנסות להציג אותו.
+    // זה מבטיח שהטקסט תמיד יופיע.
+    document.querySelectorAll('.reveal').forEach((el) => {
+        gsap.from(el, {
+            scrollTrigger: {
+                trigger: el,
+                start: "top 90%", // מתחיל כשהאלמנט בתחתית המסך
+                toggleActions: "play none none none"
+            },
+            opacity: 0,  // מתחילים משקיפות 0
+            y: 50,       // מתחילים 50 פיקסלים למטה
+            duration: 1,
+            ease: "power4.out"
+        });
+    });
+    
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if(target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
+
+</body>
+</html>
