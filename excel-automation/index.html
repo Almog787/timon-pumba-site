@@ -43,6 +43,7 @@
         .btn { display: inline-block; padding: 15px 35px; border-radius: 8px; font-weight: 800; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1.1rem; }
         .btn-green { background-color: var(--green); color: white; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
         .btn-green:hover { transform: translateY(-3px); }
+        .btn-outline { border: 2px solid var(--white); color: var(--white); margin-right: 15px; }
         
         /* Header */
         header { padding: 20px 5%; background: rgba(15, 15, 15, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: fixed; top: 0; width: 100%; z-index: 100; }
@@ -87,9 +88,6 @@
         .feature-icon { font-size: 2.5rem; margin-bottom: 15px; }
         .cross-sell { background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%); border-top: 1px solid var(--amber); margin-top: 50px; }
         .cross-sell h2 { color: var(--amber); }
-
-        /* תיקון קריטי: הסרתי את השורה שהסתירה את הטקסט */
-        /* .reveal { opacity: 0; transform: translateY(30px); }  <-- נמחק */
 
         @media (max-width: 900px) {
             .calculator-wrapper { grid-template-columns: 1fr; gap: 30px; padding: 20px; }
@@ -146,7 +144,9 @@
                         <strong id="daysWasted" style="color: #fff; display:block; font-size:1.4rem;">0 ימי עבודה מלאים!</strong>
                     </div>
                     <p style="font-size: 0.9rem; color: #888; margin-bottom: 20px;">זה הכסף שאתם יכולים להוסיף לרווח הנקי.</p>
-                    <a href="../contact/" class="btn btn-green pulse-btn" style="width: 100%;">אני רוצה לעצור את הדימום 🛑</a>
+                    
+                    <!-- כאן השינוי בטקסט של הכפתור -->
+                    <a href="../contact/" class="btn btn-green pulse-btn" style="width: 100%;">אני רוצה לחסוך את הכסף הזה 💰</a>
                 </div>
             </div>
         </div>
@@ -204,26 +204,18 @@
         document.getElementById('daysWasted').innerText = daysWasted + ' ימי עבודה מלאים בשנה!';
     }
 
-    // הפעלה ראשונית של המחשבון
     window.addEventListener('load', updateCalc);
 
-    // אנימציות - מוגנות בתוך Event Listener כדי למנוע תקלות
-    document.addEventListener("DOMContentLoaded", (event) => {
-        const lenis = new Lenis();
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
+    // אנימציות
+    const lenis = new Lenis();
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
 
-        gsap.registerPlugin(ScrollTrigger);
-        
-        // שימוש ב-FROM: האלמנט מתחיל שקוף וזז למקום, במקום להיות מוסתר ב-CSS
-        document.querySelectorAll('.reveal').forEach((el) => {
-            gsap.from(el, {
-                scrollTrigger: { trigger: el, start: "top 90%" },
-                opacity: 0, 
-                y: 50, 
-                duration: 1, 
-                ease: "power4.out"
-            });
+    gsap.registerPlugin(ScrollTrigger);
+    document.querySelectorAll('.reveal').forEach((el) => {
+        gsap.from(el, {
+            scrollTrigger: { trigger: el, start: "top 90%" },
+            opacity: 0, y: 50, duration: 1, ease: "power4.out"
         });
     });
 </script>
