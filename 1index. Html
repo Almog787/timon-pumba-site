@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לשבור את הכלוב | פרויקט החופש</title>
+    
+    <!-- הגדרות לשיתוף בוואטסאפ (SEO) -->
+    <!-- הערה: כדי שהתמונה תופיע בוואטסאפ, יש להחליף את הכתובת למטה לכתובת המלאה של האתר שלך בגיטהב -->
+    <meta property="og:title" content="לשבור את הכלוב | פרויקט החופש">
+    <meta property="og:description" content="טימון, פומבה וטלי: נגמרו הימים שאנחנו עובדים בשביל אחרים. בואו לבנות נכס.">
+    <meta property="og:type" content="website">
+    <!-- כשיהיה לך את הכתובת הסופית של האתר, שים אותה כאן במקום הלינק הזה -->
+    <meta property="og:image" content="https://trellisconsulting.wordpress.com/wp-content/uploads/2025/12/generated-image-december-23-2025-5_59pm.png?w=1024">
+    
+    <!-- אייקון אריה ללשונית -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
+
+    <!-- פונטים יוקרתיים -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&display=swap" rel="stylesheet">
+
+    <!-- ספריות אנימציה וגלילה (Lenis + GSAP) -->
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --amber: #ffb900;
+            --purple: #9b51e0;
+            --red: #ff4b4b;
+            --dark: #0f0f0f;
+            --white: #ffffff;
+            --gray: #f4f4f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- הגדרות כלליות למקטעים --- */
+        section {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 100px 5%;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            /* כאן מוגדרת תמונת הרקע הראשית מהתיקייה שלך */
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('./images/hero.jpg') center/cover no-repeat fixed;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            padding: 20px 50px;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+            cursor: pointer;
+            border: none;
+            text-align: center;
+        }
+
+        .btn-amber { background-color: var(--amber); color: #000; }
+        .btn-black { background-color: #000; color: #fff; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+        /* --- Problem Section --- */
+        .problem-section {
+            background-color: #000;
+            text-align: center;
+        }
+
+        .problem-title {
+            color: var(--red);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 30px;
+        }
+
+        .columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .col-card {
+            padding: 50px 30px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.5s;
+        }
+
+        .col-card.featured {
+            border: 4px solid var(--amber);
+            background: rgba(255, 185, 0, 0.05);
+        }
+
+        /* --- Tali Section --- */
+        .tali-section {
+            background-color: var(--white);
+            color: #000;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .tali-content {
+            padding: 80px 10%;
+        }
+
+        .tali-image {
+            height: 100%;
+            min-height: 100vh;
+            /* כאן מוגדרת התמונה של טלי מהתיקייה שלך */
+            background: url('./images/tali.jpg') center/cover no-repeat;
+        }
+
+        .purple-text { color: var(--purple); font-weight: 800; }
+
+        /* --- Final CTA --- */
+        .final-section {
+            background-color: #e0f7fa;
+            color: #000;
+            text-align: center;
+        }
+
+        /* --- Reveal Animations --- */
+        .reveal { opacity: 0; transform: translateY(50px); }
+
+        @media (max-width: 768px) {
+            .tali-section { grid-template-columns: 1fr; display: flex; flex-direction: column-reverse; }
+            .tali-image { height: 400px; width: 100%; min-height: 400px; }
+            .hero h1 { font-size: 3rem; }
+            .tali-content { padding: 50px 5%; }
+        }
+    </style>
+</head>
+<body>
+
+<main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="reveal">לשבור את הכלוב.</h1>
+            <p class="reveal">פומבה. טלי. תקשיבו טוב: נגמרו הימים שאנחנו עובדים בשביל אחרים.</p>
+            <div class="reveal">
+                <a href="https://wa.me/972528226689?text=טימון, אני מקשיב. איך שוברים את הכלוב?" target="_blank" class="btn btn-amber">טימון, אנחנו איתך! איך עושים את זה? 👇</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <h2 class="problem-title reveal">אנחנו תקועים במעגל השכירים</h2>
+            <p class="reveal" style="font-size: 1.4rem;">אתם יודעים איך זה עובד בג'ונגל הרגיל: אתם צדים בשביל הבוס, הוא מקבל את הסטייק, ואתם מקבלים את העצמות.</p>
+            
+            <div class="columns">
+                <div class="col-card reveal">
+                    <h3>🚫 להיות שכיר</h3>
+                    <p>למכור את הזמן שלך בשביל כסף. אם אתה לא עובד, אתה לא אוכל. יש תקרה, יש בוס, ויש עצבים.</p>
+                </div>
+                <div class="col-card featured reveal">
+                    <h3 style="color: var(--amber);">👑 להיות בעל עסק</h3>
+                    <p>לבנות נכס. האתרים שנבנה יעבדו בשבילנו. אנחנו קובעים את המחיר ואנחנו לוקחים את כל הקופה.</p>
+                </div>
+            </div>
+            <p class="reveal" style="margin-top: 50px; font-style: italic; font-size: 1.5rem;">הגיע הזמן לפטר את הבוס. (גם אם הבוס הוא אריה).</p>
+        </div>
+    </section>
+
+    <!-- Tali Section -->
+    <section class="tali-section">
+        <div class="tali-content">
+            <h2 class="reveal" style="font-size: 3rem; line-height: 1.1;">טלי, זה מוקדש לך: <br><span class="purple-text">הכל אפשר ללמוד. הכל.</span></h2>
+            <br>
+            <p class="reveal" style="font-size: 1.2rem;">אני יודע מה את חושבת: "אבל אני לא יודעת SEO, אני לא יודעת שיווק". אז מה? אף אחד לא נולד כשהוא יודע.</p>
+            <br>
+            <p class="reveal">גם פומבה לא ידע מה זה "שרת" כשהוא נולד. הכל זה מיומנות, ומיומנות לומדים. יש לך שכל ישר ורצון להצליח - וזה מה שחשוב.</p>
+        </div>
+        <div class="tali-image reveal"></div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-section">
+        <div class="container">
+            <h2 class="reveal" style="font-size: 3rem;">שלושה אנשים שיוצאים לחופשי</h2>
+            <p class="reveal" style="font-size: 1.3rem;">אנחנו מקימים את העסק הזה כדי שתהיה לנו שליטה על החיים שלנו.</p>
+            
+            <div class="columns" style="max-width: 800px; margin-left: auto; margin-right: auto;">
+                <div class="reveal">
+                    <a href="https://wa.me/972528226689?text=טימון, זו טלי. אני מוכנה ללמוד!" target="_blank" class="btn btn-black" style="width: 100%;">טלי: אני מוכנה ללמוד! 🎓</a>
+                </div>
+                <div class="reveal">
+                    <a href="https://wa.me/972528226689?text=טימון, נמאס לי להיות שכיר! בוא נבנה עסק!" target="_blank" class="btn btn-amber" style="width: 100%;">פומבה: נמאס לי להיות שכיר! 🐗</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    // 1. אתחול גלילה חלקה (Lenis)
+    const lenis = new Lenis();
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // 2. אתחול GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 3. אנימציית חשיפה (Reveal)
+    document.querySelectorAll('.reveal').forEach((el) => {
+        gsap.to(el, {
+            scrollTrigger: {
+                trigger: el,
+                start: "top 85%", // מתחיל כשהאלמנט נכנס ל-85% מגובה המסך
+                toggleActions: "play none none none"
+            },
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power4.out"
+        });
+    });
+
+    // 4. אפקט Parallax לתמונה של טלי
+    // מופעל רק במסכים רחבים (לא מובייל)
+    if (window.innerWidth > 768) {
+        gsap.to(".tali-image", {
+            scrollTrigger: {
+                trigger: ".tali-section",
+                scrub: true,
+                start: "top bottom",
+                end: "bottom top"
+            },
+            backgroundPosition: "center 20%",
+            ease: "none"
+        });
+    }
+</script>
+</body>
+</html>
