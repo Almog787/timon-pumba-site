@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <!-- אותו קוד מעקב ו-SEO כדי לשמור על רצף -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -14,8 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>צור קשר | טימון ופומבה פתרונות דיגיטליים</title>
-    <meta name="description" content="צרו קשר עם טימון ופומבה לפיתוח אוטומציות אקסל, בניית אתרים ופתרון תקלות.">
-
+    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&display=swap" rel="stylesheet">
     
@@ -31,7 +29,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
 
-        /* Header */
         header {
             padding: 20px 5%; background: rgba(15, 15, 15, 0.95);
             display: flex; justify-content: space-between; align-items: center;
@@ -40,27 +37,19 @@
         .logo { font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
         .highlight { color: var(--amber); }
         .nav-link { color: var(--white); text-decoration: none; margin-left: 20px; font-weight: bold; transition: 0.3s; }
-        .nav-link:hover { color: var(--amber); }
 
-        /* Contact Section */
         .contact-page {
             min-height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             padding: 50px 5%;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./images/hero.jpg') center/cover;
         }
 
         .contact-container {
             background: var(--light-bg);
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 900px;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            padding: 40px; border-radius: 20px;
+            max-width: 900px; width: 100%;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
         }
@@ -68,48 +57,26 @@
         .contact-info h1 { font-family: 'Rubik', sans-serif; font-size: 2.5rem; margin-bottom: 20px; }
         .contact-info p { color: #ccc; margin-bottom: 30px; line-height: 1.6; }
         
-        .info-item { display: flex; align-items: center; margin-bottom: 20px; }
-        .info-icon { width: 40px; height: 40px; background: rgba(255, 185, 0, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--amber); margin-left: 15px; font-size: 1.2rem; }
-        
-        /* Form */
-        .contact-form { display: flex; flex-direction: column; gap: 15px; }
-        
+        .form-group { margin-bottom: 15px; }
         .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 15px;
+            width: 100%; padding: 15px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            color: var(--white);
-            font-family: 'Heebo', sans-serif;
-            font-size: 1rem;
+            border-radius: 8px; color: var(--white);
+            font-family: 'Heebo', sans-serif; font-size: 1rem;
         }
-
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: var(--amber); }
-
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none; border-color: var(--amber); background: rgba(255,255,255,0.1);
-        }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--amber); }
 
         .submit-btn {
-            background-color: var(--green);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
+            background-color: var(--amber); color: var(--dark);
+            padding: 15px; border: none; border-radius: 8px;
+            font-weight: bold; font-size: 1.1rem; cursor: pointer;
+            transition: 0.3s; margin-top: 10px; width: 100%;
         }
-        .submit-btn:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
+        .submit-btn:hover { transform: scale(1.02); }
 
         @media (max-width: 768px) {
             .contact-container { grid-template-columns: 1fr; padding: 20px; }
-            .contact-info { text-align: center; }
-            .info-item { justify-content: center; }
-            .info-icon { margin-left: 10px; }
         }
     </style>
 </head>
@@ -118,53 +85,39 @@
 <header>
     <a href="index.html" class="logo">טימון<span class="highlight">ופומבה</span></a>
     <nav>
-        <a href="index.html" class="nav-link">דף הבית</a>
+        <a href="index.html" class="nav-link">חזרה לדף הבית</a>
     </nav>
 </header>
 
 <section class="contact-page">
     <div class="contact-container">
         
-        <!-- צד ימין: פרטים -->
         <div class="contact-info">
             <h1>בואו נדבר תכל'ס</h1>
-            <p>יש לכם קובץ אקסל שצריך לסדר? אתם צריכים חנות דיגיטלית? או סתם תקלה מעצבנת? השאירו פרטים ונחזור אליכם עם פתרון.</p>
+            <p>יש לכם קובץ אקסל שצריך לסדר? אתם צריכים חנות דיגיטלית? או סתם תקלה מעצבנת? השאירו פרטים ונחזור אליכם בהקדם.</p>
             
-            <div class="info-item">
-                <div class="info-icon">📱</div>
-                <div>
-                    <strong>וואטסאפ ישיר</strong>
-                    <div style="color: #ccc;">052-822-6689</div>
-                </div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-icon">📧</div>
-                <div>
-                    <strong>דואר אלקטרוני</strong>
-                    <div style="color: #ccc;">זמין למטה בטופס</div>
-                </div>
-            </div>
-
-            <div class="info-item">
-                <div class="info-icon">🦁</div>
-                <div>
-                    <strong>שעות פעילות</strong>
-                    <div style="color: #ccc;">ראשון - חמישי: 09:00 - 19:00</div>
-                </div>
+            <div style="margin-top: 30px;">
+                <p>📧 נחזור אליכם למייל או לטלפון תוך יום עסקים אחד.</p>
+                <p>🦁 שעות פעילות: ראשון - חמישי: 09:00 - 19:00</p>
             </div>
         </div>
 
-        <!-- צד שמאל: טופס -->
-        <form class="contact-form" onsubmit="sendToWhatsapp(event)">
+        <!-- הטופס מחובר ל-Formspree -->
+        <!-- שנה את הלינק ב-action ללינק שקיבלת -->
+        <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
             <div class="form-group">
                 <label>שם מלא</label>
-                <input type="text" id="name" required placeholder="איך קוראים לך?">
+                <input type="text" name="name" required placeholder="השם שלך">
+            </div>
+
+            <div class="form-group">
+                <label>אימייל לחזרה</label>
+                <input type="email" name="email" required placeholder="your@email.com">
             </div>
             
             <div class="form-group">
                 <label>במה אנחנו יכולים לעזור?</label>
-                <select id="service">
+                <select name="service">
                     <option value="אוטומציה לאקסל">אוטומציה לאקסל / גוגל שיטס</option>
                     <option value="בניית אתר/חנות">בניית אתר או חנות דיגיטלית</option>
                     <option value="תקלה טכנית">יש לי תקלה טכנית</option>
@@ -173,35 +126,19 @@
             </div>
 
             <div class="form-group">
-                <label>הודעה / תיאור קצר</label>
-                <textarea id="message" rows="4" placeholder="תארו בקצרה מה אתם צריכים..."></textarea>
+                <label>מספר טלפון (אופציונלי)</label>
+                <input type="tel" name="phone" placeholder="050-0000000">
             </div>
 
-            <button type="submit" class="submit-btn">שלח הודעה לטימון בוואטסאפ 🚀</button>
+            <div class="form-group">
+                <label>הודעה</label>
+                <textarea name="message" rows="4" placeholder="תארו בקצרה מה אתם צריכים..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">שלח פנייה 🚀</button>
         </form>
     </div>
 </section>
-
-<script>
-    function sendToWhatsapp(e) {
-        e.preventDefault();
-        
-        // איסוף הנתונים מהטופס
-        const name = document.getElementById('name').value;
-        const service = document.getElementById('service').value;
-        const message = document.getElementById('message').value;
-        
-        // יצירת הודעה מעוצבת
-        const formattedMessage = `היי טימון, הגעתי מהאתר (עמוד צור קשר).
-שמי: ${name}
-אני מתעניין ב: ${service}
-הודעה: ${message}`;
-
-        // שליחה לוואטסאפ
-        const whatsappUrl = `https://wa.me/972528226689?text=${encodeURIComponent(formattedMessage)}`;
-        window.open(whatsappUrl, '_blank');
-    }
-</script>
 
 </body>
 </html>
