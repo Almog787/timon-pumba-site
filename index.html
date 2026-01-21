@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-18YM6QFN0C');
-    </script>
-    
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>טימון ופומבה | מומחים לאוטומציה ודיגיטל</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
@@ -33,106 +26,94 @@
             --border: rgba(255, 255, 255, 0.08);
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-        /* --- Side Navigation --- */
+        /* --- Side Navigation (Hidden on Mobile) --- */
         .side-nav {
-            position: fixed; top: 50%; right: 40px; transform: translateY(-50%);
-            z-index: 1001; display: flex; flex-direction: column; gap: 25px;
-            padding-right: 20px; border-right: 1px solid rgba(255,255,255,0.1);
+            position: fixed; top: 50%; right: 20px; transform: translateY(-50%);
+            z-index: 1001; display: flex; flex-direction: column; gap: 20px;
         }
-        .nav-item { display: flex; align-items: center; justify-content: flex-end; cursor: pointer; position: relative; }
+        .nav-item { display: flex; align-items: center; justify-content: flex-end; cursor: pointer; }
         .nav-dot { width: 8px; height: 8px; background: rgba(255,255,255,0.3); border-radius: 50%; transition: 0.4s; }
-        .nav-label { position: absolute; right: 25px; white-space: nowrap; color: #888; font-size: 0.9rem; font-weight: 700; opacity: 0; transition: 0.3s; }
+        .nav-label { position: absolute; right: 25px; white-space: nowrap; color: #888; font-size: 0.8rem; font-weight: 700; opacity: 0; transition: 0.3s; }
         .nav-item:hover .nav-label, .nav-item.active .nav-label { opacity: 1; color: var(--amber); }
-        .nav-item.active .nav-dot { background: var(--amber); box-shadow: 0 0 15px var(--amber); transform: scale(1.8); }
+        .nav-item.active .nav-dot { background: var(--amber); box-shadow: 0 0 15px var(--amber); transform: scale(1.5); }
 
         /* --- Header --- */
-        header { position: fixed; top: 0; width: 100%; padding: 20px 5%; background: rgba(5,5,5,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 1000; }
-        .logo { font-family: 'Rubik'; font-weight: 900; font-size: 1.6rem; color: var(--white); text-decoration: none; }
+        header { 
+            position: fixed; top: 0; width: 100%; padding: 15px 5%; 
+            background: rgba(5,5,5,0.85); backdrop-filter: blur(15px); 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border); z-index: 1000; 
+        }
+        .logo { font-family: 'Rubik'; font-weight: 900; font-size: 1.3rem; color: var(--white); text-decoration: none; }
 
-        section { min-height: 100vh; padding: 100px 10% 80px; display: flex; align-items: center; justify-content: center; position: relative; }
-        .container { max-width: 1200px; width: 100%; z-index: 2; }
-        h1, h2, h3 { font-family: 'Rubik'; letter-spacing: -1px; }
+        /* --- Section Layouts --- */
+        section { min-height: 100vh; padding: 100px 5% 60px; display: flex; align-items: center; justify-content: center; }
+        .container { max-width: 1200px; width: 100%; }
+        h1 { font-family: 'Rubik'; line-height: 1.1; margin-bottom: 20px; font-size: clamp(2.2rem, 8vw, 5rem); }
+        h2 { font-family: 'Rubik'; line-height: 1.2; margin-bottom: 30px; font-size: clamp(1.8rem, 5vw, 3rem); }
 
-        .btn { display: inline-block; padding: 18px 45px; border-radius: 100px; font-weight: 900; text-decoration: none; transition: 0.4s; cursor: pointer; border: none; font-size: 1.1rem; text-align: center; }
+        .btn { display: inline-block; padding: 16px 32px; border-radius: 100px; font-weight: 900; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem; text-align: center; width: auto; }
         .btn-amber { background: var(--amber); color: #000; }
         .btn-green { background: var(--green); color: #fff; }
-        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .btn:hover { transform: translateY(-3px); }
 
-        /* --- Hero (30% overlay) --- */
+        /* --- Hero --- */
         #hero { 
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/hero.jpg') center/cover no-repeat fixed; 
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/hero.jpg') center/cover no-repeat; 
             text-align: center; 
         }
-        #hero h1 { font-size: clamp(2.5rem, 10vw, 5.5rem); text-shadow: 0 5px 20px rgba(0,0,0,0.8); margin-bottom: 20px; }
-        #hero p { font-size: 1.4rem; max-width: 800px; margin: 0 auto 50px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        #hero p { font-size: clamp(1rem, 4vw, 1.3rem); max-width: 800px; margin: 0 auto 40px; color: #eee; }
 
-        /* --- Luxury Transformation Switcher (The Slider) --- */
-        .transformation-box { 
-            background: #0a0a0a; padding: 80px 60px; border-radius: 50px; 
-            border: 1px solid var(--border); position: relative; overflow: hidden;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.5);
-            transition: 0.6s ease;
-        }
-        
-        /* Glow background for the whole section */
-        .transformation-box::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 185, 0, 0.05), transparent 70%);
-            transition: 0.6s; z-index: 1;
-        }
-        .automated-mode.transformation-box::after {
-            background: radial-gradient(circle at 50% 50%, rgba(37, 211, 102, 0.08), transparent 70%);
-        }
-
+        /* --- Transformation Switcher (Mobile Friendly) --- */
+        .transformation-box { background: #0a0a0a; padding: 50px 30px; border-radius: 35px; border: 1px solid var(--border); }
         .custom-switch { 
-            background: #000; border: 2px solid #222; padding: 6px; border-radius: 100px; 
-            display: flex; position: relative; cursor: pointer; width: 380px; height: 70px; margin: 0 auto 60px; align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 10;
+            background: #000; border: 2px solid #222; padding: 4px; border-radius: 100px; 
+            display: flex; position: relative; cursor: pointer; width: 100%; max-width: 320px; height: 55px; margin: 0 auto 40px; align-items: center; 
         }
-        .switch-option { flex: 1; text-align: center; font-weight: 900; z-index: 2; transition: 0.4s; color: #555; font-size: 1.15rem; }
+        .switch-option { flex: 1; text-align: center; font-weight: 900; z-index: 2; color: #555; font-size: 0.95rem; }
         .switch-option.active { color: #000; }
-        
-        .switch-glider { 
-            position: absolute; width: calc(50% - 6px); height: calc(100% - 12px); 
-            background: var(--amber); right: 6px; border-radius: 100px; 
-            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1;
-            box-shadow: 0 0 20px rgba(255, 185, 0, 0.4);
-        }
-        .automated-mode .switch-glider { transform: translateX(calc(-100%)); background: var(--green); box-shadow: 0 0 20px rgba(37, 211, 102, 0.4); }
+        .switch-glider { position: absolute; width: calc(50% - 4px); height: calc(100% - 8px); background: var(--amber); right: 4px; border-radius: 100px; transition: 0.4s cubic-bezier(0.65, 0, 0.35, 1); z-index: 1; }
+        .automated-mode .switch-glider { transform: translateX(calc(-100%)); background: var(--green); }
 
-        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; position: relative; z-index: 5; }
-        
-        .luxury-card { 
-            background: rgba(255,255,255,0.02); padding: 50px; border-radius: 35px; border: 1px solid var(--border); 
-            text-align: right; backdrop-filter: blur(15px); transition: 0.4s;
-        }
-        .luxury-card h3 { font-size: 1.8rem; margin-bottom: 20px; transition: 0.3s; }
-        .luxury-card p { color: #aaa; font-size: 1.1rem; min-height: 4.5em; }
-        
-        /* Interactive Icons */
-        .status-icon { font-size: 4rem; margin-bottom: 25px; display: block; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); transition: 0.4s; }
-        .automated-mode .status-icon { filter: drop-shadow(0 0 15px var(--green)); }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .luxury-card { background: rgba(255,255,255,0.02); padding: 30px; border-radius: 25px; border: 1px solid var(--border); text-align: right; }
+        .status-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
 
-        /* --- About --- */
-        .about-image { border-radius: 40px; overflow: hidden; height: 550px; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+        /* --- About Section --- */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .about-image { border-radius: 30px; overflow: hidden; height: 450px; border: 1px solid var(--border); }
         .about-image img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- Calculator --- */
-        .calc-container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 50px; background: #0a0a0a; padding: 50px; border-radius: 45px; border: 1px solid var(--border); }
-        .inputs-side { background: #111; padding: 40px; border-radius: 30px; }
-        .val-display { color: var(--amber); font-weight: 900; font-size: 1.4rem; }
-        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; margin: 20px 0; }
-        .big-number { font-size: clamp(3rem, 7vw, 5rem); font-weight: 900; color: var(--red); line-height: 1; margin: 20px 0; text-shadow: 0 0 30px rgba(255,75,75,0.3); }
+        /* --- Calculator Section --- */
+        .calc-container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; background: var(--surface); padding: 35px; border-radius: 35px; border: 1px solid var(--border); }
+        .inputs-side { background: #080808; padding: 25px; border-radius: 20px; }
+        .val-display { color: var(--amber); font-weight: 900; font-size: 1.2rem; }
+        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; margin: 15px 0; }
+        .big-number { font-size: clamp(2.5rem, 10vw, 4.5rem); font-weight: 900; color: var(--red); margin: 10px 0; }
 
-        @media (max-width: 900px) {
-            .side-nav { display: none; }
+        /* --- Contact Form --- */
+        .contact-card { background: var(--surface); padding: 40px 25px; border-radius: 35px; border: 1px solid #333; max-width: 600px; width: 100%; }
+        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 15px; background: #080808; border: 1px solid #222; border-radius: 12px; color: white; font-family: inherit; font-size: 1rem; }
+
+        /* --- Footer --- */
+        footer { padding: 40px 5%; text-align: center; color: #444; border-top: 1px solid #111; font-size: 0.85rem; }
+
+        /* --- Back to Top --- */
+        #backToTop { position: fixed; bottom: 20px; left: 20px; background: var(--amber); color: #000; width: 45px; height: 45px; border-radius: 50%; border: none; font-size: 1.2rem; cursor: pointer; display: none; z-index: 999; }
+
+        /* --- Mobile Responsive Fixes --- */
+        @media (max-width: 850px) {
+            .side-nav { display: none; } /* Hide dots on mobile */
             .comparison-grid, .calc-container, .about-grid { grid-template-columns: 1fr; }
+            .about-image { height: 300px; order: -1; }
+            .btn { width: 100%; } /* Full width buttons for easier clicking */
+            section { padding-top: 80px; padding-bottom: 40px; min-height: auto; }
+            .hero { min-height: 80vh; }
             .transformation-box { padding: 40px 20px; }
-            .custom-switch { width: 100%; }
+            .calc-container { padding: 25px; }
         }
     </style>
 </head>
@@ -148,89 +129,92 @@
 
 <header>
     <a href="#" class="logo">TIMON<span style="color:var(--amber)">&</span>PUMBAA</a>
-    <a href="#contact" class="btn btn-amber" style="padding: 12px 25px; font-size: 0.9rem;">שיחת אפיון</a>
+    <a href="#contact" class="btn btn-amber" style="padding: 10px 20px; font-size: 0.85rem; width: auto;">ייעוץ חינם</a>
 </header>
 
 <main>
+    <!-- Section 1: Hero -->
     <section id="hero">
         <div class="container">
             <h1 class="reveal">הפסיקו לעבוד ידנית.<br><span style="color:var(--amber)">תנו לטכנולוגיה לעבוד.</span></h1>
-            <p class="reveal">אוטומציה חכמה ל-Excel ו-Google Sheets שחוסכת לכם עשרות שעות בחודש.</p>
+            <p class="reveal">מערכות אוטומציה ל-Excel ו-Google Sheets שחוסכות לכם עשרות שעות עבודה בחודש.</p>
             <div class="reveal">
-                <a href="#calc" class="btn btn-green">גלו כמה כסף אתם שורפים 📉</a>
+                <a href="#calc" class="btn btn-green">גלו כמה אתם מפסידים 📉</a>
             </div>
         </div>
     </section>
 
-    <!-- Transformation Switcher (The Slider) -->
-    <section id="transform">
+    <!-- Section 2: Transformation -->
+    <section id="transform" style="background: #030303;">
         <div class="container">
             <div class="transformation-box" id="tBox">
-                <h2 style="text-align: center; margin-bottom: 10px; font-size: 2.5rem;">מבלגן - לשליטה מוחלטת</h2>
-                <p style="text-align: center; color: #666; margin-bottom: 50px;">הקליקו על המתג כדי לראות את הקסם של האוטומציה</p>
-                
+                <h2 style="text-align: center; margin-bottom: 40px;">השינוי בעסק שלך</h2>
                 <div class="custom-switch" onclick="triggerUpgrade()">
                     <div class="switch-glider" id="glider"></div>
                     <div class="switch-option active" id="optM">היום (ידני)</div>
                     <div class="switch-option" id="optA">מחר (אוטומטי)</div>
                 </div>
-
                 <div class="comparison-grid">
                     <div class="luxury-card" id="card1">
                         <span class="status-icon" id="icon1">📉</span>
                         <h3 id="title1" style="color:var(--red)">בזבוז משאבים</h3>
-                        <p id="desc1">העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט יכול לבצע בשניות.</p>
+                        <p id="desc1">העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט עושה בשניות.</p>
                     </div>
                     <div class="luxury-card" id="card2">
                         <span class="status-icon" id="icon2">⚠️</span>
                         <h3 id="title2" style="color:var(--red)">חוסר ודאות</h3>
-                        <p id="desc2">טעויות אנוש בטבלאות גורמות להחלטות עסקיות שגויות ולהפסדים כספיים.</p>
+                        <p id="desc2">טעויות אנוש בטבלאות גורמות להחלטות שגויות ולהפסדים כספיים נסתרים.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Section 3: About (Team) -->
     <section id="about">
-        <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+        <div class="container about-grid">
             <div class="about-image reveal">
-                <img src="images/1tali.jpg" alt="הצוות">
+                <img src="images/1tali.jpg" alt="צוות טימון ופומבה">
             </div>
             <div class="reveal">
-                <h2 style="font-size: 3rem; margin-bottom: 25px;">הנבחרת שבונה לכם <br><span style="color:var(--amber)">שקט תעשייתי</span></h2>
-                <p style="font-size: 1.2rem; line-height: 1.8;">אנחנו לוקחים את התהליכים הכי "מעצבנים" שלכם והופכים אותם לאוטומטיים לחלוטין. כשיש לכם מערכת שדואגת לנתונים, אתם מתפנים לדבר האמיתי - להגדיל את המכירות.</p>
+                <h2>הנבחרת שבונה לכם <br><span style="color:var(--amber)">שקט תעשייתי</span></h2>
+                <p>אנחנו לוקחים את התהליכים הכי "מעצבנים" שלכם והופכים אותם לאוטומטיים. כשיש לכם מערכת שדואגת לנתונים, אתם מתפנים לדבר האמיתי - להגדיל את המכירות.</p>
+                <a href="#contact" class="btn btn-amber" style="margin-top:20px;">בואו נכיר</a>
             </div>
         </div>
     </section>
 
-    <section id="calc" style="background: #030303;">
+    <!-- Section 4: Calculator -->
+    <section id="calc" style="background: #080808;">
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 50px;">מחשבון פוטנציאל חיסכון</h2>
+            <h2 style="text-align: center; margin-bottom: 40px;">מחשבון פוטנציאל חיסכון</h2>
             <div class="calc-container reveal">
                 <div class="inputs-side">
-                    <div style="margin-bottom: 40px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><strong>שעות ביום</strong><span class="val-display" id="hVal">2</span></div>
+                    <div style="margin-bottom: 30px;">
+                        <div style="display:flex; justify-content:space-between;"><strong>שעות עבודה ביום</strong><span class="val-display" id="hVal">2</span></div>
                         <input type="range" id="hInput" min="0.5" max="15" step="0.5" value="2" oninput="updateLogic()">
                     </div>
                     <div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><strong>שכר שעתי</strong><span class="val-display" id="rVal">60 ₪</span></div>
+                        <div style="display:flex; justify-content:space-between;"><strong>שכר שעתי</strong><span class="val-display" id="rVal">60 ₪</span></div>
                         <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateLogic()">
                     </div>
                 </div>
                 <div style="text-align: center;">
                     <h4 style="color:#888;">הפסד שנתי מצטבר:</h4>
                     <div class="big-number" id="totalResult">0 ₪</div>
-                    <div style="height: 200px; width: 100%; margin: 20px 0;"><canvas id="roiChart"></canvas></div>
-                    <a href="#contact" class="btn btn-green">אני רוצה לחסוך את הכסף הזה 💰</a>
+                    <div style="height: 180px; width: 100%; margin: 10px 0;"><canvas id="roiChart"></canvas></div>
+                    <a href="#contact" class="btn btn-green">תעצרו לי את ההפסד הזה 💰</a>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Section 5: Contact -->
     <section id="contact">
         <div class="container">
             <div class="contact-card reveal">
-                <h2 style="text-align: center; margin-bottom: 40px;">מתחילים מהפך היום</h2>
+                <h2 style="text-align: center;">מתחילים מהפך היום</h2>
+                <p style="text-align: center; color: #888; margin-bottom: 30px;">השאירו פרטים ונחזור אליכם עם הצעה לחיסכון מיידי.</p>
                 <form action="https://formspree.io/f/xkqjqbvz" method="POST">
                     <input type="text" name="name" required placeholder="שם מלא">
                     <input type="email" name="email" required placeholder="אימייל">
@@ -238,13 +222,19 @@
                         <option value="אקסל/שיטס">אוטומציה לאקסל / גוגל שיטס</option>
                         <option value="אתר">בניית אתר או חנות</option>
                     </select>
-                    <textarea name="message" rows="4" placeholder="איך נוכל לעזור?"></textarea>
-                    <button type="submit" class="btn btn-amber" style="width:100%">שלח פנייה לצוות 🚀</button>
+                    <textarea name="message" rows="3" placeholder="איך נוכל לעזור?"></textarea>
+                    <button type="submit" class="btn btn-amber">שלח פנייה לצוות 🚀</button>
                 </form>
             </div>
         </div>
     </section>
 </main>
+
+<footer>
+    <p>&copy; 2025 טימון ופומבה פתרונות דיגיטליים. <a href="404.html" style="color:#333; text-decoration:none;">[404]</a></p>
+</footer>
+
+<button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆</button>
 
 <script>
     const lenis = new Lenis();
@@ -254,7 +244,7 @@
 
     gsap.registerPlugin(ScrollTrigger);
     document.querySelectorAll('.reveal').forEach((el) => {
-        gsap.from(el, { scrollTrigger: { trigger: el, start: "top 90%" }, opacity: 0, y: 40, duration: 1 });
+        gsap.from(el, { scrollTrigger: { trigger: el, start: "top 95%" }, opacity: 0, y: 30, duration: 0.8 });
     });
 
     const sectionIds = ['hero', 'transform', 'about', 'calc', 'contact'];
@@ -268,45 +258,41 @@
         document.querySelectorAll('.nav-item').forEach((item, i) => item.classList.toggle('active', i === index));
     }
 
-    // --- Switch Logic ---
     const content = {
-        manual: { color: '#ff4b4b', i1: "📉", t1: "בזבוז משאבים", d1: "העובדים שלכם מבזבזים שעות על פעולות טכניות שרובוט עושה בשניות.", i2: "⚠️", t2: "חוסר ודאות", d2: "טעויות אנוש בטבלאות גורמות להחלטות שגויות והפסדים." },
+        manual: { color: '#ff4b4b', i1: "📉", t1: "בזבוז משאבים", d1: "העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט עושה בשניות.", i2: "⚠️", t2: "חוסר ודאות", d2: "טעויות אנוש בטבלאות גורמות להחלטות שגויות ולהפסדים כספיים." },
         automated: { color: '#25D366', i1: "📈", t1: "שליטה בזמן אמת", d1: "דשבורד חי שמתעדכן בכל שנייה ונותן לך תמונת מצב ניהולית מלאה.", i2: "🚀", t2: "דיוק מקסימלי", d2: "הנתונים נשאבים לבד ב-100% דיוק. המחשב לא טועה לעולם." }
     };
 
     function triggerUpgrade() {
         const box = document.getElementById('tBox');
         box.classList.toggle('automated-mode');
-        const state = box.classList.contains('automated-mode') ? 'automated' : 'manual';
+        const isAutomated = box.classList.contains('automated-mode');
+        const state = isAutomated ? 'automated' : 'manual';
         const data = content[state];
 
-        document.getElementById('optM').classList.toggle('active', state === 'manual');
-        document.getElementById('optA').classList.toggle('active', state === 'automated');
+        document.getElementById('optM').classList.toggle('active', !isAutomated);
+        document.getElementById('optA').classList.toggle('active', isAutomated);
 
-        gsap.to('.luxury-card', { 
-            rotateY: 90, opacity: 0, duration: 0.3, stagger: 0.1, 
-            onComplete: () => {
-                document.getElementById('icon1').innerText = data.i1;
-                document.getElementById('title1').innerText = data.t1;
-                document.getElementById('title1').style.color = data.color;
-                document.getElementById('desc1').innerText = data.d1;
-                document.getElementById('icon2').innerText = data.i2;
-                document.getElementById('title2').innerText = data.t2;
-                document.getElementById('title2').style.color = data.color;
-                document.getElementById('desc2').innerText = data.d2;
-                gsap.to('.luxury-card', { rotateY: 0, opacity: 1, duration: 0.4, stagger: 0.1 });
-            }
-        });
+        gsap.to('.luxury-card', { opacity: 0, y: 10, duration: 0.2, onComplete: () => {
+            document.getElementById('icon1').innerText = data.i1;
+            document.getElementById('title1').innerText = data.t1;
+            document.getElementById('title1').style.color = data.color;
+            document.getElementById('desc1').innerText = data.d1;
+            document.getElementById('icon2').innerText = data.i2;
+            document.getElementById('title2').innerText = data.t2;
+            document.getElementById('title2').style.color = data.color;
+            document.getElementById('desc2').innerText = data.d2;
+            gsap.to('.luxury-card', { opacity: 1, y: 0, duration: 0.3 });
+        }});
     }
 
-    // --- Calculator ---
     let myChart = null;
     function initChart() {
         const ctx = document.getElementById('roiChart').getContext('2d');
         myChart = new Chart(ctx, {
             type: 'bar',
-            data: { labels: ['היום', 'אוטומציה'], datasets: [{ data: [0, 0], backgroundColor: ['rgba(255,75,75,0.8)', 'rgba(37,211,102,0.8)'], borderRadius: 10 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false }, ticks: { color: '#fff' } } } }
+            data: { labels: ['היום', 'אוטומציה'], datasets: [{ data: [0, 0], backgroundColor: ['#ff4b4b', '#25D366'], borderRadius: 10 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#888' }, grid: { display: false } } } }
         });
     }
 
@@ -320,6 +306,7 @@
         if (myChart) { myChart.data.datasets[0].data = [annual, annual * 0.1]; myChart.update(); }
     }
     window.addEventListener('load', () => { initChart(); updateLogic(); });
+    window.onscroll = function() { document.getElementById("backToTop").style.display = (window.pageYOffset > 400) ? "block" : "none"; };
 </script>
 
 </body>
