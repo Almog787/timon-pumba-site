@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-18YM6QFN0C');
-    </script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אוטומציה לאקסל ושיטס | ניתוח חיסכון עסקי</title>
+    <title>אוטומציה לאקסל ושיטס | טימון ופומבה</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
@@ -21,190 +15,94 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { 
-            --amber: #ffb900; 
-            --dark: #0f0f0f; 
-            --light-bg: #1a1a1a; 
-            --white: #ffffff; 
-            --green: #25D366; 
-            --red: #ff4b4b;
-        }
-        
+        :root { --amber: #ffb900; --dark: #0f0f0f; --light-bg: #1a1a1a; --white: #ffffff; --green: #25D366; --red-loss: #ff4b4b; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
         
-        section { padding: 80px 5%; position: relative; }
-        .container { max-width: 1100px; margin: 0 auto; }
+        section { padding: 60px 5%; }
+        .container { max-width: 1100px; margin: 0 auto; width: 100%; }
         h1, h2, h3 { font-family: 'Rubik', sans-serif; }
-
-        header { padding: 20px 5%; background: rgba(15, 15, 15, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: fixed; top: 0; width: 100%; z-index: 100; }
         
-        /* Hero - תוקן לבהירות של 30% */
-        .hero { 
-            min-height: 60vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            text-align: center; 
-            /* שינוי מ-0.8 ל-0.3 כדי להבהיר את התמונה */
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../images/hero.jpg') center/cover; 
-            padding-top: 100px; 
-        }
+        header { padding: 15px 5%; background: rgba(15, 15, 15, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: fixed; top: 0; width: 100%; z-index: 100; }
         
-        /* הוספת צל לטקסט כדי לשמור על קריאות על הרקע הבהיר */
-        .hero h1 { 
-            font-size: clamp(2.5rem, 6vw, 4.5rem); 
-            text-shadow: 0 4px 15px rgba(0,0,0,0.6); 
-        }
-        .hero p { 
-            text-shadow: 0 2px 10px rgba(0,0,0,0.6);
-            font-weight: 500;
-        }
+        .hero { min-height: 60vh; display: flex; align-items: center; text-align: center; justify-content: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('../images/hero.jpg') center/cover; padding-top: 100px; }
 
-        /* --- Transformation Switcher --- */
-        .transformation-section { background: #0a0a0a; border-bottom: 1px solid #222; }
-        .toggle-wrapper { text-align: center; margin-bottom: 50px; }
-        .switch-box { display: inline-flex; background: #222; padding: 6px; border-radius: 50px; position: relative; cursor: pointer; border: 1px solid #333; }
-        .switch-btn { padding: 12px 35px; border-radius: 40px; font-weight: 800; transition: 0.3s; position: relative; z-index: 2; color: #888; font-size: 1.1rem; }
+        /* Calculator - Responsive Grid */
+        .calculator-wrapper { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; background: #151515; padding: 30px; border-radius: 24px; border: 1px solid #333; margin-top: 30px; }
+        .inputs-side { background: #222; padding: 25px; border-radius: 20px; }
+        .val-display { color: var(--amber); font-weight: 900; font-size: 1.1rem; }
+        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; margin: 15px 0; }
+        .big-number { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; color: var(--red-loss); margin: 10px 0; }
+
+        /* Before/After Toggle */
+        .switch-box { display: inline-flex; background: #222; padding: 5px; border-radius: 50px; position: relative; cursor: pointer; border: 1px solid #444; }
+        .switch-btn { padding: 10px 25px; border-radius: 40px; font-weight: 800; position: relative; z-index: 2; color: #777; transition: 0.3s; font-size: 0.9rem; }
         .switch-btn.active { color: #000; }
-        .switch-bg { position: absolute; top: 6px; right: 6px; bottom: 6px; width: calc(50% - 6px); background: var(--amber); border-radius: 40px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1; }
+        .switch-bg { position: absolute; top: 5px; right: 5px; bottom: 5px; width: calc(50% - 5px); background: var(--amber); border-radius: 40px; transition: 0.4s; z-index: 1; }
         .switch-box.automated .switch-bg { transform: translateX(calc(-100%)); background: var(--green); }
 
-        .t-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 50px; align-items: center; }
-        .t-image-container { height: 400px; border-radius: 20px; overflow: hidden; border: 2px solid #333; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .t-image-container img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        
-        .t-content h3 { font-size: 2.2rem; margin-bottom: 20px; }
-        .t-content ul { list-style: none; }
-        .t-content li { margin-bottom: 15px; display: flex; align-items: center; font-size: 1.2rem; color: #ccc; }
-        .t-content li::before { content: "✕"; color: var(--red); margin-left: 15px; font-weight: 900; }
-        .automated-view .t-content li::before { content: "✓"; color: var(--green); }
-        .automated-view { display: none; }
-
-        /* --- Improved Calculator --- */
-        .calculator-card { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: #151515; padding: 40px; border-radius: 30px; border: 1px solid #333; box-shadow: 0 30px 60px rgba(0,0,0,0.6); }
-        .inputs-side { background: #1a1a1a; padding: 35px; border-radius: 24px; border: 1px solid #222; }
-        .control-group { margin-bottom: 30px; }
-        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .val-display { color: var(--amber); font-weight: 900; font-size: 1.3rem; background: rgba(255,185,0,0.1); padding: 4px 12px; border-radius: 8px; }
-        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; height: 8px; }
-
-        .results-side { display: flex; flex-direction: column; justify-content: center; text-align: center; }
-        .money-loss { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; color: var(--red); margin: 10px 0; letter-spacing: -1px; }
-        .time-saved { background: rgba(37, 211, 102, 0.1); color: var(--green); padding: 15px; border-radius: 12px; font-weight: bold; margin-bottom: 25px; border: 1px solid rgba(37, 211, 102, 0.2); }
-
-        .chart-box { height: 200px; margin-bottom: 20px; }
-
-        .btn-green { display: inline-block; padding: 20px 40px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.2rem; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
-        .btn-green:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(37, 211, 102, 0.4); }
+        .btn-green { display: inline-block; padding: 16px 32px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 800; transition: 0.3s; text-align: center; }
 
         @media (max-width: 850px) {
-            .t-grid, .calculator-card { grid-template-columns: 1fr; }
-            .t-image-container { height: 250px; order: -1; }
+            .calculator-wrapper { grid-template-columns: 1fr; padding: 20px; }
+            .hero h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="../" style="font-weight: 900; color: white; text-decoration: none; font-size: 1.4rem;">טימון<span style="color:var(--amber);">ופומבה</span></a>
-    <a href="../" style="color: white; text-decoration: none; font-weight: bold;">← חזרה לדף הבית</a>
+    <a href="../" style="font-weight: 900; color: white; text-decoration: none; font-size: 1.2rem;">טימון<span style="color:var(--amber);">ופומבה</span></a>
+    <a href="../" style="color: white; text-decoration: none; font-weight: bold; font-size: 0.9rem;">← חזרה</a>
 </header>
 
 <main>
     <section class="hero">
         <div class="container">
-            <h1 style="font-size: clamp(2.5rem, 6vw, 4.5rem);">אוטומציה לאקסל ושיטס <br><span style="color:var(--amber);">בלי דאגות.</span></h1>
-            <p style="font-size: 1.4rem; color: #fff; margin-top: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">אל תבזבזו את הזמן היקר שלכם על פעולות שרובוט יכול לעשות במילי-שנייה.</p>
+            <h1 class="reveal">אקסל וגוגל שיטס חכמים. <br><span style="color:var(--amber);">בלי עבודה ידנית.</span></h1>
         </div>
     </section>
 
-    <!-- Transformation Switcher -->
-    <section class="transformation-section">
+    <!-- Transformation Toggle -->
+    <section style="text-align: center; background: #0a0a0a;">
         <div class="container">
-            <div class="toggle-wrapper">
-                <div class="switch-box" id="tSwitch" onclick="toggleT()">
-                    <div class="switch-bg"></div>
-                    <div class="switch-btn active" id="btnM">הכאוס הנוכחי</div>
-                    <div class="switch-btn" id="btnA">המהפך שלנו</div>
-                </div>
+            <h2 style="margin-bottom: 30px;">איך נראה המהפך בעסק?</h2>
+            <div class="switch-box" id="tSwitch" onclick="toggleT()">
+                <div class="switch-bg"></div>
+                <div class="switch-btn active" id="btnM">עבודה ידנית</div>
+                <div class="switch-btn" id="btnA">אוטומציה</div>
             </div>
 
-            <!-- תצוגה ידנית -->
-            <div class="t-grid manual-view" id="viewM">
-                <div class="t-content">
-                    <h3 style="color: var(--red);">טבלאות שמעכבות אותך</h3>
-                    <ul>
-                        <li>הזנת נתונים ידנית אינסופית (Data Entry).</li>
-                        <li>טעויות אנוש שגורמות לנתונים שגויים.</li>
-                        <li>קבצים כבדים שנתקעים בכל פתיחה.</li>
-                        <li>תלות מוחלטת בזיכרון של עובד ספציפי.</li>
-                    </ul>
-                </div>
-                <div class="t-image-container">
-                    <!-- תמונה של אקסל מבולגן ועמוס -->
-                    <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=1000" alt="Messy Spreadsheet">
-                </div>
+            <div id="viewM" style="margin-top:40px; font-size: 1.1rem; color: #ccc;">
+                <p>😵‍💫 שעות של העתק-הדבק, טעויות בנתונים ודוחות שמתעדכנים רק פעם בחודש.</p>
             </div>
-
-            <!-- תצוגה אוטומטית -->
-            <div class="t-grid automated-view" id="viewA">
-                <div class="t-content">
-                    <h3 style="color: var(--green);">ניהול חכם ומהיר</h3>
-                    <ul>
-                        <li>משיכת נתונים אוטומטית מה-CRM או מהאתר.</li>
-                        <li>דיוק של 100% - המחשב לא טועה.</li>
-                        <li>דשבורד חי וצבעוני שנותן תמונת מצב בשנייה.</li>
-                        <li>שקט נפשי - הכל רץ חלק ב-"האקונה מטטה".</li>
-                    </ul>
-                </div>
-                <div class="t-image-container" style="border-color: var(--green);">
-                    <!-- תמונה של דשבורד נקי ומודרני -->
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000" alt="Clean Dashboard">
-                </div>
+            <div id="viewA" style="margin-top:40px; font-size: 1.1rem; color: var(--green); display:none;">
+                <p>🚀 נתונים נשאבים לבד, 0% טעויות ודשבורד חי שזמין לך מכל מקום 24/7.</p>
             </div>
         </div>
     </section>
 
-    <!-- Advanced ROI Calculator -->
+    <!-- Calculator -->
     <section>
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 10px;">מחשבון בזבוז זמן וכסף</h2>
-            <p style="text-align: center; color: #888; margin-bottom: 50px;">גלו כמה העסק שלכם מפסיד על עבודה ידנית בכל שנה.</p>
-            
-            <div class="calculator-card">
+            <h2 style="text-align: center; margin-bottom: 40px;">מחשבון פוטנציאל חיסכון</h2>
+            <div class="calculator-wrapper">
                 <div class="inputs-side">
-                    <h3 style="margin-bottom: 30px;">נתוני הפעילות:</h3>
-                    
-                    <div class="control-group">
-                        <div class="label-row"><label>שעות עבודה ידנית ביום</label><span class="val-display" id="hVal">2</span></div>
-                        <input type="range" id="hInput" min="0.5" max="10" step="0.5" value="2" oninput="updateCalc()">
+                    <div style="margin-bottom: 25px;">
+                        <div style="display:flex; justify-content:space-between;"><strong>שעות ביום</strong><span class="val-display" id="hVal">2</span></div>
+                        <input type="range" id="hInput" min="0.5" max="10" step="0.5" value="2" oninput="updateLogic()">
                     </div>
-
-                    <div class="control-group">
-                        <div class="label-row"><label>שכר שעתי (ברוטו + עלויות)</label><span class="val-display" id="rVal">60 ₪</span></div>
-                        <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateCalc()">
-                    </div>
-
-                    <div class="control-group">
-                        <div class="label-row"><label>מספר עובדים במשימה</label><span class="val-display" id="eVal">1</span></div>
-                        <input type="range" id="eInput" min="1" max="20" step="1" value="1" oninput="updateCalc()">
+                    <div>
+                        <div style="display:flex; justify-content:space-between;"><strong>שכר שעתי</strong><span class="val-display" id="rVal">60 ₪</span></div>
+                        <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateLogic()">
                     </div>
                 </div>
 
-                <div class="results-side">
-                    <h4>ההפסד השנתי שלכם:</h4>
-                    <div class="money-loss" id="totalMoney">0 ₪</div>
-                    
-                    <div class="time-saved">
-                        ⌛ אתם שורפים <span id="daysLost">0</span> ימי עבודה בשנה!
-                    </div>
-
-                    <div class="chart-box">
-                        <canvas id="roiChart"></canvas>
-                    </div>
-
-                    <a href="../contact/" class="btn-green">אני רוצה לחסוך את הכסף הזה 💰</a>
+                <div style="text-align: center;">
+                    <h4 style="color:#888;">הפסד שנתי שניתן לחסוך:</h4>
+                    <div class="big-number" id="totalResult">0 ₪</div>
+                    <div style="height: 150px; margin-bottom: 20px;"><canvas id="roiChart"></canvas></div>
+                    <a href="../contact/" class="btn-green" style="width:100%;">אני רוצה לחסוך את הכסף הזה 💰</a>
                 </div>
             </div>
         </div>
@@ -212,85 +110,46 @@
 </main>
 
 <script>
-    // --- Logic for Transformation ---
-    function toggleT() {
-        const s = document.getElementById('tSwitch');
-        const vM = document.getElementById('viewM');
-        const vA = document.getElementById('viewA');
-        const bM = document.getElementById('btnM');
-        const bA = document.getElementById('btnA');
-
-        if (s.classList.contains('automated')) {
-            s.classList.remove('automated');
-            vA.style.display = 'none';
-            vM.style.display = 'grid';
-            bM.classList.add('active'); bA.classList.remove('active');
-            gsap.from(vM, {opacity: 0, x: 20, duration: 0.4});
-        } else {
-            s.classList.add('automated');
-            vM.style.display = 'none';
-            vA.style.display = 'grid';
-            bA.classList.add('active'); bM.classList.remove('active');
-            gsap.from(vA, {opacity: 0, x: -20, duration: 0.4});
-        }
-    }
-
-    // --- Calculator & Chart Logic ---
     let myChart = null;
 
     function initChart() {
         const ctx = document.getElementById('roiChart').getContext('2d');
         myChart = new Chart(ctx, {
             type: 'bar',
-            data: {
-                labels: ['היום (ידני)', 'אחרי אוטומציה'],
-                datasets: [{
-                    data: [0, 0],
-                    backgroundColor: ['#ff4b4b', '#25D366'],
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { display: false },
-                    x: { ticks: { color: '#888', font: { family: 'Heebo' } }, grid: { display: false } }
-                }
-            }
+            data: { labels: ['היום', 'אוטומציה'], datasets: [{ data: [0, 0], backgroundColor: ['#ff4b4b', '#25D366'], borderRadius: 5 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#888' }, grid: { display: false } } } }
         });
     }
 
-    function updateCalc() {
+    function updateLogic() {
         const h = parseFloat(document.getElementById('hInput').value);
         const r = parseInt(document.getElementById('rInput').value);
-        const e = parseInt(document.getElementById('eInput').value);
-
         document.getElementById('hVal').innerText = h;
         document.getElementById('rVal').innerText = r + ' ₪';
-        document.getElementById('eVal').innerText = e;
+        const annual = h * 22 * 12 * r;
+        document.getElementById('totalResult').innerText = annual.toLocaleString() + ' ₪';
+        if (myChart) { myChart.data.datasets[0].data = [annual, annual * 0.1]; myChart.update(); }
+    }
 
-        const annualMoney = h * e * 22 * 12 * r;
-        const totalHours = h * e * 22 * 12;
-        const daysLost = Math.round(totalHours / 9); // יום עבודה ממוצע
-
-        document.getElementById('totalMoney').innerText = annualMoney.toLocaleString() + ' ₪';
-        document.getElementById('daysLost').innerText = daysLost;
-
-        if (myChart) {
-            myChart.data.datasets[0].data = [annualMoney, annualMoney * 0.1]; // אוטומציה חוסכת 90%
-            myChart.update();
+    function toggleT() {
+        const s = document.getElementById('tSwitch');
+        const vM = document.getElementById('viewM');
+        const vA = document.getElementById('viewA');
+        const bM = document.getElementById('btnM');
+        const bA = document.getElementById('btnA');
+        if (s.classList.contains('automated')) {
+            s.classList.remove('automated'); vA.style.display = 'none'; vM.style.display = 'block';
+            bM.classList.add('active'); bA.classList.remove('active');
+        } else {
+            s.classList.add('automated'); vM.style.display = 'none'; vA.style.display = 'block';
+            bA.classList.add('active'); bM.classList.remove('active');
         }
     }
 
-    window.addEventListener('load', () => {
-        initChart();
-        updateCalc();
-        const lenis = new Lenis();
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
-    });
+    window.addEventListener('load', () => { initChart(); updateLogic(); });
+    const lenis = new Lenis();
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
 </script>
 
 </body>
