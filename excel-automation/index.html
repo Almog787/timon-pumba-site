@@ -5,7 +5,7 @@
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אוטומציה לאקסל ושיטס | טימון ופומבה</title>
+    <title>המהפך הדיגיטלי | טימון ופומבה אוטומציה</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
@@ -15,36 +15,153 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --amber: #ffb900; --dark: #0f0f0f; --light-bg: #1a1a1a; --white: #ffffff; --green: #25D366; --red-loss: #ff4b4b; }
+        :root { 
+            --amber: #ffb900; 
+            --dark: #080808; 
+            --card-bg: rgba(255, 255, 255, 0.03); 
+            --white: #ffffff; 
+            --green: #25D366; 
+            --red: #ff4b4b;
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
         
-        section { padding: 60px 5%; }
-        .container { max-width: 1100px; margin: 0 auto; width: 100%; }
+        section { padding: 100px 5%; position: relative; }
+        .container { max-width: 1100px; margin: 0 auto; }
         h1, h2, h3 { font-family: 'Rubik', sans-serif; }
-        
-        header { padding: 15px 5%; background: rgba(15, 15, 15, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: fixed; top: 0; width: 100%; z-index: 100; }
-        
-        .hero { min-height: 60vh; display: flex; align-items: center; text-align: center; justify-content: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('../images/hero.jpg') center/cover; padding-top: 100px; }
 
-        /* Calculator - Responsive Grid */
-        .calculator-wrapper { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; background: #151515; padding: 30px; border-radius: 24px; border: 1px solid #333; margin-top: 30px; }
-        .inputs-side { background: #222; padding: 25px; border-radius: 20px; }
-        .val-display { color: var(--amber); font-weight: 900; font-size: 1.1rem; }
+        header { padding: 20px 5%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
+        
+        .hero { min-height: 60vh; display: flex; align-items: center; text-align: center; justify-content: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('../images/hero.jpg') center/cover no-repeat fixed; padding-top: 100px; }
+
+        /* --- New Fancy Transformation Switch --- */
+        .transformation-box {
+            background: #111;
+            padding: 60px 40px;
+            border-radius: 40px;
+            border: 1px solid #222;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        .toggle-ui {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .custom-switch {
+            background: #000;
+            border: 2px solid #333;
+            padding: 8px;
+            border-radius: 100px;
+            display: flex;
+            position: relative;
+            cursor: pointer;
+            width: 320px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,1);
+        }
+
+        .switch-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-weight: 900;
+            z-index: 2;
+            transition: 0.4s;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .switch-option.active { color: #000; }
+
+        .switch-glider {
+            position: absolute;
+            width: calc(50% - 8px);
+            height: calc(100% - 16px);
+            background: var(--amber);
+            left: 8px;
+            border-radius: 100px;
+            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 0 20px rgba(255, 185, 0, 0.4);
+        }
+
+        .automated .switch-glider {
+            transform: translateX(calc(100% + 0px));
+            background: var(--green);
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+        }
+
+        /* --- Cards UI --- */
+        .comparison-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            perspective: 1000px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.5s;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .glass-card:hover::before { transform: translateX(100%); }
+
+        .status-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
+        .glass-card h3 { font-size: 1.8rem; margin-bottom: 20px; }
+        .glass-card p { color: #888; margin-bottom: 20px; line-height: 1.6; }
+
+        .feature-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-left: 8px;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+
+        /* Scan Line Effect */
+        .scan-line {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--amber);
+            box-shadow: 0 0 15px var(--amber);
+            opacity: 0;
+            z-index: 5;
+        }
+
+        /* Automated State Styles */
+        .automated .glass-card { border-color: rgba(37, 211, 102, 0.2); }
+        .automated .status-icon { filter: drop-shadow(0 0 10px var(--green)); }
+
+        /* --- Calculator --- */
+        .calculator-card { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: #111; padding: 40px; border-radius: 30px; border: 1px solid #222; margin-top: 50px; }
+        .val-display { color: var(--amber); font-weight: 900; font-size: 1.3rem; }
         input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; margin: 15px 0; }
-        .big-number { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; color: var(--red-loss); margin: 10px 0; }
-
-        /* Before/After Toggle */
-        .switch-box { display: inline-flex; background: #222; padding: 5px; border-radius: 50px; position: relative; cursor: pointer; border: 1px solid #444; }
-        .switch-btn { padding: 10px 25px; border-radius: 40px; font-weight: 800; position: relative; z-index: 2; color: #777; transition: 0.3s; font-size: 0.9rem; }
-        .switch-btn.active { color: #000; }
-        .switch-bg { position: absolute; top: 5px; right: 5px; bottom: 5px; width: calc(50% - 5px); background: var(--amber); border-radius: 40px; transition: 0.4s; z-index: 1; }
-        .switch-box.automated .switch-bg { transform: translateX(calc(-100%)); background: var(--green); }
-
-        .btn-green { display: inline-block; padding: 16px 32px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 800; transition: 0.3s; text-align: center; }
+        .big-number { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; color: var(--red); margin: 10px 0; text-shadow: 0 0 20px rgba(255, 75, 75, 0.2); }
+        .btn-green { display: inline-block; padding: 20px 40px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.2rem; transition: 0.3s; width: 100%; text-align: center; }
 
         @media (max-width: 850px) {
-            .calculator-wrapper { grid-template-columns: 1fr; padding: 20px; }
+            .comparison-display, .calculator-card { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2.2rem; }
         }
     </style>
@@ -52,57 +169,79 @@
 <body>
 
 <header>
-    <a href="../" style="font-weight: 900; color: white; text-decoration: none; font-size: 1.2rem;">טימון<span style="color:var(--amber);">ופומבה</span></a>
-    <a href="../" style="color: white; text-decoration: none; font-weight: bold; font-size: 0.9rem;">← חזרה</a>
+    <a href="../" style="font-weight: 900; color: white; text-decoration: none; font-size: 1.4rem;">טימון<span style="color:var(--amber);">ופומבה</span></a>
+    <a href="../" style="color: white; text-decoration: none; font-weight: bold;">← חזרה</a>
 </header>
 
 <main>
     <section class="hero">
         <div class="container">
-            <h1 class="reveal">אקסל וגוגל שיטס חכמים. <br><span style="color:var(--amber);">בלי עבודה ידנית.</span></h1>
+            <h1 class="reveal">אוטומציה היא לא הוצאה.<br><span style="color:var(--amber);">היא השקעה שמחזירה את עצמה.</span></h1>
         </div>
     </section>
 
-    <!-- Transformation Toggle -->
-    <section style="text-align: center; background: #0a0a0a;">
-        <div class="container">
-            <h2 style="margin-bottom: 30px;">איך נראה המהפך בעסק?</h2>
-            <div class="switch-box" id="tSwitch" onclick="toggleT()">
-                <div class="switch-bg"></div>
-                <div class="switch-btn active" id="btnM">עבודה ידנית</div>
-                <div class="switch-btn" id="btnA">אוטומציה</div>
-            </div>
-
-            <div id="viewM" style="margin-top:40px; font-size: 1.1rem; color: #ccc;">
-                <p>😵‍💫 שעות של העתק-הדבק, טעויות בנתונים ודוחות שמתעדכנים רק פעם בחודש.</p>
-            </div>
-            <div id="viewA" style="margin-top:40px; font-size: 1.1rem; color: var(--green); display:none;">
-                <p>🚀 נתונים נשאבים לבד, 0% טעויות ודשבורד חי שזמין לך מכל מקום 24/7.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Calculator -->
+    <!-- Transformation Switcher Section -->
     <section>
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 40px;">מחשבון פוטנציאל חיסכון</h2>
-            <div class="calculator-wrapper">
+            <div class="transformation-box" id="mainBox">
+                <div class="scan-line" id="scanLine"></div>
+                
+                <div class="toggle-ui">
+                    <div class="custom-switch" id="uiSwitch" onclick="triggerUpgrade()">
+                        <div class="switch-glider"></div>
+                        <div class="switch-option active" id="optM">היום (ידני)</div>
+                        <div class="switch-option" id="optA">מחר (אוטומטי)</div>
+                    </div>
+                </div>
+
+                <div class="comparison-display">
+                    <!-- כרטיס 1 -->
+                    <div class="glass-card" id="card1">
+                        <span class="status-icon" id="icon1">📉</span>
+                        <h3 id="title1">בזבוז משאבים</h3>
+                        <p id="desc1">העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט יכול לבצע בשניות.</p>
+                        <div id="tags1">
+                            <span class="feature-tag">הזנה ידנית</span>
+                            <span class="feature-tag">שחיקת עובדים</span>
+                            <span class="feature-tag">איטיות</span>
+                        </div>
+                    </div>
+
+                    <!-- כרטיס 2 -->
+                    <div class="glass-card" id="card2">
+                        <span class="status-icon" id="icon2">⚠️</span>
+                        <h3 id="title2">חוסר ודאות</h3>
+                        <p id="desc2">טעויות אנוש בטבלאות גורמות להחלטות עסקיות שגויות ולהפסדים כספיים נסתרים.</p>
+                        <div id="tags2">
+                            <span class="feature-tag">טעויות אנוש</span>
+                            <span class="feature-tag">דאטה מיושן</span>
+                            <span class="feature-tag">סיכון</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section style="background: #050505;">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 50px;">מחשבון פוטנציאל חיסכון</h2>
+            <div class="calculator-card">
                 <div class="inputs-side">
-                    <div style="margin-bottom: 25px;">
-                        <div style="display:flex; justify-content:space-between;"><strong>שעות ביום</strong><span class="val-display" id="hVal">2</span></div>
-                        <input type="range" id="hInput" min="0.5" max="10" step="0.5" value="2" oninput="updateLogic()">
-                    </div>
-                    <div>
-                        <div style="display:flex; justify-content:space-between;"><strong>שכר שעתי</strong><span class="val-display" id="rVal">60 ₪</span></div>
-                        <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateLogic()">
-                    </div>
+                    <h3 style="margin-bottom: 20px;">נתוני הפעילות שלכם:</h3>
+                    <div><strong>שעות ביום:</strong> <span class="val-display" id="hVal">2</span></div>
+                    <input type="range" id="hInput" min="0.5" max="10" step="0.5" value="2" oninput="updateLogic()">
+                    
+                    <div style="margin-top: 20px;"><strong>שכר שעתי:</strong> <span class="val-display" id="rVal">60 ₪</span></div>
+                    <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateLogic()">
                 </div>
 
                 <div style="text-align: center;">
                     <h4 style="color:#888;">הפסד שנתי שניתן לחסוך:</h4>
                     <div class="big-number" id="totalResult">0 ₪</div>
-                    <div style="height: 150px; margin-bottom: 20px;"><canvas id="roiChart"></canvas></div>
-                    <a href="../contact/" class="btn-green" style="width:100%;">אני רוצה לחסוך את הכסף הזה 💰</a>
+                    <div style="height: 160px; margin-bottom: 20px;"><canvas id="roiChart"></canvas></div>
+                    <a href="../contact/" class="btn-green">אני רוצה לחסוך את הכסף הזה 💰</a>
                 </div>
             </div>
         </div>
@@ -110,13 +249,61 @@
 </main>
 
 <script>
-    let myChart = null;
+    // --- Fancy Upgrade Logic ---
+    let isAutomated = false;
 
+    function triggerUpgrade() {
+        const box = document.getElementById('mainBox');
+        const scan = document.getElementById('scanLine');
+        const uiSwitch = document.getElementById('uiSwitch');
+        
+        isAutomated = !isAutomated;
+
+        // אנימציית סריקה
+        gsap.fromTo(scan, {top: "0%", opacity: 1}, {top: "100%", opacity: 0, duration: 0.8, ease: "power2.inOut"});
+
+        if (isAutomated) {
+            uiSwitch.classList.add('automated');
+            document.getElementById('optA').classList.add('active');
+            document.getElementById('optM').classList.remove('active');
+            updateContent("🚀", "דיוק מקסימלי", "הנתונים נשאבים לבד ב-100% דיוק. המחשב לא טועה לעולם.", ["אפס טעויות", "מהירות שיא", "סקיילאביליות"], 
+                          "📈", "שליטה בזמן אמת", "דשבורד חי שמתעדכן בכל שנייה ונותן לך תמונת מצב ניהולית מלאה.", ["בינה מלאכותית", "דוחות חיים", "שקט נפשי"]);
+        } else {
+            uiSwitch.classList.remove('automated');
+            document.getElementById('optM').classList.add('active');
+            document.getElementById('optA').classList.remove('active');
+            updateContent("📉", "בזבוז משאבים", "העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט יכול לבצע בשניות.", ["הזנה ידנית", "שחיקת עובדים", "איטיות"],
+                          "⚠️", "חוסר ודאות", "טעויות אנוש בטבלאות גורמות להחלטות עסקיות שגויות ולהפסדים כספיים נסתרים.", ["טעויות אנוש", "דאטה מיושן", "סיכון"]);
+        }
+    }
+
+    function updateContent(i1, t1, d1, tags1, i2, t2, d2, tags2) {
+        const cards = document.querySelectorAll('.glass-card');
+        gsap.to(cards, {opacity: 0, scale: 0.95, duration: 0.3, onComplete: () => {
+            document.getElementById('icon1').innerText = i1;
+            document.getElementById('title1').innerText = t1;
+            document.getElementById('desc1').innerText = d1;
+            document.getElementById('tags1').innerHTML = tags1.map(t => `<span class="feature-tag">${t}</span>`).join('');
+            
+            document.getElementById('icon2').innerText = i2;
+            document.getElementById('title2').innerText = t2;
+            document.getElementById('desc2').innerText = d2;
+            document.getElementById('tags2').innerHTML = tags2.map(t => `<span class="feature-tag">${t}</span>`).join('');
+            
+            gsap.to(cards, {opacity: 1, scale: 1, duration: 0.4, stagger: 0.1});
+        }});
+    }
+
+    // --- Calculator Logic ---
+    let myChart = null;
     function initChart() {
         const ctx = document.getElementById('roiChart').getContext('2d');
         myChart = new Chart(ctx, {
             type: 'bar',
-            data: { labels: ['היום', 'אוטומציה'], datasets: [{ data: [0, 0], backgroundColor: ['#ff4b4b', '#25D366'], borderRadius: 5 }] },
+            data: {
+                labels: ['היום', 'אוטומציה'],
+                datasets: [{ data: [0, 0], backgroundColor: ['#ff4b4b', '#25D366'], borderRadius: 5 }]
+            },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#888' }, grid: { display: false } } } }
         });
     }
@@ -129,21 +316,6 @@
         const annual = h * 22 * 12 * r;
         document.getElementById('totalResult').innerText = annual.toLocaleString() + ' ₪';
         if (myChart) { myChart.data.datasets[0].data = [annual, annual * 0.1]; myChart.update(); }
-    }
-
-    function toggleT() {
-        const s = document.getElementById('tSwitch');
-        const vM = document.getElementById('viewM');
-        const vA = document.getElementById('viewA');
-        const bM = document.getElementById('btnM');
-        const bA = document.getElementById('btnA');
-        if (s.classList.contains('automated')) {
-            s.classList.remove('automated'); vA.style.display = 'none'; vM.style.display = 'block';
-            bM.classList.add('active'); bA.classList.remove('active');
-        } else {
-            s.classList.add('automated'); vM.style.display = 'none'; vA.style.display = 'block';
-            bA.classList.add('active'); bM.classList.remove('active');
-        }
     }
 
     window.addEventListener('load', () => { initChart(); updateLogic(); });
