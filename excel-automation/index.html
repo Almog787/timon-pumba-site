@@ -5,7 +5,7 @@
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>המהפך הדיגיטלי | טימון ופומבה</title>
+    <title>המהפך הדיגיטלי | טימון ופומבה אוטומציה</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
@@ -66,15 +66,20 @@
 
         .switch-glider {
             position: absolute; width: calc(50% - 4px); height: calc(100% - 8px);
-            background: var(--amber); right: 4px; /* ברירת מחדל בימין - מצב 'היום' */
+            background: var(--amber); 
+            left: 4px; /* ברירת מחדל בצד שמאל (היום ידני) */
             border-radius: 100px;
             transition: 0.5s cubic-bezier(0.65, 0, 0.35, 1); z-index: 1;
         }
 
-        /* מצב אוטומטי - גליידר עובר לשמאל וצבעו ירוק */
-        .automated .switch-glider { transform: translateX(calc(-100%)); background: var(--green); box-shadow: 0 0 20px rgba(37, 211, 102, 0.4); }
+        /* מצב אוטומטי - גליידר עובר לימין (מחר) */
+        .automated .switch-glider { 
+            transform: translateX(calc(100%)); 
+            background: var(--green); 
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4); 
+        }
 
-        /* Cards UI */
+        /* Cards UI - Matching your screenshot */
         .comparison-display { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .glass-card {
             background: #161616;
@@ -85,7 +90,7 @@
             transition: 0.3s;
         }
         .status-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
-        .glass-card h3 { font-size: 1.6rem; margin-bottom: 15px; font-family: 'Rubik'; }
+        .glass-card h3 { font-size: 1.6rem; margin-bottom: 15px; font-family: 'Rubik'; font-weight: 700; }
         .glass-card p { color: #ccc; margin-bottom: 25px; line-height: 1.6; min-height: 4em; }
         
         .tags-container { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -113,7 +118,7 @@
 <main>
     <section class="hero">
         <div class="container">
-            <h1 class="reveal">אוטומציה היא לא הוצאה.<br><span style="color:var(--amber);">היא השקעה שמחזירה את עצמה.</span></h1>
+            <h1>אוטומציה היא לא הוצאה.<br><span style="color:var(--amber);">היא השקעה שמחזירה את עצמה.</span></h1>
         </div>
     </section>
 
@@ -126,14 +131,14 @@
                 <div class="toggle-ui">
                     <div class="custom-switch" id="uiSwitch" onclick="triggerUpgrade()">
                         <div class="switch-glider"></div>
-                        <!-- מצב ידני בימין, מצב אוטומטי בשמאל -->
-                        <div class="switch-option" id="optA">מחר (אוטומטי)</div>
+                        <!-- שמאל: היום, ימין: מחר -->
                         <div class="switch-option active" id="optM">היום (ידני)</div>
+                        <div class="switch-option" id="optA">מחר (אוטומטי)</div>
                     </div>
                 </div>
 
                 <div class="comparison-display">
-                    <!-- כרטיס 1 - מתחיל כ'היום' -->
+                    <!-- כרטיס 1 - מתחיל כ'היום' (בזבוז) -->
                     <div class="glass-card" id="card1">
                         <span class="status-icon" id="icon1">📉</span>
                         <h3 id="title1">בזבוז משאבים</h3>
@@ -145,7 +150,7 @@
                         </div>
                     </div>
 
-                    <!-- כרטיס 2 - מתחיל כ'היום' -->
+                    <!-- כרטיס 2 - מתחיל כ'היום' (סיכון) -->
                     <div class="glass-card" id="card2">
                         <span class="status-icon" id="icon2">⚠️</span>
                         <h3 id="title2">חוסר ודאות</h3>
@@ -185,7 +190,7 @@
 </main>
 
 <script>
-    // --- נתוני ההודעות המדויקים ---
+    // --- נתוני ההודעות המדויקים לפי צילום המסך שלך ---
     const contentData = {
         manual: {
             scanColor: '#ffb900',
@@ -194,8 +199,18 @@
         },
         automated: {
             scanColor: '#25D366',
-            card1: { icon: "📈", title: "שליטה בזמן אמת", desc: "דשבורד חי שמתעדכן בכל שנייה ונותן לך תמונת מצב ניהולית מלאה.", tags: ["בינה מלאכותית", "דוחות חיים", "שקט נפשי"] },
-            card2: { icon: "🚀", title: "דיוק מקסימלי", desc: "הנתונים נשאבים לבד ב-100% דיוק. המחשב לא טועה לעולם ולא מתעייף.", tags: ["אפס טעויות", "מהירות שיא", "סקיילאביליות"] }
+            card1: { 
+                icon: "📈", 
+                title: "שליטה בזמן אמת", 
+                desc: "דשבורד חי שמתעדכן בכל שנייה ונותן לך תמונת מצב ניהולית מלאה.", 
+                tags: ["בינה מלאכותית", "דוחות חיים", "שקט נפשי"] 
+            },
+            card2: { 
+                icon: "🚀", 
+                title: "דיוק מקסימלי", 
+                desc: "הנתונים נשאבים לבד ב-100% דיוק. המחשב לא טועה לעולם ולא מתעייף.", 
+                tags: ["אפס טעויות", "מהירות שיא", "סקיילאביליות"] 
+            }
         }
     };
 
@@ -203,40 +218,39 @@
         const uiSwitch = document.getElementById('uiSwitch');
         const scan = document.getElementById('scanLine');
         
-        // בדיקת המצב הנוכחי (האם הכפתור כרגע על 'אוטומטי')
-        const isCurrentlyAutomated = uiSwitch.classList.contains('automated');
-        
-        // אם הוא היה אוטומטי -> עבור לידני. אם היה ידני -> עבור לאוטומטי.
-        const targetState = isCurrentlyAutomated ? 'manual' : 'automated';
-        const data = contentData[targetState];
+        // בדיקה: האם אנחנו כרגע במצב ידני ועוברים לאוטומטי?
+        const willBeAutomated = !uiSwitch.classList.contains('automated');
+        const data = willBeAutomated ? contentData.automated : contentData.manual;
 
-        // עדכון המתג
+        // הפעלת המתג הויזואלי
         uiSwitch.classList.toggle('automated');
-        document.getElementById('optM').classList.toggle('active', targetState === 'manual');
-        document.getElementById('optA').classList.toggle('active', targetState === 'automated');
+        document.getElementById('optM').classList.toggle('active', !willBeAutomated);
+        document.getElementById('optA').classList.toggle('active', willBeAutomated);
 
         // אנימציית סריקה
         scan.style.background = data.scanColor;
         gsap.fromTo(scan, {top: "0%", opacity: 1}, {top: "100%", opacity: 0, duration: 0.8});
 
-        // עדכון תוכן הכרטיסיות באנימציה
+        // עדכון תוכן הכרטיסיות
         const cards = document.querySelectorAll('.glass-card');
-        gsap.to(cards, {opacity: 0, scale: 0.98, duration: 0.25, onComplete: () => {
+        gsap.to(cards, {opacity: 0, y: 10, duration: 0.3, onComplete: () => {
+            // עדכון כרטיס 1
             document.getElementById('icon1').innerText = data.card1.icon;
             document.getElementById('title1').innerText = data.card1.title;
             document.getElementById('desc1').innerText = data.card1.desc;
             document.getElementById('tags1').innerHTML = data.card1.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
             
+            // עדכון כרטיס 2
             document.getElementById('icon2').innerText = data.card2.icon;
             document.getElementById('title2').innerText = data.card2.title;
             document.getElementById('desc2').innerText = data.card2.desc;
             document.getElementById('tags2').innerHTML = data.card2.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
             
-            gsap.to(cards, {opacity: 1, scale: 1, duration: 0.4});
+            gsap.to(cards, {opacity: 1, y: 0, duration: 0.4});
         }});
     }
 
-    // --- Calculator & Chart Logic ---
+    // --- Calculator Logic ---
     let myChart = null;
     function initChart() {
         const ctx = document.getElementById('roiChart').getContext('2d');
