@@ -1,263 +1,283 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <!-- 1. Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-18YM6QFN0C');
+    </script>
+    
+    <!-- SEO & Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>המהפך הדיגיטלי | טימון ופומבה</title>
+    <title>טימון ופומבה | אוטומציה, אקסל ופתרונות דיגיטליים לעסקים</title>
+    <meta name="description" content="מומחים באוטומציה ל-Excel ו-Google Sheets, בניית חנויות דיגיטליות ואתרים. אנחנו הופכים טבלאות למערכות חכמות וחוסכים לכם זמן יקר.">
+    <meta name="google-site-verification" content="OrJ99zXpus_GMOqnEmZI1sJSos31nitrKKtMX8o49KM" />
     
+    <!-- Schema.org for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "טימון ופומבה פתרונות דיגיטליים",
+      "url": "https://almog787.github.io/timon-pumba-site/",
+      "logo": "https://almog787.github.io/timon-pumba-site/images/hero.jpg",
+      "description": "מומחים באוטומציה לאקסל וגוגל שיטס, ובניית אתרים לעסקים.",
+      "address": { "@type": "PostalAddress", "addressCountry": "IL" }
+    }
+    </script>
+
+    <!-- Styles & Fonts -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Animation Libraries -->
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root { 
             --amber: #ffb900; 
-            --dark: #080808; 
+            --dark: #0f0f0f; 
+            --light-bg: #1a1a1a; 
             --white: #ffffff; 
             --green: #25D366; 
-            --red: #ff4b4b;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
+        body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         
-        header { padding: 20px 5%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
-        
-        /* Hero - 30% Brightness */
-        .hero { 
-            min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; 
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../images/hero.jpg') center/cover no-repeat fixed; padding-top: 100px; 
-        }
-        .hero h1 { font-size: clamp(2rem, 5vw, 4rem); text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
-
-        /* --- Transformation Switch Section --- */
         section { padding: 80px 5%; position: relative; }
-        .container { max-width: 1100px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; width: 100%; }
+        h1, h2, h3 { font-family: 'Rubik', sans-serif; }
+        .highlight { color: var(--amber); }
 
-        .transformation-box {
-            background: #111;
-            padding: 60px 40px;
-            border-radius: 40px;
-            border: 1px solid #222;
+        /* Buttons */
+        .btn { display: inline-block; padding: 16px 32px; border-radius: 8px; font-weight: 800; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1.1rem; text-align: center; }
+        .btn-amber { background-color: var(--amber); color: var(--dark); }
+        .btn-green { background-color: var(--green); color: var(--white); }
+        .btn-outline { border: 2px solid var(--amber); color: var(--amber); background: transparent; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+        /* Header */
+        header { position: fixed; top: 0; width: 100%; padding: 15px 5%; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-link { color: white; text-decoration: none; font-weight: bold; font-size: 0.95rem; transition: 0.3s; }
+        .nav-link:hover { color: var(--amber); }
+
+        /* Hero - 30% Overlay (Bright) */
+        .hero { 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            /* שכבת הגנה עדינה של 30% בלבד */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('./images/hero.jpg') center/cover no-repeat fixed; 
+            padding-top: 100px; 
         }
+        .hero h1 { font-size: clamp(2.2rem, 8vw, 4.5rem); margin-bottom: 20px; line-height: 1.1; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+        .hero p { font-size: clamp(1.1rem, 3vw, 1.4rem); max-width: 750px; margin: 0 auto 40px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.6); font-weight: 500; }
 
-        .toggle-ui { display: flex; justify-content: center; margin-bottom: 60px; }
+        /* Services Grid */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 50px; }
+        .service-card { background: var(--light-bg); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; display: flex; flex-direction: column; }
+        .service-card:hover { border-color: var(--amber); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .service-icon { font-size: 3rem; margin-bottom: 20px; }
+        .service-card h3 { margin-bottom: 15px; color: var(--amber); }
+        .service-card ul { list-style: none; margin-bottom: 30px; color: #ccc; flex-grow: 1; }
+        .service-card li { margin-bottom: 12px; display: flex; align-items: center; }
+        .service-card li::before { content: "•"; color: var(--amber); margin-left: 10px; font-size: 1.5rem; }
 
-        .custom-switch {
-            background: #000;
-            border: 2px solid #333;
-            padding: 4px;
-            border-radius: 100px;
-            display: flex;
-            position: relative;
-            cursor: pointer;
-            width: 320px;
-            height: 55px;
-            align-items: center;
+        /* Portfolio Section */
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-top: 40px; }
+        .portfolio-item { position: relative; border-radius: 16px; overflow: hidden; height: 380px; background-color: #111; border: 1px solid #222; }
+        .portfolio-bg { width: 100%; height: 100%; background-size: cover; background-position: center; transition: 0.6s; opacity: 0.7; }
+        .portfolio-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%); padding: 35px; transform: translateY(0); transition: 0.3s; }
+        .portfolio-item:hover .portfolio-bg { transform: scale(1.05); opacity: 1; }
+        .portfolio-item h3 { font-size: 1.5rem; margin-bottom: 8px; color: var(--amber); }
+
+        /* Testimonials */
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 50px; }
+        .review-card { background: linear-gradient(145deg, #1a1a1a, #222); padding: 35px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: right; }
+        .review-stars { color: var(--amber); margin-bottom: 15px; font-size: 1.2rem; }
+        .review-text { font-style: italic; color: #ddd; margin-bottom: 20px; line-height: 1.6; }
+
+        /* Footer */
+        footer { background: #000; padding: 60px 5% 30px; border-top: 1px solid #222; color: #888; text-align: center; }
+        footer a { color: #555; text-decoration: none; font-size: 0.8rem; margin-top: 10px; display: inline-block; }
+
+        /* Back to Top */
+        #backToTop { position: fixed; bottom: 30px; right: 30px; background: var(--amber); color: #000; width: 50px; height: 50px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; display: none; z-index: 999; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            section { padding: 60px 5%; }
+            .hero { background-attachment: scroll; }
         }
-
-        .switch-option { flex: 1; text-align: center; font-weight: 900; z-index: 2; transition: 0.4s; color: #555; pointer-events: none; }
-        .switch-option.active { color: #000; }
-
-        .switch-glider {
-            position: absolute; width: calc(50% - 4px); height: calc(100% - 8px);
-            background: var(--amber); right: 4px; border-radius: 100px;
-            transition: 0.4s cubic-bezier(0.65, 0, 0.35, 1); z-index: 1;
-        }
-
-        /* מצב אוטומטי - גליידר עובר שמאלה וירוק */
-        .automated .switch-glider { transform: translateX(calc(-100%)); background: var(--green); }
-
-        /* Cards UI */
-        .comparison-display { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .glass-card {
-            background: #161616;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 40px;
-            border-radius: 30px;
-            text-align: right;
-        }
-        .status-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
-        .glass-card h3 { font-size: 1.6rem; margin-bottom: 15px; font-family: 'Rubik'; }
-        .glass-card p { color: #ccc; margin-bottom: 25px; line-height: 1.6; min-height: 3em; }
-        
-        .tags-container { display: flex; flex-wrap: wrap; gap: 10px; }
-        .feature-tag {
-            padding: 6px 14px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem; color: #aaa;
-        }
-
-        /* Scan Line Effect */
-        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--amber); opacity: 0; z-index: 5; }
-
-        /* Calculator */
-        .calculator-card { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: #111; padding: 40px; border-radius: 30px; border: 1px solid #222; margin-top: 50px; }
-        .val-display { color: var(--amber); font-weight: 900; font-size: 1.3rem; }
-        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; margin: 15px 0; }
-        .big-number { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; color: var(--red); margin: 10px 0; }
-        .btn-green { display: inline-block; padding: 20px 40px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.2rem; transition: 0.3s; width: 100%; text-align: center; border: none; cursor: pointer; }
-
-        @media (max-width: 850px) { .comparison-display, .calculator-card { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="../" style="font-weight: 900; color: white; text-decoration: none; font-size: 1.4rem;">טימון<span style="color:var(--amber);">ופומבה</span></a>
-    <a href="../" style="color: white; text-decoration: none; font-weight: bold;">← חזרה</a>
+    <a href="./" class="logo">טימון<span class="highlight">ופומבה</span></a>
+    <nav class="nav-links">
+        <a href="./excel-automation/" class="nav-link">אוטומציה</a>
+        <a href="#services" class="nav-link">שירותים</a>
+        <a href="./contact/" class="nav-link">צור קשר</a>
+    </nav>
+    <a href="./contact/" class="btn btn-amber" style="padding: 10px 20px; font-size: 0.9rem;">שיחת ייעוץ</a>
 </header>
 
 <main>
+    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>אוטומציה היא לא הוצאה.<br><span style="color:var(--amber);">היא השקעה שמחזירה את עצמה.</span></h1>
-        </div>
-    </section>
-
-    <!-- Transformation Switcher -->
-    <section>
-        <div class="container">
-            <div class="transformation-box" id="mainBox">
-                <div class="scan-line" id="scanLine"></div>
-                
-                <div class="toggle-ui">
-                    <div class="custom-switch" id="uiSwitch" onclick="triggerUpgrade()">
-                        <div class="switch-glider"></div>
-                        <div class="switch-option" id="optA">מחר (אוטומטי)</div>
-                        <div class="switch-option active" id="optM">היום (ידני)</div>
-                    </div>
-                </div>
-
-                <div class="comparison-display">
-                    <!-- כרטיס 1 -->
-                    <div class="glass-card" id="card1">
-                        <span class="status-icon" id="icon1">📉</span>
-                        <h3 id="title1">בזבוז משאבים</h3>
-                        <p id="desc1">העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט יכול לבצע בשניות.</p>
-                        <div class="tags-container" id="tags1">
-                            <span class="feature-tag">הזנה ידנית</span>
-                            <span class="feature-tag">שחיקת עובדים</span>
-                            <span class="feature-tag">איטיות</span>
-                        </div>
-                    </div>
-
-                    <!-- כרטיס 2 -->
-                    <div class="glass-card" id="card2">
-                        <span class="status-icon" id="icon2">⚠️</span>
-                        <h3 id="title2">חוסר ודאות</h3>
-                        <p id="desc2">טעויות אנוש בטבלאות גורמות להחלטות עסקיות שגויות ולהפסדים כספיים נסתרים.</p>
-                        <div class="tags-container" id="tags2">
-                            <span class="feature-tag">טעויות אנוש</span>
-                            <span class="feature-tag">דאטה מיושן</span>
-                            <span class="feature-tag">סיכון</span>
-                        </div>
-                    </div>
-                </div>
+            <h1 class="reveal">הפסיקו לעבוד ידנית. <br><span class="highlight">תנו לטכנולוגיה לעבוד.</span></h1>
+            <p class="reveal">מומחים באוטומציה ל-Excel ו-Google Sheets, בניית אתרים ופתרון תקלות טכניות מורכבות.</p>
+            <div class="reveal">
+                <a href="./excel-automation/" class="btn btn-green">איך חוסכים זמן וכסף? 📊</a>
             </div>
         </div>
     </section>
 
-    <!-- Calculator Section -->
-    <section style="background: #050505;">
+    <!-- Services Section -->
+    <section id="services">
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 40px;">מחשבון פוטנציאל חיסכון</h2>
-            <div class="calculator-card">
-                <div class="inputs-side" style="background:#1a1a1a; padding:30px; border-radius:20px;">
-                    <div style="display:flex; justify-content:space-between;"><strong>שעות ביום:</strong> <span class="val-display" id="hVal">2</span></div>
-                    <input type="range" id="hInput" min="0.5" max="10" step="0.5" value="2" oninput="updateLogic()">
-                    <div style="margin-top: 20px; display:flex; justify-content:space-between;"><strong>שכר שעתי:</strong> <span class="val-display" id="rVal">60 ₪</span></div>
-                    <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateLogic()">
+            <h2 class="reveal" style="text-align: center; margin-bottom: 50px; font-size: 2.5rem;">במה אנחנו מתמחים?</h2>
+            <div class="services-grid">
+                
+                <div class="service-card reveal">
+                    <div class="service-icon">📊</div>
+                    <h3>אקסל וגוגל שיטס</h3>
+                    <p>הופכים טבלאות למערכות חכמות שמתעדכנות לבד וחוסכות טעויות אנוש.</p>
+                    <ul>
+                        <li>בניית דשבורדים חיים</li>
+                        <li>אוטומציות Apps Script</li>
+                        <li>נוסחאות מורכבות ו-VBA</li>
+                    </ul>
+                    <a href="./excel-automation/" class="btn btn-green">למחשבון החיסכון</a>
                 </div>
 
-                <div style="text-align: center;">
-                    <h4 style="color:#888;">הפסד שנתי שניתן לחסוך:</h4>
-                    <div class="big-number" id="totalResult">0 ₪</div>
-                    <div style="height: 150px; margin-bottom: 20px;"><canvas id="roiChart"></canvas></div>
-                    <a href="../contact/" class="btn-green">אני רוצה לחסוך את הכסף הזה 💰</a>
+                <div class="service-card reveal">
+                    <div class="service-icon">🛍️</div>
+                    <h3>בניית אתרים וחנויות</h3>
+                    <p>פיתוח חנויות E-commerce ואתרי תדמית יוקרתיים המותאמים אישית.</p>
+                    <ul>
+                        <li>עיצוב חווית משתמש (UX)</li>
+                        <li>אופטימיזציה לגוגל (SEO)</li>
+                        <li>סליקה וחיבור למערכות</li>
+                    </ul>
+                    <a href="./contact/" class="btn btn-amber">הצעת מחיר</a>
+                </div>
+
+                <div class="service-card reveal">
+                    <div class="service-icon">🔧</div>
+                    <h3>טיפול בתקלות ודיגיטל</h3>
+                    <p>האתר נפל? האקסל נתקע? אנחנו ה"הנדימן" הדיגיטלי שיחזיר אתכם למסלול.</p>
+                    <ul>
+                        <li>תיקון באגים קריטיים</li>
+                        <li>שיפור מהירות האתר</li>
+                        <li>תחזוקה ואבטחה שוטפת</li>
+                    </ul>
+                    <a href="./contact/" class="btn btn-outline">יש לי תקלה טכנית</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section - Using your images -->
+    <section style="background: var(--light-bg);">
+        <div class="container">
+            <h2 class="reveal" style="text-align: center; margin-bottom: 40px;">פרויקטים נבחרים</h2>
+            <div class="portfolio-grid">
+                
+                <div class="portfolio-item reveal">
+                    <div class="portfolio-bg" style="background-image: url('./images/hero.jpg');"></div>
+                    <div class="portfolio-overlay">
+                        <h3>מערכות אוטומציה חכמות</h3>
+                        <p>ייעול תהליכים עסקיים שחוסכים עשרות שעות עבודה בחודש.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-item reveal">
+                    <div class="portfolio-bg" style="background-image: url('./images/1tali.jpg');"></div>
+                    <div class="portfolio-overlay">
+                        <h3>בניית חנויות ואתרי תדמית</h3>
+                        <p>הפיכת גולשים ללקוחות משלמים באמצעות עיצוב מדויק ומהירות שיא.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section>
+        <div class="container">
+            <h2 class="reveal" style="text-align: center; margin-bottom: 40px;">מה הלקוחות אומרים?</h2>
+            <div class="reviews-grid">
+                <div class="review-card reveal">
+                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="review-text">"האוטומציה שבניתם לנו באקסל פשוט שינתה את העסק. חסכנו שעות כל שבוע על סידור הנתונים."</p>
+                    <strong>- ירון, מנהל לוגיסטיקה</strong>
+                </div>
+                <div class="review-card reveal">
+                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="review-text">"האתר החדש נראה מדהים ומביא לידים כבר מהשבוע הראשון. תודה רבה על השירות!"</p>
+                    <strong>- ענבל, מעצבת פנים</strong>
                 </div>
             </div>
         </div>
     </section>
 </main>
 
+<footer>
+    <div class="container">
+        <p>&copy; 2025 טימון ופומבה פתרונות דיגיטליים. כל הזכויות שמורות.</p>
+        <a href="./404.html">[Status Check]</a>
+    </div>
+</footer>
+
+<button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="חזרה למעלה">⬆</button>
+
 <script>
-    // --- נתוני ההודעות (מתוקן) ---
-    const contentData = {
-        manual: {
-            scanColor: '#ffb900',
-            card1: { icon: "📉", title: "בזבוז משאבים", desc: "העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט יכול לבצע בשניות.", tags: ["הזנה ידנית", "שחיקת עובדים", "איטיות"] },
-            card2: { icon: "⚠️", title: "חוסר ודאות", desc: "טעויות אנוש בטבלאות גורמות להחלטות עסקיות שגויות ולהפסדים כספיים נסתרים.", tags: ["טעויות אנוש", "דאטה מיושן", "סיכון"] }
-        },
-        automated: {
-            scanColor: '#25D366',
-            card1: { icon: "📈", title: "שליטה בזמן אמת", desc: "דשבורד חי שמתעדכן בכל שנייה ונותן לך תמונת מצב ניהולית מלאה.", tags: ["בינה מלאכותית", "דוחות חיים", "שקט נפשי"] },
-            card2: { icon: "🚀", title: "דיוק מקסימלי", desc: "הנתונים נשאבים לבד ב-100% דיוק. המחשב לא טועה לעולם ולא מתעייף.", tags: ["אפס טעויות", "מהירות שיא", "סקיילאביליות"] }
-        }
-    };
-
-    function triggerUpgrade() {
-        const uiSwitch = document.getElementById('uiSwitch');
-        const scan = document.getElementById('scanLine');
-        
-        // בדיקה לאיזה מצב עוברים
-        const movingToAutomated = !uiSwitch.classList.contains('automated');
-        const data = movingToAutomated ? contentData.automated : contentData.manual;
-
-        // הפעלת המתג
-        uiSwitch.classList.toggle('automated');
-        document.getElementById('optM').classList.toggle('active', !movingToAutomated);
-        document.getElementById('optA').classList.toggle('active', movingToAutomated);
-
-        // אפקט סריקה
-        scan.style.background = data.scanColor;
-        gsap.fromTo(scan, {top: "0%", opacity: 1}, {top: "100%", opacity: 0, duration: 0.8});
-
-        // החלפת תוכן הכרטיסיות באנימציה
-        const cards = document.querySelectorAll('.glass-card');
-        gsap.to(cards, {opacity: 0, scale: 0.95, duration: 0.3, onComplete: () => {
-            document.getElementById('icon1').innerText = data.card1.icon;
-            document.getElementById('title1').innerText = data.card1.title;
-            document.getElementById('desc1').innerText = data.card1.desc;
-            document.getElementById('tags1').innerHTML = data.card1.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
-            
-            document.getElementById('icon2').innerText = data.card2.icon;
-            document.getElementById('title2').innerText = data.card2.title;
-            document.getElementById('desc2').innerText = data.card2.desc;
-            document.getElementById('tags2').innerHTML = data.card2.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
-            
-            gsap.to(cards, {opacity: 1, scale: 1, duration: 0.4});
-        }});
-    }
-
-    // --- Calculator Logic ---
-    let myChart = null;
-    function initChart() {
-        const ctx = document.getElementById('roiChart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'bar',
-            data: { labels: ['היום', 'אוטומציה'], datasets: [{ data: [0, 0], backgroundColor: ['#ff4b4b', '#25D366'], borderRadius: 5 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#888' }, grid: { display: false } } } }
-        });
-    }
-
-    function updateLogic() {
-        const h = parseFloat(document.getElementById('hInput').value);
-        const r = parseInt(document.getElementById('rInput').value);
-        document.getElementById('hVal').innerText = h;
-        document.getElementById('rVal').innerText = r + ' ₪';
-        const annual = h * 22 * 12 * r;
-        document.getElementById('totalResult').innerText = annual.toLocaleString() + ' ₪';
-        if (myChart) { myChart.data.datasets[0].data = [annual, annual * 0.1]; myChart.update(); }
-    }
-
-    window.addEventListener('load', () => { initChart(); updateLogic(); });
+    // Smooth Scroll Initialization
     const lenis = new Lenis();
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
+
+    // GSAP Revel Animations (Safe 'from' method)
+    gsap.registerPlugin(ScrollTrigger);
+    document.querySelectorAll('.reveal').forEach((el) => {
+        gsap.from(el, {
+            scrollTrigger: {
+                trigger: el,
+                start: "top 90%", 
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            y: 40,
+            duration: 0.8,
+            ease: "power2.out"
+        });
+    });
+
+    // Back to top button visibility
+    window.onscroll = function() {
+        const btn = document.getElementById("backToTop");
+        if (window.pageYOffset > 400) {
+            btn.style.display = "block";
+        } else {
+            btn.style.display = "none";
+        }
+    };
 </script>
 
 </body>
