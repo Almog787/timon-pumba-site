@@ -39,7 +39,27 @@
 
         header { padding: 20px 5%; background: rgba(15, 15, 15, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: fixed; top: 0; width: 100%; z-index: 100; }
         
-        .hero { min-height: 60vh; display: flex; align-items: center; text-align: center; justify-content: center; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../images/hero.jpg') center/cover; padding-top: 100px; }
+        /* Hero - תוקן לבהירות של 30% */
+        .hero { 
+            min-height: 60vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            /* שינוי מ-0.8 ל-0.3 כדי להבהיר את התמונה */
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../images/hero.jpg') center/cover; 
+            padding-top: 100px; 
+        }
+        
+        /* הוספת צל לטקסט כדי לשמור על קריאות על הרקע הבהיר */
+        .hero h1 { 
+            font-size: clamp(2.5rem, 6vw, 4.5rem); 
+            text-shadow: 0 4px 15px rgba(0,0,0,0.6); 
+        }
+        .hero p { 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+            font-weight: 500;
+        }
 
         /* --- Transformation Switcher --- */
         .transformation-section { background: #0a0a0a; border-bottom: 1px solid #222; }
@@ -95,7 +115,7 @@
     <section class="hero">
         <div class="container">
             <h1 style="font-size: clamp(2.5rem, 6vw, 4.5rem);">אוטומציה לאקסל ושיטס <br><span style="color:var(--amber);">בלי דאגות.</span></h1>
-            <p style="font-size: 1.4rem; color: #ccc; margin-top: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">אל תבזבזו את הזמן היקר שלכם על פעולות שרובוט יכול לעשות במילי-שנייה.</p>
+            <p style="font-size: 1.4rem; color: #fff; margin-top: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">אל תבזבזו את הזמן היקר שלכם על פעולות שרובוט יכול לעשות במילי-שנייה.</p>
         </div>
     </section>
 
