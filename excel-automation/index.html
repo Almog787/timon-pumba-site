@@ -5,107 +5,171 @@
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אוטומציה חכמה | טימון ופומבה</title>
+    <title>אוטומציה חכמה | הופכים אקסל לכלי עבודה עוצמתי</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@300;400;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { 
-            --amber: #ffb900; 
-            --bg-light: #ffffff; 
-            --bg-gray: #f1f3f5;
-            --text-main: #2d3436;
-            --green: #25D366; 
-            --red: #d63031;
+        :root {
+            --amber: #ffb900;
+            --dark: #0a0a0a;
+            --light-bg: #151515;
+            --green: #25D366;
+            --white: #ffffff;
         }
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Heebo', sans-serif; background-color: var(--bg-light); color: var(--text-main); line-height: 1.6; }
+        body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
         
-        section { padding: 80px 5%; }
-        .container { max-width: 1000px; margin: 0 auto; }
+        section { padding: 100px 5%; }
+        .container { max-width: 1100px; margin: 0 auto; }
         h1, h2, h3 { font-family: 'Rubik', sans-serif; }
 
-        /* Calculator Wrapper */
-        .calc-card {
-            background: #fff; padding: 40px; border-radius: 30px; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08); border: 1px solid #eee;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+        /* --- Data Flow Animation --- */
+        .data-animation {
+            height: 100px; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 40px;
+        }
+        .data-node {
+            width: 15px; height: 15px; background: var(--amber); border-radius: 2px; opacity: 0.3;
         }
 
-        .inputs-side { background: var(--bg-gray); padding: 30px; border-radius: 20px; }
-        .control-group { margin-bottom: 25px; }
+        /* --- Calculator Wrapper --- */
+        .logic-grid {
+            display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start;
+        }
+
+        .inputs-panel {
+            background: var(--light-bg); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .control-group { margin-bottom: 30px; }
         .label-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; }
-        .val-display { color: var(--amber); font-size: 1.2rem; }
-        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; }
+        .val-display { color: var(--amber); }
 
-        /* Result Panel */
-        .result-side { display: flex; flex-direction: column; justify-content: center; text-align: center; }
-        .insight-box { background: #fff9db; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #ffe066; }
-        .big-number { font-size: 3.5rem; font-weight: 900; color: var(--red); margin: 10px 0; }
-        
-        .btn-green { display: inline-block; padding: 18px 40px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 1.2rem; transition: 0.3s; }
-        .btn-green:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3); }
+        input[type=range] { width: 100%; cursor: pointer; accent-color: var(--amber); }
 
-        /* Table */
-        .comp-table { width: 100%; border-collapse: collapse; margin-top: 40px; background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .comp-table th, .comp-table td { padding: 20px; border: 1px solid #eee; text-align: center; }
-        .comp-table th { background: var(--bg-gray); }
+        /* --- Result Insights --- */
+        .insights-panel {
+            display: flex; flex-direction: column; gap: 20px;
+        }
 
-        @media (max-width: 800px) { .calc-card { grid-template-columns: 1fr; } }
+        .insight-card {
+            background: rgba(255,255,255,0.03); padding: 25px; border-radius: 15px; border-right: 4px solid var(--amber);
+            transition: 0.3s;
+        }
+
+        .insight-card h4 { color: var(--amber); margin-bottom: 8px; font-size: 1.2rem; }
+        .insight-card p { font-size: 1rem; color: #bbb; line-height: 1.5; }
+
+        .big-result {
+            font-size: 3.5rem; font-weight: 900; color: #ff4b4b; margin: 20px 0;
+        }
+
+        .btn { display: inline-block; padding: 18px 40px; border-radius: 12px; font-weight: 800; text-decoration: none; text-align: center; font-size: 1.2rem; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-green { background: var(--green); color: white; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
+        .btn-green:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(37, 211, 102, 0.4); }
+
+        /* --- Comparison Section --- */
+        .comparison-table {
+            width: 100%; border-collapse: collapse; margin-top: 50px; background: #111; border-radius: 15px; overflow: hidden;
+        }
+        .comparison-table th, .comparison-table td { padding: 20px; text-align: center; border: 1px solid #222; }
+        .comparison-table th { background: #1a1a1a; color: var(--amber); }
+        .bad { color: #ff4b4b; }
+        .good { color: var(--green); font-weight: bold; }
+
+        @media (max-width: 850px) {
+            .logic-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-<header style="padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: #fff; border-bottom: 1px solid #eee;">
-    <a href="../" style="font-weight: 900; color: #2d3436; text-decoration: none; font-size: 1.4rem;">טימון<span style="color:var(--amber);">ופומבה</span></a>
-    <a href="../" style="color: var(--text-main); text-decoration: none; font-weight: bold;">← חזרה לדף הבית</a>
+<header style="padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; top:0; width:100%; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); z-index: 100;">
+    <a href="../" style="font-weight: 900; color: white; text-decoration: none; font-size: 1.4rem;">טימון<span style="color:var(--amber);">ופומבה</span></a>
+    <a href="../" style="color: white; text-decoration: none; font-weight: bold;">← חזרה הביתה</a>
 </header>
 
 <main>
-    <section style="text-align: center; background: var(--bg-gray);">
+    <!-- Hero Section -->
+    <section style="text-align: center; padding-top: 150px;">
         <div class="container">
-            <h1 style="font-size: 3rem; margin-bottom: 20px;">האם אתה מנהל עסק, <br><span style="color:var(--amber);">או מנהל טבלאות?</span></h1>
-            <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto;">אוטומציה היא לא רק חיסכון בכסף. היא הדרך שלך להפסיק לעשות עבודה של רובוט, ולהתחיל לצמוח.</p>
+            <!-- Data Flow Animation Placeholder -->
+            <div class="data-animation" id="dataFlow">
+                <div class="data-node"></div><div class="data-node"></div><div class="data-node"></div>
+                <div class="data-node"></div><div class="data-node"></div><div class="data-node"></div>
+            </div>
+
+            <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 20px;">האם אתה מנהל את העסק, <br><span style="color:var(--amber);">או מנהל טבלאות?</span></h1>
+            <p style="font-size: 1.3rem; color: #aaa; max-width: 800px; margin: 0 auto;">
+                אוטומציה היא לא רק "חיסכון בכסף". היא הדרך שלך להפסיק לעשות עבודה של רובוט, ולהתחיל לעשות עבודה של מנהל.
+            </p>
         </div>
     </section>
 
-    <section>
+    <!-- Interactive Logic Section -->
+    <section style="background: #0f0f0f; border-top: 1px solid #222;">
         <div class="container">
-            <div class="calc-card">
+            <div class="logic-grid">
+                
                 <!-- Inputs -->
-                <div class="inputs-side">
-                    <h3 style="margin-bottom: 25px;">נתוני הפעילות שלך:</h3>
+                <div class="inputs-panel">
+                    <h3 style="margin-bottom: 30px;">נתוני הפעילות שלך:</h3>
+                    
                     <div class="control-group">
-                        <div class="label-row"><label>שעות עבודה ידנית ביום</label><span class="val-display" id="hVal">2</span></div>
+                        <div class="label-row"><label>שעות עבודה ידנית (ביום)</label><span class="val-display" id="hVal">2</span></div>
                         <input type="range" id="hInput" min="0.5" max="10" step="0.5" value="2" oninput="updateLogic()">
                     </div>
+
                     <div class="control-group">
-                        <div class="label-row"><label>שכר שעתי (ממוצע)</label><span class="val-display" id="rVal">60 ₪</span></div>
+                        <div class="label-row"><label>שכר שעתי ממוצע</label><span class="val-display" id="rVal">60 ₪</span></div>
                         <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateLogic()">
                     </div>
+
                     <div class="control-group">
-                        <div class="label-row"><label>מספר עובדים</label><span class="val-display" id="eVal">1</span></div>
+                        <div class="label-row"><label>מספר עובדים במשימה</label><span class="val-display" id="eVal">1</span></div>
                         <input type="range" id="eInput" min="1" max="20" step="1" value="1" oninput="updateLogic()">
                     </div>
                 </div>
 
-                <!-- Results -->
-                <div class="result-side">
-                    <div class="insight-box">
-                        <h4>ההפסד השנתי הישיר שלך:</h4>
-                        <div class="big-number" id="totalResult">0 ₪</div>
+                <!-- Logical Results -->
+                <div class="insights-panel">
+                    <div class="insight-card">
+                        <h4>🔴 המחיר הכלכלי הישיר</h4>
+                        <p>העסק שלך "שורף" <strong id="moneyLoss" style="color:white;">0</strong> ₪ בכל שנה על פעולות טכניות שרובוט יכול לעשות בחינם.</p>
                     </div>
-                    <p style="margin-bottom: 25px; color: var(--text-muted);">הזמן הזה יכול היה להיות מושקע במכירות ובצמיחה של העסק.</p>
-                    <a href="../contact/" class="btn-green">אני רוצה לחסוך את הכסף הזה 💰</a>
-                </div>
-            </div>
 
-            <!-- Table -->
-            <table class="comp-table">
+                    <div class="insight-card" style="border-right-color: #555;">
+                        <h4>⚠️ מחיר הטעויות (הנסתר)</h4>
+                        <p>בעבודה ידנית יש הסתברות של 5% לטעות אנוש. סטטיסטית, אתה חווה כ-<strong id="errorStat" style="color:white;">0</strong> תקלות נתונים בשנה שעלולות לעלות ביוקר.</p>
+                    </div>
+
+                    <div class="insight-card" style="border-right-color: var(--green);">
+                        <h4>🚀 פוטנציאל הצמיחה</h4>
+                        <p>בזמן שיתפנה, תוכל להשקיע <strong id="timeBonus" style="color:white;">0</strong> שעות בשנה בחיזוק הקשר עם הלקוחות ובפיתוח העסק.</p>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="margin-bottom: 15px; font-weight: bold;">השורה התחתונה:</p>
+                        <div class="big-result" id="totalResult">0 ₪</div>
+                        <a href="../contact/" class="btn btn-green">אני רוצה להחזיר את השליטה לעסק 📈</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section>
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 40px;">למה לעבור לאוטומציה?</h2>
+            <table class="comparison-table">
                 <thead>
                     <tr>
                         <th>פרמטר</th>
@@ -116,13 +180,23 @@
                 <tbody>
                     <tr>
                         <td>זמן ביצוע</td>
-                        <td style="color: var(--red);">שעות / ימים</td>
-                        <td style="color: var(--green); font-weight: bold;">שניות בודדות</td>
+                        <td class="bad">שעות / ימים</td>
+                        <td class="good">שניות בודדות</td>
                     </tr>
                     <tr>
                         <td>דיוק נתונים</td>
-                        <td style="color: var(--red);">סכנת טעויות אנוש</td>
-                        <td style="color: var(--green); font-weight: bold;">100% דיוק מתמטי</td>
+                        <td class="bad">תלוי בריכוז של העובד</td>
+                        <td class="good">100% דיוק מתמטי</td>
+                    </tr>
+                    <tr>
+                        <td>יכולת שדרוג</td>
+                        <td class="bad">דורש עוד כוח אדם</td>
+                        <td class="good">גדל יחד עם העסק ללא עלות נוספת</td>
+                    </tr>
+                    <tr>
+                        <td>השפעה על העובד</td>
+                        <td class="bad">שחיקה ותסכול</td>
+                        <td class="good">פניות למשימות חשובות באמת</td>
                     </tr>
                 </tbody>
             </table>
@@ -131,6 +205,21 @@
 </main>
 
 <script>
+    // --- Animation Logic ---
+    function animateData() {
+        gsap.to(".data-node", {
+            y: "random(-20, 20)",
+            x: "random(-10, 10)",
+            opacity: 1,
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            stagger: 0.1,
+            ease: "sine.inOut"
+        });
+    }
+
+    // --- Calculator Logic ---
     function updateLogic() {
         const h = parseFloat(document.getElementById('hInput').value);
         const r = parseInt(document.getElementById('rInput').value);
@@ -140,15 +229,40 @@
         document.getElementById('rVal').innerText = r + ' ₪';
         document.getElementById('eVal').innerText = e;
 
-        const annualMoney = h * e * 22 * 12 * r;
+        // חישובים
+        const annualHours = h * e * 22 * 12;
+        const annualMoney = annualHours * r;
+        const errors = Math.round(annualHours * 0.05); // הנחה של 5% טעויות לשעה
+
+        // עדכון תצוגה
+        document.getElementById('moneyLoss').innerText = annualMoney.toLocaleString();
+        document.getElementById('errorStat').innerText = errors.toLocaleString();
+        document.getElementById('timeBonus').innerText = annualHours.toLocaleString();
         document.getElementById('totalResult').innerText = annualMoney.toLocaleString() + ' ₪';
+        
+        // אפקט פעימה לתוצאה
+        gsap.fromTo("#totalResult", {scale: 1.1}, {scale: 1, duration: 0.3});
     }
 
-    window.addEventListener('load', updateLogic);
-    
-    const lenis = new Lenis();
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
+    // --- Init ---
+    window.addEventListener('load', () => {
+        animateData();
+        updateLogic();
+        
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        gsap.registerPlugin(ScrollTrigger);
+        document.querySelectorAll('.insight-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: { trigger: card, start: "top 90%" },
+                x: i % 2 === 0 ? 50 : -50,
+                opacity: 0,
+                duration: 0.8
+            });
+        });
+    });
 </script>
 
 </body>
