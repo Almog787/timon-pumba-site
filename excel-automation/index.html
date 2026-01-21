@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <!-- 1. Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-18YM6QFN0C');
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>המהפך הדיגיטלי | טימון ופומבה אוטומציה</title>
@@ -32,7 +39,6 @@
 
         header { padding: 20px 5%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
         
-        /* Hero - 30% Brightness */
         .hero { 
             min-height: 60vh; 
             display: flex; 
@@ -44,7 +50,7 @@
         }
         .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
 
-        /* --- Transformation Box --- */
+        /* --- Transformation Switch (Fixed) --- */
         .transformation-box {
             background: #111;
             padding: 60px 40px;
@@ -59,47 +65,71 @@
         .custom-switch {
             background: #000;
             border: 2px solid #333;
-            padding: 8px;
+            padding: 4px;
             border-radius: 100px;
             display: flex;
             position: relative;
             cursor: pointer;
-            width: 320px;
+            width: 340px;
+            height: 60px;
+            align-items: center;
         }
 
-        .switch-option { flex: 1; text-align: center; padding: 12px; font-weight: 900; z-index: 2; transition: 0.4s; color: #555; }
+        .switch-option { 
+            flex: 1; 
+            text-align: center; 
+            font-weight: 900; 
+            z-index: 2; 
+            transition: 0.4s; 
+            color: #777; 
+            font-size: 1.1rem;
+            pointer-events: none; /* כדי שהקליק ייתפס במיכל הראשי */
+        }
+        
         .switch-option.active { color: #000; }
 
         .switch-glider {
-            position: absolute; width: calc(50% - 8px); height: calc(100% - 16px);
-            background: var(--amber); left: 8px; border-radius: 100px;
-            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1;
+            position: absolute; 
+            width: calc(50% - 4px); 
+            height: calc(100% - 8px);
+            background: var(--amber); 
+            right: 4px; /* מתחיל מצד ימין (היום) */
+            border-radius: 100px;
+            transition: 0.5s cubic-bezier(0.65, 0, 0.35, 1); 
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(255, 185, 0, 0.4);
         }
 
-        .automated .switch-glider { transform: translateX(calc(100%)); background: var(--green); }
+        /* מצב אוטומטי - הגליידר עובר שמאלה */
+        .automated .switch-glider { 
+            transform: translateX(calc(-100%)); 
+            background: var(--green); 
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+        }
 
-        /* Cards */
+        /* Comparison Display */
         .comparison-display { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .glass-card {
             background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 30px;
+            transition: 0.4s ease;
         }
         .status-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
         .feature-tag { display: inline-block; padding: 6px 14px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem; margin-left: 8px; margin-bottom: 8px; color: #ccc; }
 
-        /* Scan Line */
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--amber); box-shadow: 0 0 15px var(--amber); opacity: 0; z-index: 5; }
 
         /* Calculator */
         .calculator-card { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: #111; padding: 40px; border-radius: 30px; border: 1px solid #222; margin-top: 50px; }
-        .val-display { color: var(--amber); font-weight: 900; font-size: 1.3rem; }
-        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; }
-        .big-number { font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900; color: var(--red); margin: 10px 0; }
+        .val-display { color: var(--amber); font-weight: 900; font-size: 1.3rem; background: rgba(255,185,0,0.1); padding: 4px 12px; border-radius: 8px; }
+        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; margin: 15px 0; }
+        .big-number { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; color: var(--red); margin: 10px 0; }
         .btn-green { display: inline-block; padding: 20px 40px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 1.2rem; transition: 0.3s; text-align: center; }
 
         @media (max-width: 850px) {
             .comparison-display, .calculator-card { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2.2rem; }
+            .custom-switch { width: 100%; }
         }
     </style>
 </head>
@@ -124,10 +154,11 @@
                 <div class="scan-line" id="scanLine"></div>
                 
                 <div class="toggle-ui">
+                    <!-- המתג החכם -->
                     <div class="custom-switch" id="uiSwitch" onclick="triggerUpgrade()">
                         <div class="switch-glider"></div>
-                        <div class="switch-option active" id="optM">היום (ידני)</div>
                         <div class="switch-option" id="optA">מחר (אוטומטי)</div>
+                        <div class="switch-option active" id="optM">היום (ידני)</div>
                     </div>
                 </div>
 
@@ -184,16 +215,14 @@
 </main>
 
 <script>
-    // --- Data Storage for Switch ---
+    // --- Data Storage (Inverted Fix) ---
     const contentData = {
         manual: {
-            opt: 'optM',
             scanColor: '#ffb900',
             card1: { icon: "📉", title: "בזבוז משאבים", desc: "העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט יכול לבצע בשניות.", tags: ["הזנה ידנית", "שחיקת עובדים", "איטיות"] },
             card2: { icon: "⚠️", title: "חוסר ודאות", desc: "טעויות אנוש בטבלאות גורמות להחלטות עסקיות שגויות ולהפסדים כספיים נסתרים.", tags: ["טעויות אנוש", "דאטה מיושן", "סיכון"] }
         },
         automated: {
-            opt: 'optA',
             scanColor: '#25D366',
             card1: { icon: "🚀", title: "דיוק מקסימלי", desc: "הנתונים נשאבים לבד ב-100% דיוק. המחשב לא טועה לעולם ולא מתעייף.", tags: ["אפס טעויות", "מהירות שיא", "סקיילאביליות"] },
             card2: { icon: "📈", title: "שליטה בזמן אמת", desc: "דשבורד חי שמתעדכן בכל שנייה ונותן לך תמונת מצב ניהולית מלאה.", tags: ["בינה מלאכותית", "דוחות חיים", "שקט נפשי"] }
@@ -204,36 +233,39 @@
         const uiSwitch = document.getElementById('uiSwitch');
         const scan = document.getElementById('scanLine');
         
-        // Toggle the state based on class presence
-        const movingToAutomated = !uiSwitch.classList.contains('automated');
-        const data = movingToAutomated ? contentData.automated : contentData.manual;
+        // Check current state
+        const isCurrentlyAutomated = uiSwitch.classList.contains('automated');
+        
+        // If it WAS automated, we move to manual. If it WAS manual, we move to automated.
+        const targetState = isCurrentlyAutomated ? 'manual' : 'automated';
+        const data = contentData[targetState];
 
-        // Visual Switch
+        // Toggle Switch Class
         uiSwitch.classList.toggle('automated');
-        document.getElementById('optM').classList.toggle('active', !movingToAutomated);
-        document.getElementById('optA').classList.toggle('active', movingToAutomated);
+        
+        // Update Labels Active State
+        document.getElementById('optM').classList.toggle('active', targetState === 'manual');
+        document.getElementById('optA').classList.toggle('active', targetState === 'automated');
 
         // Scan Line Animation
         scan.style.background = data.scanColor;
         scan.style.boxShadow = `0 0 15px ${data.scanColor}`;
         gsap.fromTo(scan, {top: "0%", opacity: 1}, {top: "100%", opacity: 0, duration: 0.8});
 
-        // Content Update with Animation
+        // Content Update with In-Out Animation
         const cards = document.querySelectorAll('.glass-card');
-        gsap.to(cards, {opacity: 0, y: 10, duration: 0.3, onComplete: () => {
-            // Update Card 1
+        gsap.to(cards, {opacity: 0, scale: 0.98, duration: 0.25, onComplete: () => {
             document.getElementById('icon1').innerText = data.card1.icon;
             document.getElementById('title1').innerText = data.card1.title;
             document.getElementById('desc1').innerText = data.card1.desc;
             document.getElementById('tags1').innerHTML = data.card1.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
             
-            // Update Card 2
             document.getElementById('icon2').innerText = data.card2.icon;
             document.getElementById('title2').innerText = data.card2.title;
             document.getElementById('desc2').innerText = data.card2.desc;
             document.getElementById('tags2').innerHTML = data.card2.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
             
-            gsap.to(cards, {opacity: 1, y: 0, duration: 0.4, stagger: 0.1});
+            gsap.to(cards, {opacity: 1, scale: 1, duration: 0.4, stagger: 0.1});
         }});
     }
 
@@ -261,10 +293,13 @@
         if (myChart) { myChart.data.datasets[0].data = [annual, annual * 0.1]; myChart.update(); }
     }
 
-    window.addEventListener('load', () => { initChart(); updateLogic(); });
-    const lenis = new Lenis();
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
+    window.addEventListener('load', () => { 
+        initChart(); 
+        updateLogic(); 
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+    });
 </script>
 
 </body>
