@@ -15,35 +15,65 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --amber: #ffb900; --dark: #0f0f0f; --light-bg: #1a1a1a; --white: #ffffff; --green: #25D366; --red-loss: #ff4b4b; }
+        :root { 
+            --amber: #ffb900; 
+            --dark: #0f0f0f; 
+            --light-bg: #1a1a1a; 
+            --white: #ffffff; 
+            --green: #25D366; 
+            --red: #ff4b4b;
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
         
-        section { padding: 80px 5%; }
+        section { padding: 80px 5%; position: relative; }
         .container { max-width: 1100px; margin: 0 auto; }
-        h1, h2 { font-family: 'Rubik', sans-serif; }
-        
+        h1, h2, h3 { font-family: 'Rubik', sans-serif; }
+
         header { padding: 20px 5%; background: rgba(15, 15, 15, 0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: fixed; top: 0; width: 100%; z-index: 100; }
         
         .hero { min-height: 60vh; display: flex; align-items: center; text-align: center; justify-content: center; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../images/hero.jpg') center/cover; padding-top: 100px; }
 
-        /* Calculator Styles */
+        /* --- Transformation Toggle Section (המחליף של הסליידר) --- */
+        .toggle-container { text-align: center; margin-bottom: 40px; }
+        .switch-box { display: inline-flex; background: #222; padding: 5px; border-radius: 50px; position: relative; cursor: pointer; border: 1px solid #333; }
+        .switch-btn { padding: 12px 30px; border-radius: 40px; font-weight: 800; transition: 0.3s; position: relative; z-index: 2; color: #666; }
+        .switch-btn.active { color: #000; }
+        .switch-bg { position: absolute; top: 5px; right: 5px; bottom: 5px; width: calc(50% - 5px); background: var(--amber); border-radius: 40px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1; }
+        .switch-box.automated .switch-bg { transform: translateX(calc(-100% - 0px)); background: var(--green); }
+
+        .transformation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; min-height: 400px; }
+        .t-card { background: #1a1a1a; padding: 40px; border-radius: 24px; border: 1px solid #333; height: 100%; transition: 0.5s; }
+        .t-card h3 { font-size: 1.8rem; margin-bottom: 20px; }
+        .t-card ul { list-style: none; }
+        .t-card li { margin-bottom: 15px; display: flex; align-items: center; font-size: 1.1rem; }
+        .t-card li::before { content: "•"; margin-left: 10px; font-size: 1.5rem; }
+
+        /* מצב ידני */
+        .manual-view .t-card { border-color: var(--red); }
+        .manual-view h3 { color: var(--red); }
+        .manual-view li::before { color: var(--red); }
+        
+        /* מצב אוטומטי */
+        .automated-view { display: none; } /* מוסתר בהתחלה */
+        .automated-view .t-card { border-color: var(--green); box-shadow: 0 0 30px rgba(37, 211, 102, 0.1); }
+        .automated-view h3 { color: var(--green); }
+        .automated-view li::before { color: var(--green); }
+
+        /* --- Calculator --- */
         .calculator-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: #151515; padding: 40px; border-radius: 24px; border: 1px solid #333; margin-top: 30px; }
         .inputs-side { background: #222; padding: 30px; border-radius: 20px; }
         .val-display { color: var(--amber); font-weight: 900; font-size: 1.2rem; }
         input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; margin: 15px 0; }
-        .big-number { font-size: 3.5rem; font-weight: 900; color: var(--red-loss); margin: 10px 0; }
+        .big-number { font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900; color: var(--red); margin: 10px 0; }
 
-        /* Before/After Slider */
-        .ba-slider { position: relative; width: 100%; max-width: 800px; height: 400px; margin: 40px auto; overflow: hidden; border-radius: 16px; border: 2px solid var(--amber); }
-        .ba-img { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background-size: cover; background-position: center; }
-        .ba-resize { position: absolute; top: 0; left: 0; height: 100%; width: 50%; overflow: hidden; border-right: 2px solid var(--white); z-index: 10; }
-        .ba-resize .ba-img { width: 800px; height: 100%; }
-        .ba-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: var(--amber); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: black; z-index: 20; cursor: col-resize; }
+        .btn-green { display: inline-block; padding: 18px 40px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 1.2rem; transition: 0.3s; text-align: center; }
+        .btn-green:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3); }
 
-        .btn-green { display: inline-block; padding: 18px 40px; background: var(--green); color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 1.2rem; transition: 0.3s; }
-
-        @media (max-width: 850px) { .calculator-wrapper { grid-template-columns: 1fr; } .ba-resize .ba-img { width: 100vw; } .ba-slider { height: 250px; } }
+        @media (max-width: 850px) {
+            .transformation-grid, .calculator-wrapper { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -56,15 +86,58 @@
 <main>
     <section class="hero">
         <div class="container">
-            <h1>הפסיקו לנהל טבלאות. <br><span style="color:var(--amber);">תתחילו לנהל עסק.</span></h1>
-            <p style="font-size: 1.2rem; color: #ccc;">אוטומציה לאקסל וגוגל שיטס היא הדרך שלכם לצמוח באמת.</p>
+            <h1>הופכים נתונים לכסף. <br><span style="color:var(--amber);">בלי עבודה ידנית.</span></h1>
+            <p style="font-size: 1.2rem; color: #ccc; margin-top: 20px;">אנחנו בונים "מוח" דיגיטלי בתוך האקסל והגוגל שיטס שלכם.</p>
         </div>
     </section>
 
-    <!-- Calculator Section -->
-    <section>
+    <!-- Transformation Toggle Section -->
+    <section style="background: #0a0a0a;">
         <div class="container">
-            <h2 style="text-align: center;">מחשבון פוטנציאל חיסכון</h2>
+            <h2 style="text-align: center; margin-bottom: 10px;">איך נראה המהפך בעסק?</h2>
+            <p style="text-align: center; color: #888; margin-bottom: 40px;">לחצו על המתג כדי לראות את השינוי</p>
+
+            <div class="toggle-container">
+                <div class="switch-box" id="transformationSwitch" onclick="toggleTransformation()">
+                    <div class="switch-bg"></div>
+                    <div class="switch-btn active" id="btnManual">עבודה ידנית</div>
+                    <div class="switch-btn" id="btnAutomated">אוטומציה</div>
+                </div>
+            </div>
+
+            <!-- התצוגות מתחלפות -->
+            <div class="transformation-grid manual-view" id="manualContent">
+                <div class="t-card">
+                    <h3>הכאוס הנוכחי</h3>
+                    <ul>
+                        <li>שעות של "העתק-הדבק" בין קבצים.</li>
+                        <li>טעויות אנוש שגורמות להפסדים כספיים.</li>
+                        <li>דוחות שמוכנים רק שבוע אחרי סוף החודש.</li>
+                        <li>תחושת שחיקה ותסכול של העובדים.</li>
+                    </ul>
+                </div>
+                <div style="text-align: center; font-size: 8rem; filter: grayscale(1);">😵‍💫</div>
+            </div>
+
+            <div class="transformation-grid automated-view" id="automatedContent">
+                <div class="t-card">
+                    <h3>השקט שאחרי</h3>
+                    <ul>
+                        <li>נתונים נשאבים אוטומטית מכל המערכות.</li>
+                        <li>0% טעויות - הכל מבוסס על קוד מדויק.</li>
+                        <li>דשבורד חי שמתעדכן בכל רגע נתון.</li>
+                        <li>העובדים מתפנים למשימות שמביאות כסף.</li>
+                    </ul>
+                </div>
+                <div style="text-align: center; font-size: 8rem;">🚀</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section style="border-top: 1px solid #222;">
+        <div class="container">
+            <h2 style="text-align: center;">מחשבון פוטנציאל רווח</h2>
             <div class="calculator-wrapper">
                 <div class="inputs-side">
                     <h3 style="margin-bottom: 20px;">נתוני העבודה שלכם:</h3>
@@ -76,7 +149,7 @@
                 </div>
 
                 <div style="text-align: center;">
-                    <h4>הפסד שנתי מצטבר:</h4>
+                    <h4>הפסד שנתי שניתן לחסוך:</h4>
                     <div class="big-number" id="totalResult">0 ₪</div>
                     <div style="height: 150px; margin-bottom: 20px;"><canvas id="roiChart"></canvas></div>
                     <a href="../contact/" class="btn-green">אני רוצה לחסוך את הכסף הזה 💰</a>
@@ -84,27 +157,38 @@
             </div>
         </div>
     </section>
-
-    <!-- Before/After Slider -->
-    <section style="background: #111;">
-        <div class="container">
-            <h2 style="text-align: center;">מבלגן לשליטה מוחלטת</h2>
-            <div class="ba-slider" id="baSlider">
-                <!-- תמונה אחרי (דשבורד) -->
-                <div class="ba-img" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000');"></div>
-                <!-- תמונה לפני (אקסל) -->
-                <div class="ba-resize" id="baResize">
-                    <div class="ba-img" style="background-image: url('https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=1000');"></div>
-                </div>
-                <span class="ba-handle" id="baHandle">⬌</span>
-            </div>
-        </div>
-    </section>
 </main>
 
 <script>
-    let myChart = null;
+    // --- Toggle Logic ---
+    function toggleTransformation() {
+        const switchBox = document.getElementById('transformationSwitch');
+        const manual = document.getElementById('manualContent');
+        const automated = document.getElementById('automatedContent');
+        const btnM = document.getElementById('btnManual');
+        const btnA = document.getElementById('btnAutomated');
 
+        if (switchBox.classList.contains('automated')) {
+            // חזרה לידני
+            switchBox.classList.remove('automated');
+            automated.style.display = 'none';
+            manual.style.display = 'grid';
+            btnM.classList.add('active');
+            btnA.classList.remove('active');
+            gsap.from(manual, {opacity: 0, y: 20, duration: 0.5});
+        } else {
+            // מעבר לאוטומטי
+            switchBox.classList.add('automated');
+            manual.style.display = 'none';
+            automated.style.display = 'grid';
+            btnA.classList.add('active');
+            btnM.classList.remove('active');
+            gsap.from(automated, {opacity: 0, y: 20, duration: 0.5});
+        }
+    }
+
+    // --- Chart + Calc Logic ---
+    let myChart = null;
     function initChart() {
         const ctx = document.getElementById('roiChart').getContext('2d');
         myChart = new Chart(ctx, {
@@ -136,29 +220,13 @@
         }
     }
 
-    // Slider Logic
-    const slider = document.getElementById('baSlider');
-    const resize = document.getElementById('baResize');
-    const handle = document.getElementById('baHandle');
-    let isDragging = false;
-
-    function move(e) {
-        if (!isDragging) return;
-        let x = (e.pageX || e.touches[0].pageX) - slider.offsetLeft;
-        if (x < 0) x = 0; if (x > slider.offsetWidth) x = slider.offsetWidth;
-        let p = (x / slider.offsetWidth) * 100;
-        resize.style.width = p + "%";
-        handle.style.left = p + "%";
-    }
-
-    handle.addEventListener('mousedown', () => isDragging = true);
-    handle.addEventListener('touchstart', () => isDragging = true);
-    window.addEventListener('mouseup', () => isDragging = false);
-    window.addEventListener('touchend', () => isDragging = false);
-    slider.addEventListener('mousemove', move);
-    slider.addEventListener('touchmove', move);
-
-    window.addEventListener('load', () => { initChart(); updateLogic(); });
+    window.addEventListener('load', () => { 
+        initChart(); 
+        updateLogic(); 
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+    });
 </script>
 
 </body>
