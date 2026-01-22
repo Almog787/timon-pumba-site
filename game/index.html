@@ -8,6 +8,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
     
+    <!-- חיבור המאגר החיצוני -->
     <script src="patterns.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
@@ -25,26 +26,29 @@
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--bg-main); color: #1f2937; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* --- Screens --- */
-        #menu-screen, #instructions-screen { position: fixed; inset: 0; background: var(--bg-main); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
-        .menu-card { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 90%; }
+        /* --- Layout --- */
+        .main-wrapper { display: grid; grid-template-columns: 1fr 350px; flex: 1; overflow: hidden; }
 
-        /* --- Header --- */
-        header { width: 100%; padding: 10px 5%; background: var(--surface); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; }
-        .tool-picker { display: flex; background: #f3f4f6; padding: 4px; border-radius: 50px; gap: 5px; }
-        .tool-btn { padding: 8px 15px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold; font-size: 0.85rem; color: #666; }
-        .tool-btn.active { background: var(--amber); color: black; }
+        /* --- YouTube Sidebar --- */
+        .youtube-sidebar { background: #1a1a1a; border-right: 1px solid #333; display: flex; flex-direction: column; padding: 20px; color: white; z-index: 10; }
+        .youtube-sidebar h3 { font-family: 'Rubik'; margin-bottom: 15px; font-size: 1.1rem; color: var(--amber); }
+        #yt-frame { width: 100%; aspect-ratio: 16/9; border-radius: 10px; border: 1px solid #444; }
+        .yt-input-group { display: flex; gap: 5px; margin-top: 15px; }
+        .yt-input { flex: 1; padding: 10px; border-radius: 8px; border: none; background: #333; color: white; font-size: 0.8rem; }
+        .yt-presets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+        .preset-btn { background: #333; border: 1px solid #444; color: #ccc; padding: 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
 
         /* --- Game Area --- */
-        #game-screen { display: none; flex: 1; overflow: auto; position: relative; background: var(--bg-main); }
-        .game-layout { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; margin: 40px auto; width: max-content; }
+        #game-screen { flex: 1; overflow: auto; position: relative; background: var(--bg-main); padding: 20px; }
+        header { width: 100%; padding: 10px 5%; background: var(--surface); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; }
         
+        .game-layout { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; margin: 20px auto; width: max-content; }
         .top-hints { grid-column: 2; grid-row: 1; display: grid; position: sticky; top: 0; background: var(--bg-main); z-index: 5; }
         .side-hints { grid-column: 1; grid-row: 2; display: grid; position: sticky; right: 0; background: var(--bg-main); z-index: 5; }
         .hint-box { display: flex; justify-content: center; align-items: center; background: var(--bg-main); gap: 2px; padding: 2px; }
         .top-hints .hint-box { flex-direction: column; justify-content: flex-end; border-left: 1px solid var(--grid-line); }
         .side-hints .hint-box { flex-direction: row; justify-content: flex-end; padding-left: 8px; border-top: 1px solid var(--grid-line); }
-        .hint-num { display: flex; align-items: center; justify-content: center; background: #e5e7eb; color: #374151; border-radius: 4px; font-weight: 900; font-size: calc(var(--cell-size) * 0.4); min-width: calc(var(--cell-size) * 0.7); height: calc(var(--cell-size) * 0.7); }
+        .hint-num { display: flex; align-items: center; justify-content: center; background: #e5e7eb; color: #374151; border-radius: 4px; font-weight: 900; font-size: calc(var(--cell-size) * 0.45); min-width: calc(var(--cell-size) * 0.75); height: calc(var(--cell-size) * 0.75); }
         .hint-box.thick-v { border-left: 2px solid var(--grid-thick); }
         .hint-box.thick-h { border-top: 2px solid var(--grid-thick); }
 
@@ -52,27 +56,30 @@
         .cell { width: var(--cell-size); height: var(--cell-size); background: #fff; border: 0.5px solid var(--grid-line); position: relative; transition: 0.1s; }
         .cell.b-right { border-left: 2px solid var(--grid-thick); }
         .cell.b-bottom { border-bottom: 2px solid var(--grid-thick); }
-        .cell.filled { background: #1f2937; transform: scale(0.95); }
+        .cell.filled { background: #1f2937; transform: scale(0.95); border-radius: 2px; }
         .cell.marked::after { content: '×'; position: absolute; top:50%; left:50%; transform:translate(-50%, -50%); color: #d1d5db; font-size: calc(var(--cell-size) * 0.8); font-weight: bold; }
 
-        .btn { padding: 10px 20px; border-radius: 50px; border: none; background: var(--amber); color: black; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        /* UI */
+        .btn { padding: 8px 16px; border-radius: 50px; border: none; background: var(--amber); color: black; font-weight: 900; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
         .btn-outline { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
         #win-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--green); color: white; padding: 20px; display: none; justify-content: center; align-items: center; gap: 30px; z-index: 3000; }
+        #menu-screen, #instructions-screen { position: fixed; inset: 0; background: var(--bg-main); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
+        .menu-card { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); text-align: center; max-width: 450px; width: 90%; }
 
-        @media (max-width: 600px) { header { padding: 5px; } .zoom-controls { display: none; } }
+        @media (max-width: 1000px) { .main-wrapper { grid-template-columns: 1fr; } .youtube-sidebar { display: none; } }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="menu-screen">
         <div class="menu-card">
-            <h1 style="font-family:'Rubik'; font-weight:900; font-size:2.5rem; margin-bottom:10px;">שחור ופתור</h1>
+            <h1 style="font-family:'Rubik'; font-weight:900; font-size:2.5rem; margin-bottom:10px;">שחור ופתור PRO</h1>
             <p>בחרו גודל לוח כדי להתחיל</p>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:20px;">
                 <button class="btn" onclick="startGame(5)">5x5</button>
                 <button class="btn" onclick="startGame(10)">10x10</button>
                 <button class="btn" onclick="startGame(20)">20x20</button>
-                <button class="btn" onclick="startGame(40)">40x40</button>
+                <button class="btn" onclick="startGame(40)">40x40 (מונה ליזה)</button>
             </div>
             <button class="btn btn-outline" style="margin-top:15px; width:100%" onclick="showInstructions()">איך משחקים? ❓</button>
             <a href="../" style="display:block; margin-top:20px; color:#999; text-decoration:none;">← חזרה לאתר</a>
@@ -87,68 +94,78 @@
                 <li>המספרים בצדדים מציינים כמה משבצות צבועות יש ברצף.</li>
                 <li><b>קליק שמאלי:</b> צביעה (⬛).</li>
                 <li><b>קליק ימני:</b> סימון איקס (❌).</li>
+                <li>ניתן לגרור את העכבר לצביעה מהירה.</li>
             </ul>
-            <button class="btn" style="width:100%" onclick="showMenu()">הבנתי!</button>
+            <button class="btn" style="width:100%" onclick="closeInstructions()">הבנתי!</button>
         </div>
     </div>
 
     <header id="game-header" style="display:none;">
-        <button class="btn btn-outline" onclick="showMenu()">תפריט</button>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-outline" onclick="location.reload()">תפריט</button>
+            <button class="btn btn-outline" onclick="resetCurrentGame()">איפוס</button>
+        </div>
         <div style="display:flex; gap:10px; background:#eee; padding:5px; border-radius:50px;">
             <button class="btn" onclick="giveHint()" style="background:#fff; color:#555;">טיפ 💡</button>
             <button class="btn" onclick="showSolution()" style="background:#fff; color:#555;">פתרון 🏁</button>
         </div>
-        <div class="tool-picker">
-            <button class="tool-btn active" id="tool-fill" onclick="setTool(1)">⬛</button>
-            <button class="tool-btn" id="tool-x" onclick="setTool(2)">❌</button>
+        <div style="display:flex; gap:10px;">
+            <button class="btn active" id="tool-fill" onclick="setTool(1)">⬛</button>
+            <button class="btn btn-outline" id="tool-x" onclick="setTool(2)">❌</button>
         </div>
-        <input type="range" id="zoomSlider" min="10" max="60" value="30" oninput="updateZoom(this.value)">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <input type="range" id="zoomSlider" min="10" max="60" value="30" oninput="updateZoom(this.value)">
+            <span style="font-size:0.7rem; font-weight:bold;">זום</span>
+        </div>
     </header>
 
-    <div id="game-screen">
-        <div class="game-layout">
-            <div class="top-hints" id="topHints"></div>
-            <div class="side-hints" id="sideHints"></div>
-            <div class="grid" id="grid"></div>
+    <div class="main-wrapper">
+        <div id="game-screen">
+            <div class="game-layout">
+                <div class="top-hints" id="topHints"></div>
+                <div class="side-hints" id="sideHints"></div>
+                <div class="grid" id="grid"></div>
+            </div>
         </div>
+        <aside class="youtube-sidebar">
+            <h3>🎵 מוזיקה לריכוז</h3>
+            <div class="yt-input-group">
+                <input type="text" id="yt-url" class="yt-input" placeholder="לינק מיוטיוב...">
+                <button class="btn" onclick="loadYT()" style="padding:5px 10px;">נגן</button>
+            </div>
+            <iframe id="yt-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div class="yt-presets">
+                <button class="preset-btn" onclick="changeVid('jfKfPfyJRdk')">Lo-Fi ☕</button>
+                <button class="preset-btn" onclick="changeVid('17mYv7-O_t8')">ג'ונגל 🌴</button>
+            </div>
+        </aside>
     </div>
 
     <div id="win-bar">
-        <strong id="win-text">ניצחון! 🏆</strong>
-        <button class="btn" style="background:white; color:black;" onclick="showMenu()">חזרה לתפריט</button>
+        <strong style="font-size: 1.2rem;">ניצחון! ציירתם <span id="drawn-object-name"></span> 🏆</strong>
+        <button class="btn" style="background:white; color:black;" onclick="location.reload()">חזרה לתפריט</button>
     </div>
 
 <script>
-    let SIZE, targetGrid, userGrid, isMouseDown = false, currentTool = 1, drawMode = 1, currentName = "";
+    let SIZE = 10, targetGrid = [], userGrid = [], isMouseDown = false, currentTool = 1, drawMode = 1, currentName = "";
 
-    function showMenu() {
-        document.getElementById('menu-screen').style.display = 'flex';
-        document.getElementById('instructions-screen').style.display = 'none';
-        document.getElementById('game-header').style.display = 'none';
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('win-bar').style.display = 'none';
-    }
-
-    function showInstructions() {
-        document.getElementById('menu-screen').style.display = 'none';
-        document.getElementById('instructions-screen').style.display = 'flex';
-    }
+    function loadYT() { const url = document.getElementById('yt-url').value; const vidId = url.split('v=')[1]?.split('&')[0] || url.split('/').pop(); if(vidId) changeVid(vidId); }
+    function changeVid(id) { document.getElementById('yt-frame').src = `https://www.youtube.com/embed/${id}?autoplay=1`; }
+    function showInstructions() { document.getElementById('instructions-screen').style.display = 'flex'; }
+    function closeInstructions() { document.getElementById('instructions-screen').style.display = 'none'; }
 
     function startGame(size) {
         SIZE = size;
         document.getElementById('menu-screen').style.display = 'none';
         document.getElementById('game-header').style.display = 'flex';
         document.getElementById('game-screen').style.display = 'block';
-        
         let zoom = size === 40 ? 18 : (size === 20 ? 22 : 30);
         document.getElementById('zoomSlider').value = zoom;
         updateZoom(zoom);
-
         const options = library[SIZE];
         const selected = options[Math.floor(Math.random() * options.length)];
         targetGrid = selected.data;
         currentName = selected.name;
-        
         initGame();
     }
 
@@ -168,7 +185,6 @@
         topEl.style.gridTemplateColumns = `repeat(${SIZE}, var(--cell-size))`;
         sideEl.style.gridTemplateRows = `repeat(${SIZE}, var(--cell-size))`;
         topEl.innerHTML = ''; sideEl.innerHTML = '';
-
         for (let c = 0; c < SIZE; c++) {
             const col = []; for(let r=0; r<SIZE; r++) col.push(targetGrid[r][c]);
             const hints = calculateHints(col), box = document.createElement('div');
@@ -193,11 +209,14 @@
                 const cell = document.createElement('div');
                 cell.className = 'cell' + ((c+1)%5===0 && c!==SIZE-1 ? ' b-right' : '') + ((r+1)%5===0 && r!==SIZE-1 ? ' b-bottom' : '');
                 cell.id = `cell-${r}-${c}`;
-                const handle = (e) => { isMouseDown = true; drawMode = (e.button === 2) ? (userGrid[r][c] === 2 ? 0 : 2) : (userGrid[r][c] === currentTool ? 0 : currentTool); updateCell(r, c, cell); };
-                cell.onmousedown = handle; cell.onmouseenter = () => { if(isMouseDown) updateCell(r, c, cell); };
+                const handle = (e) => {
+                    isMouseDown = true;
+                    drawMode = (e.button === 2) ? (userGrid[r][c] === 2 ? 0 : 2) : (userGrid[r][c] === currentTool ? 0 : currentTool);
+                    updateCell(r, c, cell);
+                };
+                cell.onmousedown = handle;
+                cell.onmouseenter = () => { if(isMouseDown) updateCell(r, c, cell); };
                 cell.ontouchstart = (e) => { handle(e); e.preventDefault(); };
-                if(userGrid[r][c] === 1) cell.classList.add('filled');
-                if(userGrid[r][c] === 2) cell.classList.add('marked');
                 gridEl.appendChild(cell);
             }
         }
@@ -231,8 +250,9 @@
         if(confirm("להציג פתרון?")) {
             for(let r=0; r<SIZE; r++) {
                 for(let c=0; c<SIZE; c++) {
+                    const el = document.getElementById(`cell-${r}-${c}`);
                     drawMode = targetGrid[r][c];
-                    updateCell(r, c, document.getElementById(`cell-${r}-${c}`));
+                    updateCell(r, c, el);
                 }
             }
         }
@@ -244,7 +264,7 @@
                 if (targetGrid[r][c] !== (userGrid[r][c] === 1 ? 1 : 0)) return;
             }
         }
-        document.getElementById('win-text').innerText = `ניצחון! ציירתם ${currentName} 🏆`;
+        document.getElementById('drawn-object-name').innerText = currentName;
         document.getElementById('win-bar').style.display = 'flex';
     }
 
