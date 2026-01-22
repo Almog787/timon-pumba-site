@@ -9,61 +9,84 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;900&display=swap" rel="stylesheet">
     
     <style>
-        :root { --amber: #ffb900; --dark: #050505; --red: #ff4b4b; }
+        :root { --amber: #ffb900; --dark: #050505; --red: #ff4b4b; --green: #25D366; }
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: none; }
-        body { font-family: 'Rubik', sans-serif; background-color: #000; color: white; overflow: hidden; height: 100vh; }
+        body { font-family: 'Rubik', sans-serif; background-color: #000; color: white; overflow: hidden; height: 100vh; position: fixed; width: 100%; }
 
-        #game-container { position: relative; width: 100vw; height: 100vh; cursor: crosshair; }
+        #game-container { position: relative; width: 100vw; height: 100vh; background: #000; }
         canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 
-        /* לוח בקרה תחתון (Doom Style) */
+        /* לוח בקרה תחתון */
         #status-bar {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
-            background: #222; border-top: 4px solid #444;
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 80px;
+            background: #1a1a1a; border-top: 4px solid #333;
             display: flex; align-items: center; justify-content: space-around;
-            z-index: 50; padding: 0 20px;
+            z-index: 100;
         }
-        .stat-box { text-align: center; font-weight: 900; }
-        .stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
-        .stat-value { font-size: 2rem; color: var(--red); }
-        #pumbaa-face { font-size: 3.5rem; background: #333; padding: 5px 15px; border-radius: 10px; border: 2px solid #555; }
+        .stat-box { text-align: center; min-width: 80px; }
+        .stat-label { font-size: 0.6rem; color: #888; }
+        .stat-value { font-size: 1.5rem; color: var(--amber); font-weight: 900; }
+        #pumbaa-face { font-size: 2.5rem; }
 
         /* Minimap */
         #minimap {
-            position: absolute; top: 20px; right: 20px; width: 120px; height: 120px;
-            background: rgba(0,0,0,0.8); border: 2px solid #555; border-radius: 5px; z-index: 60;
+            position: absolute; top: 10px; right: 10px; width: 100px; height: 100px;
+            background: rgba(0,0,0,0.7); border: 2px solid #444; border-radius: 8px; z-index: 110;
         }
 
-        #msg-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 100;
+        /* כפתורי שליטה למובייל */
+        .mobile-controls {
+            position: absolute; bottom: 100px; left: 20px; right: 20px;
+            display: none; justify-content: space-between; align-items: flex-end; z-index: 120;
         }
-        .btn { padding: 15px 40px; border-radius: 5px; border: none; background: var(--red); color: white; font-weight: 900; font-size: 1.5rem; cursor: pointer; }
+        .d-pad { display: grid; grid-template-columns: repeat(3, 60px); gap: 10px; }
+        .ctrl-btn { 
+            width: 60px; height: 60px; background: rgba(255,255,255,0.1); 
+            border: 2px solid rgba(255,255,255,0.2); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;
+        }
+        .ctrl-btn:active { background: var(--amber); color: black; }
+
+        #start-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 200; text-align: center;
+        }
+
+        .btn-start { padding: 15px 40px; background: var(--amber); border: none; border-radius: 50px; font-weight: 900; font-size: 1.5rem; cursor: pointer; }
+
+        @media (max-width: 850px) { .mobile-controls { display: flex; } }
     </style>
 </head>
 <body>
 
     <div id="game-container">
+        <div id="start-screen">
+            <h1 style="color:var(--amber); margin-bottom:20px;">PUMBAA 3D MAZE</h1>
+            <p style="margin-bottom:30px; color:#ccc;">מצא את כל החרקים במבוך!</p>
+            <button class="btn-start" onclick="startGame()">התחל משחק 🐗</button>
+        </div>
+
         <canvas id="gameCanvas"></canvas>
         <canvas id="minimap"></canvas>
+
+        <div class="mobile-controls">
+            <div class="d-pad">
+                <div></div><div class="ctrl-btn" id="btn-up">▲</div><div></div>
+                <div class="ctrl-btn" id="btn-left">◀</div><div class="ctrl-btn" id="btn-down">▼</div><div class="ctrl-btn" id="btn-right">▶</div>
+            </div>
+        </div>
 
         <div id="status-bar">
             <div class="stat-box">
                 <div class="stat-label">ניקוד</div>
-                <div class="stat-value" id="score-val">000</div>
+                <div class="stat-value" id="score-val">0</div>
             </div>
             <div id="pumbaa-face">🐗</div>
             <div class="stat-box">
                 <div class="stat-label">חרקים</div>
                 <div class="stat-value" id="bugs-val">0</div>
             </div>
-        </div>
-
-        <div id="msg-layer">
-            <h2 style="font-size: 3rem; color: var(--red); margin-bottom: 20px;">האקונה מטטה!</h2>
-            <p style="margin-bottom: 30px;">מצאת חרק טעים במיוחד.</p>
-            <button class="btn" onclick="nextLevel()">לשלב הבא</button>
         </div>
     </div>
 
@@ -73,32 +96,30 @@
     const miniCanvas = document.getElementById('minimap');
     const miniCtx = miniCanvas.getContext('2d');
 
-    // --- הגדרות עולם ---
-    const MAP_SIZE = 16;
+    // --- הגדרות ---
+    const MAP_SIZE = 12;
     const CELL_SIZE = 64;
+    const FOV = Math.PI / 3;
     let map = [];
-    let sprites = []; // חרקים וצבועים
+    let sprites = [];
+    let score = 0;
+    let bugsFound = 0;
+    let gameRunning = false;
 
     const player = {
-        x: 150, y: 150, dir: 0, 
-        speed: 0, rotSpeed: 0,
-        moveSpeed: 3.5, rotStep: 0.06,
-        bob: 0, bobSpeed: 0.15, bobAmount: 8
+        x: 0, y: 0, dir: 0,
+        moveSpeed: 3.0, rotSpeed: 0.05
     };
 
-    let score = 0;
-    let bugs = 0;
+    const keys = { w: false, s: false, a: false, d: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
 
-    // יצירת טקסטורת קיר (לבנים בסגנון רטרו)
+    // יצירת טקסטורת קיר
     const wallTex = document.createElement('canvas');
     wallTex.width = 64; wallTex.height = 64;
     const wCtx = wallTex.getContext('2d');
-    wCtx.fillStyle = '#4a2c0a'; wCtx.fillRect(0,0,64,64);
-    wCtx.strokeStyle = '#2a1805';
-    for(let i=0; i<4; i++) {
-        wCtx.strokeRect(0, i*16, 32, 16);
-        wCtx.strokeRect(32, i*16+8, 32, 16);
-    }
+    wCtx.fillStyle = '#332211'; wCtx.fillRect(0,0,64,64);
+    wCtx.strokeStyle = '#554433';
+    for(let i=0; i<64; i+=16) wCtx.strokeRect(0, i, 64, 16);
 
     function generateMap() {
         map = Array(MAP_SIZE).fill().map(() => Array(MAP_SIZE).fill(1));
@@ -114,155 +135,139 @@
             }
         }
         walk(1, 1);
-        spawnBugs();
-    }
+        
+        // מיקום שחקן בטוח
+        player.x = CELL_SIZE * 1.5;
+        player.y = CELL_SIZE * 1.5;
+        player.dir = 0;
 
-    function spawnBugs() {
+        // יצירת חרקים
         sprites = [];
-        for(let i=0; i<3; i++) {
+        for(let i=0; i<5; i++) {
             let sx, sy;
             do { sx = Math.floor(Math.random()*MAP_SIZE); sy = Math.floor(Math.random()*MAP_SIZE); } 
-            while(map[sy][sx] !== 0);
+            while(map[sy][sx] !== 0 || (sx < 3 && sy < 3));
             sprites.push({ x: sx*CELL_SIZE+32, y: sy*CELL_SIZE+32, char: '🐛', collected: false });
         }
     }
 
-    function resize() {
-        canvas.width = window.innerWidth / 2; // רזולוציה נמוכה לסגנון רטרו
-        canvas.height = (window.innerHeight - 100) / 2;
-        miniCanvas.width = 120; miniCanvas.height = 120;
-    }
-
-    function drawMinimap() {
-        const s = 120 / MAP_SIZE;
-        miniCtx.fillStyle = '#000'; miniCtx.fillRect(0,0,120,120);
-        for(let y=0; y<MAP_SIZE; y++) {
-            for(let x=0; x<MAP_SIZE; x++) {
-                if(map[y][x]) { miniCtx.fillStyle = '#555'; miniCtx.fillRect(x*s, y*s, s, s); }
-            }
-        }
-        miniCtx.fillStyle = 'red';
-        miniCtx.fillRect((player.x/CELL_SIZE)*s-2, (player.y/CELL_SIZE)*s-2, 4, 4);
-    }
-
-    function render() {
-        // שמיים ורצפה
-        ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0, 0, canvas.width, canvas.height/2);
-        ctx.fillStyle = '#333'; ctx.fillRect(0, canvas.height/2, canvas.width, canvas.height/2);
-
-        const zBuffer = [];
-
-        // Raycasting
-        for(let i=0; i<canvas.width; i++) {
-            let rayAngle = (player.dir - 0.5) + (i / canvas.width);
-            let distance = 0;
-            let x = player.x, y = player.y;
-            let cos = Math.cos(rayAngle), sin = Math.sin(rayAngle);
-
-            while(distance < 800) {
-                x += cos * 2; y += sin * 2; distance += 2;
-                if(map[Math.floor(y/CELL_SIZE)][Math.floor(x/CELL_SIZE)]) break;
-            }
-
-            zBuffer[i] = distance;
-            let fixDist = distance * Math.cos(rayAngle - player.dir);
-            let h = (CELL_SIZE * canvas.height) / fixDist;
-            
-            // ציור קיר עם הצללה
-            let shade = Math.min(255, 20000 / (distance * 1.5));
-            ctx.globalAlpha = shade / 255;
-            ctx.drawImage(wallTex, (x+y)%64, 0, 1, 64, i, (canvas.height/2 - h/2) + player.bob, 1, h);
-            ctx.globalAlpha = 1;
-        }
-
-        // רינדור ספרייטים (חרקים)
-        sprites.forEach(s => {
-            if(s.collected) return;
-            let dx = s.x - player.x, dy = s.y - player.y;
-            let dist = Math.sqrt(dx*dx + dy*dy);
-            let angle = Math.atan2(dy, dx) - player.dir;
-            if(angle < -Math.PI) angle += Math.PI*2;
-            if(angle > Math.PI) angle -= Math.PI*2;
-
-            if(Math.abs(angle) < 1) {
-                let x = (0.5 * (angle / 0.5) + 0.5) * canvas.width;
-                let h = (CELL_SIZE * canvas.height) / dist;
-                if(dist < zBuffer[Math.floor(x)]) {
-                    ctx.font = `${h}px serif`;
-                    ctx.textAlign = 'center';
-                    ctx.fillText(s.char, x, (canvas.height/2 + h/3) + player.bob);
-                }
-            }
-            // איסוף
-            if(dist < 30) { s.collected = true; bugs++; score += 500; updateUI(); checkWin(); }
-        });
-    }
-
-    function updateUI() {
-        document.getElementById('score-val').innerText = score.toString().padStart(3, '0');
-        document.getElementById('bugs-val').innerText = bugs;
-        const face = document.getElementById('pumbaa-face');
-        face.innerText = '😋'; setTimeout(() => face.innerText = '🐗', 500);
-    }
-
-    function checkWin() {
-        if(sprites.every(s => s.collected)) {
-            document.getElementById('msg-layer').style.display = 'flex';
-        }
-    }
-
-    function nextLevel() {
-        document.getElementById('msg-layer').style.display = 'none';
+    function startGame() {
+        document.getElementById('start-screen').style.display = 'none';
+        gameRunning = true;
         generateMap();
-        player.x = 100; player.y = 100;
+        loop();
+    }
+
+    function resize() {
+        canvas.width = window.innerWidth / 2;
+        canvas.height = (window.innerHeight - 80) / 2;
+        miniCanvas.width = 100; miniCanvas.height = 100;
     }
 
     function loop() {
-        // תנועה
-        let nx = player.x + Math.cos(player.dir) * player.speed;
-        let ny = player.y + Math.sin(player.dir) * player.speed;
-        if(map[Math.floor(ny/CELL_SIZE)][Math.floor(nx/CELL_SIZE)] === 0) {
-            player.x = nx; player.y = ny;
-        }
-        player.dir += player.rotSpeed;
+        if(!gameRunning) return;
 
-        // אפקט הליכה (Bobbing)
-        if(player.speed !== 0) {
-            player.bob = Math.sin(Date.now() * player.bobSpeed) * player.bobAmount;
-        } else {
-            player.bob *= 0.9;
-        }
+        // לוגיקת תנועה
+        let moveStep = 0;
+        if(keys.w || keys.ArrowUp) moveStep = player.moveSpeed;
+        if(keys.s || keys.ArrowDown) moveStep = -player.moveSpeed;
+
+        if(keys.a || keys.ArrowLeft) player.dir -= player.rotSpeed;
+        if(keys.d || keys.ArrowRight) player.dir += player.rotSpeed;
+
+        let newX = player.x + Math.cos(player.dir) * moveStep;
+        let newY = player.y + Math.sin(player.dir) * moveStep;
+
+        // בדיקת התנגשות עם החלקה (Slide)
+        if(map[Math.floor(player.y/CELL_SIZE)][Math.floor(newX/CELL_SIZE)] === 0) player.x = newX;
+        if(map[Math.floor(newY/CELL_SIZE)][Math.floor(player.x/CELL_SIZE)] === 0) player.y = newY;
 
         render();
         drawMinimap();
         requestAnimationFrame(loop);
     }
 
-    // שליטה
-    window.addEventListener('keydown', e => {
-        if(e.key === 'w' || e.key === 'ArrowUp') player.speed = player.moveSpeed;
-        if(e.key === 's' || e.key === 'ArrowDown') player.speed = -player.moveSpeed;
-        if(e.key === 'a' || e.key === 'ArrowLeft') player.rotSpeed = -player.rotStep;
-        if(e.key === 'd' || e.key === 'ArrowRight') player.rotSpeed = player.rotStep;
-    });
-    window.addEventListener('keyup', e => {
-        if(['w','s','ArrowUp','ArrowDown'].includes(e.key)) player.speed = 0;
-        if(['a','d','ArrowLeft','ArrowRight'].includes(e.key)) player.rotSpeed = 0;
-    });
+    function render() {
+        ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height/2);
+        ctx.fillStyle = '#222'; ctx.fillRect(0, canvas.height/2, canvas.width, canvas.height/2);
 
-    // תמיכה בטאץ'
-    window.addEventListener('touchstart', e => {
-        const x = e.touches[0].clientX;
-        if(x < window.innerWidth/3) player.rotSpeed = -player.rotStep;
-        else if(x > window.innerWidth*0.6) player.rotSpeed = player.rotStep;
-        else player.speed = player.moveSpeed;
-    });
-    window.addEventListener('touchend', () => { player.speed = 0; player.rotSpeed = 0; });
+        const zBuffer = [];
+
+        for(let i=0; i<canvas.width; i++) {
+            let rayAngle = (player.dir - FOV/2) + (i / canvas.width) * FOV;
+            let distance = 0;
+            let rx = player.x, ry = player.y;
+            let cx = Math.cos(rayAngle), cy = Math.sin(rayAngle);
+
+            while(distance < 600) {
+                rx += cx * 4; ry += cy * 4; distance += 4;
+                if(map[Math.floor(ry/CELL_SIZE)][Math.floor(rx/CELL_SIZE)]) break;
+            }
+
+            zBuffer[i] = distance;
+            let fixDist = distance * Math.cos(rayAngle - player.dir);
+            let h = (CELL_SIZE * canvas.height) / fixDist;
+            
+            let shade = Math.min(1, 300 / distance);
+            ctx.globalAlpha = shade;
+            ctx.drawImage(wallTex, (rx+ry)%64, 0, 1, 64, i, (canvas.height/2 - h/2), 1, h);
+        }
+
+        ctx.globalAlpha = 1;
+        sprites.forEach(s => {
+            if(s.collected) return;
+            let dx = s.x - player.x, dy = s.y - player.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            let angle = Math.atan2(dy, dx) - player.dir;
+            while(angle < -Math.PI) angle += Math.PI*2;
+            while(angle > Math.PI) angle -= Math.PI*2;
+
+            if(Math.abs(angle) < FOV) {
+                let screenX = (angle / FOV + 0.5) * canvas.width;
+                let h = (CELL_SIZE * canvas.height) / dist;
+                if(dist < zBuffer[Math.floor(screenX)]) {
+                    ctx.font = `${h}px serif`;
+                    ctx.textAlign = 'center';
+                    ctx.fillText(s.char, screenX, canvas.height/2 + h/3);
+                }
+            }
+            if(dist < 30) { 
+                s.collected = true; bugsFound++; score += 100; 
+                document.getElementById('score-val').innerText = score;
+                document.getElementById('bugs-val').innerText = bugsFound;
+                if(bugsFound >= 5) { alert("ניצחת! כל החרקים נאכלו."); location.reload(); }
+            }
+        });
+    }
+
+    function drawMinimap() {
+        const s = 100 / MAP_SIZE;
+        miniCtx.fillStyle = '#000'; miniCtx.fillRect(0,0,100,100);
+        for(let y=0; y<MAP_SIZE; y++) {
+            for(let x=0; x<MAP_SIZE; x++) {
+                if(map[y][x]) { miniCtx.fillStyle = '#444'; miniCtx.fillRect(x*s, y*s, s, s); }
+            }
+        }
+        miniCtx.fillStyle = 'red';
+        miniCtx.fillRect((player.x/CELL_SIZE)*s-2, (player.y/CELL_SIZE)*s-2, 4, 4);
+    }
+
+    // שליטה
+    window.addEventListener('keydown', e => keys[e.key] = true);
+    window.addEventListener('keyup', e => keys[e.key] = false);
+
+    // שליטה במובייל
+    const setupBtn = (id, key) => {
+        const btn = document.getElementById(id);
+        btn.addEventListener('pointerdown', () => keys[key] = true);
+        btn.addEventListener('pointerup', () => keys[key] = false);
+        btn.addEventListener('pointerleave', () => keys[key] = false);
+    };
+    setupBtn('btn-up', 'w'); setupBtn('btn-down', 's');
+    setupBtn('btn-left', 'a'); setupBtn('btn-right', 'd');
 
     window.addEventListener('resize', resize);
     resize();
-    generateMap();
-    loop();
 </script>
 </body>
 </html>
