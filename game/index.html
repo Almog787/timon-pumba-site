@@ -27,7 +27,6 @@
             display: flex; overflow: hidden;
         }
 
-        /* --- Layout --- */
         .main-wrapper {
             display: grid;
             grid-template-columns: 1fr 350px;
@@ -35,7 +34,6 @@
             height: 100%;
         }
 
-        /* --- YouTube Sidebar --- */
         .youtube-sidebar {
             background: #111;
             border-right: 1px solid #222;
@@ -48,7 +46,6 @@
         .preset-btn { background: #222; border: 1px solid #333; color: #888; padding: 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
         .preset-btn:hover { background: #333; color: white; }
 
-        /* --- Game Area --- */
         #game-container {
             flex: 1;
             position: relative;
@@ -65,7 +62,6 @@
             border: 2px solid #222;
         }
 
-        /* UI Overlays */
         .game-ui {
             position: absolute; top: 40px; width: 90%;
             display: flex; justify-content: space-between;
@@ -99,14 +95,12 @@
 <body>
 
     <div class="main-wrapper">
-        <!-- Game Area -->
         <div id="game-container">
             <div class="game-ui">
                 <div class="score-box">Score: <span id="score">0</span></div>
                 <div class="score-box">Best: <span id="best">0</span></div>
             </div>
 
-            <!-- Start Screen -->
             <div id="start-screen">
                 <div style="font-size: 5rem; margin-bottom: 10px;">🐗</div>
                 <h1 style="font-family:'Rubik'; font-size: 3rem; color: var(--amber);">AUTOMATION RUNNER</h1>
@@ -115,18 +109,16 @@
                 <p class="instructions">רווח או לחיצה: קפיצה | קפיצה כפולה נתמכת</p>
             </div>
 
-            <!-- Game Over Screen -->
             <div id="game-over-screen" style="display: none;">
                 <h1 style="font-size: 3.5rem; color: var(--red);">העסק קרס! 📉</h1>
-                <p id="final-score-text" style="font-size: 1.5rem; margin: 10px 0;"></p>
+                <p style="font-size: 1.5rem; margin: 10px 0;">ניקוד סופי: <span id="final-score">0</span></p>
                 <button class="btn" onclick="startGame()">נסה שוב 🔄</button>
-                <a href="../" style="margin-top: 20px; color: #555; text-decoration: none; font-weight: bold;">חזרה לאתר</a>
+                <a href="../" style="margin-top: 20px; color: #555; text-decoration: none; font-weight: bold; display: block;">חזרה לאתר</a>
             </div>
 
             <canvas id="gameCanvas"></canvas>
         </div>
 
-        <!-- YouTube Sidebar -->
         <aside class="youtube-sidebar">
             <h3>🎵 פלייליסט עבודה</h3>
             <iframe id="yt-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk" frameborder="0" allow="autoplay; encrypted-media"></iframe>
@@ -144,12 +136,12 @@
     const ctx = canvas.getContext('2d');
     const scoreEl = document.getElementById('score');
     const bestEl = document.getElementById('best');
+    const finalScoreEl = document.getElementById('final-score');
     
-    // --- Game State ---
     let score = 0;
     let highScore = localStorage.getItem('pumbaaRunnerBest') || 0;
     bestEl.innerText = highScore;
-    let gameSpeed = 5;
+    let gameSpeed = 6;
     let isPlaying = false;
     let frame = 0;
     let obstacles = [];
@@ -161,7 +153,6 @@
     }
     resize();
 
-    // --- Player Object ---
     const pumbaa = {
         x: 80, y: 300, w: 60, h: 60,
         dy: 0, jumpForce: -15, gravity: 0.8,
@@ -195,14 +186,14 @@
             if (this.jumps < 2) {
                 this.dy = this.jumpForce;
                 this.jumps++;
+                this.grounded = false;
             }
         }
     };
 
-    // --- Obstacles & Items ---
     class GameObject {
-        constructor(x, y, w, h, char, color) {
-            this.x = x; this.y = y; this.w = w; this.h = h; this.char = char; this.color = color;
+        constructor(x, y, w, h, char) {
+            this.x = x; this.y = y; this.w = w; this.h = h; this.char = char;
         }
         draw() {
             ctx.font = `${this.w}px serif`;
@@ -219,14 +210,15 @@
         document.getElementById('game-over-screen').style.display = 'none';
         score = 0; gameSpeed = 6; frame = 0;
         obstacles = []; items = [];
+        pumbaa.y = 200; pumbaa.dy = 0;
         isPlaying = true;
-        animate();
+        requestAnimationFrame(animate);
     }
 
     function gameOver() {
         isPlaying = false;
         document.getElementById('game-over-screen').style.display = 'flex';
-        document.getElementById('result-score').innerText = Math.floor(score);
+        finalScoreEl.innerText = Math.floor(score);
         if (score > highScore) {
             highScore = Math.floor(score);
             localStorage.setItem('pumbaaRunnerBest', highScore);
@@ -240,43 +232,44 @@
         if (!isPlaying) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw Floor
+        // Floor
         ctx.fillStyle = '#222';
         ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
-        ctx.strokeStyle = var(--amber);
+        ctx.strokeStyle = '#ffb900'; // Fixed: used hex instead of var()
+        ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(0, canvas.height-40); ctx.lineTo(canvas.width, canvas.height-40); ctx.stroke();
 
         pumbaa.update();
 
-        // Spawn Logic
-        if (frame % 80 === 0) {
-            obstacles.push(new GameObject(canvas.width, canvas.height - 80, 40, 40, '🌵', 'red'));
+        // Spawn
+        if (frame % 100 === 0) {
+            obstacles.push(new GameObject(canvas.width, canvas.height - 85, 45, 45, '🌵'));
         }
-        if (frame % 120 === 0) {
-            items.push(new GameObject(canvas.width, canvas.height - 150 - Math.random()*100, 35, 35, '💎', 'green'));
+        if (frame % 150 === 0) {
+            items.push(new GameObject(canvas.width, canvas.height - 180 - Math.random()*100, 40, 40, '💎'));
         }
 
-        // Update Obstacles
-        obstacles.forEach((obs, i) => {
-            obs.update();
-            if (pumbaa.x < obs.x + 30 && pumbaa.x + 30 > obs.x && pumbaa.y < obs.y + 30 && pumbaa.y + 30 > obs.y) {
+        // Obstacles
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            obstacles[i].update();
+            // Collision
+            if (pumbaa.x < obstacles[i].x + 30 && pumbaa.x + 40 > obstacles[i].x && pumbaa.y < obstacles[i].y + 40 && pumbaa.y + 50 > obstacles[i].y) {
                 gameOver();
             }
-            if (obs.x < -50) obstacles.splice(i, 1);
-        });
+            if (obstacles[i].x < -100) obstacles.splice(i, 1);
+        }
 
-        // Update Items
-        items.forEach((item, i) => {
-            item.update();
-            if (pumbaa.x < item.x + 40 && pumbaa.x + 40 > item.x && pumbaa.y < item.y + 40 && pumbaa.y + 40 > item.y) {
+        // Items
+        for (let i = items.length - 1; i >= 0; i--) {
+            items[i].update();
+            if (pumbaa.x < items[i].x + 40 && pumbaa.x + 40 > items[i].x && pumbaa.y < items[i].y + 40 && pumbaa.y + 50 > items[i].y) {
                 score += 500;
                 items.splice(i, 1);
-                gsap.to(scoreEl, { scale: 1.5, duration: 0.1, yoyo: true, repeat: 1 });
             }
-            if (item.x < -50) items.splice(i, 1);
-        });
+            if (items[i] && items[i].x < -100) items.splice(i, 1);
+        }
 
-        score += 1;
+        score += 0.2;
         scoreEl.innerText = Math.floor(score);
         gameSpeed += 0.001;
         frame++;
@@ -284,9 +277,9 @@
     }
 
     // Controls
-    window.addEventListener('keydown', (e) => { if (e.code === 'Space') pumbaa.jump(); });
-    window.addEventListener('touchstart', () => pumbaa.jump());
-    window.addEventListener('mousedown', () => pumbaa.jump());
+    window.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') pumbaa.jump(); });
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); pumbaa.jump(); }, {passive: false});
+    canvas.addEventListener('mousedown', () => pumbaa.jump());
 </script>
 </body>
 </html>
