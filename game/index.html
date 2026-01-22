@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pumbaa Hit: המעוף של הפינגווין | טימון ופומבה</title>
+    <title>Pumbaa Hit | טימון ופומבה</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐗</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;900&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
@@ -12,8 +12,8 @@
         :root {
             --amber: #ffb900;
             --dark: #050505;
-            --blue: #00a8ff;
-            --white: #ffffff;
+            --green: #25D366;
+            --red: #ff4b4b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: none; }
@@ -25,83 +25,77 @@
             display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* --- UI --- */
         header { 
-            padding: 15px 5%; background: rgba(0,0,0,0.8); 
+            padding: 15px 5%; background: #111; 
             display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 100;
+            border-bottom: 1px solid #333; z-index: 100;
         }
         .logo { font-family: 'Rubik'; font-weight: 900; color: white; text-decoration: none; }
 
         #game-container {
             flex: 1; position: relative; background: linear-gradient(to bottom, #001d3d, #003566);
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
 
-        canvas { background: transparent; width: 100%; height: 100%; }
+        canvas { display: block; width: 100%; height: 100%; }
 
-        /* Overlay UI */
+        /* UI */
         .hud {
             position: absolute; top: 20px; width: 100%; padding: 0 30px;
             display: flex; justify-content: space-between; font-family: 'Rubik';
-            font-size: 1.5rem; font-weight: 900; pointer-events: none;
+            font-size: 1.5rem; font-weight: 900; pointer-events: none; z-index: 10;
         }
-        .distance-box span { color: var(--amber); }
 
-        /* Launch Meter */
+        /* Power Meter */
         #launch-ui {
-            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
-            text-align: center; z-index: 10;
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            text-align: center; z-index: 20; background: rgba(0,0,0,0.6); padding: 20px; border-radius: 20px; backdrop-filter: blur(5px);
         }
-        .meter-bg { width: 200px; height: 20px; background: #222; border-radius: 10px; overflow: hidden; border: 2px solid white; }
-        #meter-fill { width: 0%; height: 100%; background: linear-gradient(to right, var(--green), var(--amber), red); transition: 0.05s; }
+        .meter-bg { width: 250px; height: 25px; background: #333; border-radius: 15px; overflow: hidden; border: 2px solid white; margin: 10px 0; }
+        #meter-fill { width: 0%; height: 100%; background: linear-gradient(to right, var(--green), var(--amber), var(--red)); }
 
         /* Game Over */
         #game-over {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.85);
+            position: absolute; inset: 0; background: rgba(0,0,0,0.9);
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 200; text-align: center; backdrop-filter: blur(10px);
+            z-index: 200; text-align: center;
         }
 
         .btn {
             padding: 16px 40px; border-radius: 50px; border: none;
             background: var(--amber); color: black; font-weight: 900;
-            font-size: 1.2rem; cursor: pointer; transition: 0.3s; margin-top: 20px;
+            font-size: 1.2rem; cursor: pointer; transition: 0.3s;
         }
-        .btn:hover { transform: scale(1.05); }
 
-        .instr { position: absolute; bottom: 20px; color: rgba(255,255,255,0.5); font-size: 0.9rem; width: 100%; text-align: center; }
+        .instr { position: absolute; bottom: 10px; color: rgba(255,255,255,0.4); font-size: 0.8rem; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
 
     <header>
         <a href="../" class="logo">PUMBAA<span>HIT</span></a>
-        <div style="font-size: 0.8rem; color: #888;">שיא: <span id="best-dist">0</span> מ'</div>
+        <div style="font-size: 0.9rem;">שיא: <span id="best-dist" style="color:var(--amber)">0</span> מ'</div>
     </header>
 
     <div id="game-container">
         <div class="hud">
-            <div class="distance-box">מרחק: <span id="dist-val">0</span> מ'</div>
+            <div>מרחק: <span id="dist-val" style="color:var(--amber)">0</span> מ'</div>
         </div>
 
-        <!-- שלב ההשקה -->
         <div id="launch-ui">
-            <p style="margin-bottom: 10px; font-weight: bold;">עוצמת חבטה</p>
+            <p style="font-weight: bold; color: white;">לחץ כדי לחבוט!</p>
             <div class="meter-bg"><div id="meter-fill"></div></div>
-            <p style="margin-top: 10px; font-size: 0.8rem;">לחץ כדי לחבוט!</p>
         </div>
 
-        <!-- סיום -->
         <div id="game-over">
-            <h1 style="font-size: 3rem; color: var(--amber);">הטיסה הסתיימה!</h1>
-            <p id="final-dist-text" style="font-size: 1.5rem; margin: 10px 0;"></p>
-            <button class="btn" onclick="resetGame()">חבטה נוספת 🐗</button>
-            <a href="../" style="margin-top: 20px; color: #555; text-decoration: none; font-weight: bold; display: block;">חזרה לאתר</a>
+            <h1 style="font-size: 3rem; color: var(--amber); margin-bottom: 10px;">הטיסה הסתיימה!</h1>
+            <p id="final-dist-text" style="font-size: 1.5rem; margin-bottom: 30px;"></p>
+            <button class="btn" onclick="resetGame()">נסה שוב 🐗</button>
+            <a href="../" style="margin-top: 20px; color: #666; text-decoration: none; font-weight: bold; display: block;">חזרה לאתר</a>
         </div>
 
         <canvas id="gameCanvas"></canvas>
-        <div class="instr">לחיצה באוויר: צלילה מהירה (Slam) ⚡</div>
+        <div class="instr">לחיצה באוויר: צלילה מהירה (Slam) ⚡ | פגע ב🦭 ובעננים ☁️</div>
     </div>
 
 <script>
@@ -111,79 +105,71 @@
     const distVal = document.getElementById('dist-val');
     const bestVal = document.getElementById('best-dist');
     const gameOverScreen = document.getElementById('game-over');
+    const launchUI = document.getElementById('launch-ui');
 
-    // --- Physics & Config ---
     let width, height;
-    let state = 'WAITING'; // WAITING, LAUNCHING, FLYING, ENDED
+    let gameState = 'LAUNCH'; // LAUNCH, FLY, END
     let score = 0;
     let highScore = localStorage.getItem('pumbaaHitBest') || 0;
     bestVal.innerText = highScore;
 
-    let meterPos = 0;
-    let meterDir = 1;
+    let power = 0;
+    let powerDir = 1;
     let cameraX = 0;
 
     const penguin = {
         x: 100, y: 0, vx: 0, vy: 0,
-        radius: 25, rotation: 0,
-        gravity: 0.25, friction: 0.992,
+        rotation: 0, gravity: 0.25, friction: 0.99,
         isSlamming: false
     };
 
-    const worldObjects = []; // עננים וכלבי ים
-
-    function init() {
-        resize();
-        resetGame();
-        requestAnimationFrame(update);
-    }
+    const objects = [];
 
     function resize() {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight - 80;
-        penguin.y = height - 100;
+        if (gameState === 'LAUNCH') penguin.y = height - 100;
     }
 
-    function resetGame() {
-        state = 'WAITING';
-        score = 0;
-        cameraX = 0;
-        penguin.x = 100;
-        penguin.y = height - 100;
-        penguin.vx = 0;
-        penguin.vy = 0;
-        penguin.isSlamming = false;
-        penguin.rotation = 0;
-        worldObjects.length = 0;
-        generateObjects(500);
-        gameOverScreen.style.display = 'none';
-        document.getElementById('launch-ui').style.display = 'block';
-    }
-
-    function generateObjects(startX) {
-        for (let i = 0; i < 10; i++) {
-            const x = startX + i * 600 + Math.random() * 300;
-            const type = Math.random() > 0.5 ? 'SEAL' : 'CLOUD';
-            worldObjects.push({
+    function spawnObjects(startX) {
+        for (let i = 0; i < 5; i++) {
+            const x = startX + i * 800 + Math.random() * 400;
+            const type = Math.random() > 0.4 ? 'SEAL' : 'CLOUD';
+            objects.push({
                 x: x,
-                y: type === 'SEAL' ? height - 60 : 100 + Math.random() * (height - 250),
+                y: type === 'SEAL' ? height - 65 : 100 + Math.random() * (height - 300),
                 type: type,
                 active: true
             });
         }
     }
 
+    function resetGame() {
+        gameState = 'LAUNCH';
+        score = 0;
+        cameraX = 0;
+        power = 0;
+        penguin.x = 100;
+        penguin.y = height - 100;
+        penguin.vx = 0;
+        penguin.vy = 0;
+        penguin.rotation = 0;
+        penguin.isSlamming = false;
+        objects.length = 0;
+        spawnObjects(800);
+        gameOverScreen.style.display = 'none';
+        launchUI.style.display = 'block';
+    }
+
     function handleInput() {
-        if (state === 'WAITING') {
-            state = 'LAUNCHING';
-        } else if (state === 'LAUNCHING') {
-            const power = meterPos / 100;
-            penguin.vx = 15 + (power * 25);
-            penguin.vy = -10 - (power * 15);
-            state = 'FLYING';
-            document.getElementById('launch-ui').style.display = 'none';
-        } else if (state === 'FLYING' && !penguin.isSlamming) {
-            penguin.vy += 15; // Slam down
+        if (gameState === 'LAUNCH') {
+            const p = power / 100;
+            penguin.vx = 15 + (p * 30);
+            penguin.vy = -10 - (p * 20);
+            gameState = 'FLY';
+            launchUI.style.display = 'none';
+        } else if (gameState === 'FLY' && !penguin.isSlamming) {
+            penguin.vy = 20; // Slam down
             penguin.isSlamming = true;
         }
     }
@@ -191,63 +177,58 @@
     function update() {
         ctx.clearRect(0, 0, width, height);
 
-        if (state === 'LAUNCHING') {
-            meterPos += 3 * meterDir;
-            if (meterPos > 100 || meterPos < 0) meterDir *= -1;
-            meterFill.style.width = meterPos + '%';
+        if (gameState === 'LAUNCH') {
+            power += 4 * powerDir;
+            if (power > 100 || power < 0) powerDir *= -1;
+            meterFill.style.width = power + '%';
         }
 
-        if (state === 'FLYING') {
-            // Physics
+        if (gameState === 'FLY') {
             penguin.vy += penguin.gravity;
             penguin.vx *= penguin.friction;
             penguin.x += penguin.vx;
             penguin.y += penguin.vy;
             penguin.rotation += penguin.vx * 0.01;
 
-            // Camera follow
             cameraX = penguin.x - 150;
 
-            // Ground collision
+            // Ground hit
             if (penguin.y > height - 60) {
                 penguin.y = height - 60;
-                penguin.vy *= -0.4; // Bounce loss
-                penguin.vx *= 0.8;
+                penguin.vy *= -0.4; // Bounce
+                penguin.vx *= 0.7;
                 penguin.isSlamming = false;
 
                 if (penguin.vx < 0.5) {
-                    state = 'ENDED';
-                    endGame();
+                    gameState = 'END';
+                    showGameOver();
                 }
             }
 
-            // Object collisions
-            worldObjects.forEach(obj => {
+            // Collision with boosters
+            objects.forEach(obj => {
                 if (!obj.active) return;
-                const dx = penguin.x - (obj.x);
-                const dy = penguin.y - (obj.y);
+                const dx = penguin.x - obj.x;
+                const dy = penguin.y - obj.y;
                 const dist = Math.sqrt(dx*dx + dy*dy);
 
                 if (dist < 60) {
                     if (obj.type === 'SEAL') {
-                        penguin.vy = -18;
-                        penguin.vx += 10;
+                        penguin.vy = -22;
+                        penguin.vx += 8;
                         penguin.isSlamming = false;
-                    } else if (obj.type === 'CLOUD') {
+                    } else {
                         penguin.vx += 15;
                         penguin.vy -= 5;
                     }
                     obj.active = false;
-                    score += 1000;
                 }
             });
 
-            // Generate more objects
-            if (penguin.x > worldObjects[worldObjects.length - 5].x) {
-                generateObjects(worldObjects[worldObjects.length - 1].x + 600);
+            if (penguin.x > objects[objects.length - 3].x) {
+                spawnObjects(objects[objects.length - 1].x + 800);
             }
 
-            score = Math.max(score, Math.floor(penguin.x / 10));
             distVal.innerText = Math.floor(penguin.x / 10);
         }
 
@@ -256,43 +237,42 @@
     }
 
     function draw() {
-        // Draw Ground
+        // Ground
         ctx.fillStyle = '#001524';
         ctx.fillRect(0, height - 40, width, 40);
-        
-        // Draw Objects
-        worldObjects.forEach(obj => {
-            const screenX = obj.x - cameraX;
-            if (screenX > -100 && screenX < width + 100) {
+
+        // Objects
+        objects.forEach(obj => {
+            const sx = obj.x - cameraX;
+            if (sx > -100 && sx < width + 100) {
                 ctx.font = '50px serif';
-                ctx.globalAlpha = obj.active ? 1 : 0.3;
-                ctx.fillText(obj.type === 'SEAL' ? '🦭' : '☁️', screenX, obj.y);
+                ctx.globalAlpha = obj.active ? 1 : 0.2;
+                ctx.fillText(obj.type === 'SEAL' ? '🦭' : '☁️', sx, obj.y);
                 ctx.globalAlpha = 1;
             }
         });
 
-        // Draw Hitter (Pumbaa)
-        if (penguin.x < 300) {
+        // Pumbaa (Hitter)
+        if (penguin.x < 500) {
             ctx.font = '80px serif';
             ctx.fillText('🐗', 20 - cameraX, height - 40);
         }
 
-        // Draw Penguin
+        // Penguin
         ctx.save();
         ctx.translate(penguin.x - cameraX, penguin.y);
         ctx.rotate(penguin.rotation);
-        ctx.font = '40px serif';
+        ctx.font = '45px serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('🐧', 0, 0);
         ctx.restore();
     }
 
-    function endGame() {
-        gameOverScreen.style.display = 'flex';
+    function showGameOver() {
         const finalDist = Math.floor(penguin.x / 10);
-        document.getElementById('final-dist-text').innerText = `מרחק סופי: ${finalDist} מטרים`;
-        
+        document.getElementById('final-dist-text').innerText = `הגעת למרחק של ${finalDist} מטרים!`;
+        gameOverScreen.style.display = 'flex';
         if (finalDist > highScore) {
             highScore = finalDist;
             localStorage.setItem('pumbaaHitBest', highScore);
@@ -304,7 +284,9 @@
     window.addEventListener('touchstart', (e) => { e.preventDefault(); handleInput(); }, {passive: false});
     window.addEventListener('resize', resize);
 
-    init();
+    resize();
+    resetGame();
+    requestAnimationFrame(update);
 </script>
 </body>
 </html>
