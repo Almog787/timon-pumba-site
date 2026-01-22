@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Automation Runner | טימון ופומבה</title>
+    <title>Pumbaa Hit: המעוף של הפינגווין | טימון ופומבה</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐗</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;900&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
     <style>
         :root {
             --amber: #ffb900;
             --dark: #050505;
-            --green: #25D366;
-            --red: #ff4b4b;
+            --blue: #00a8ff;
+            --white: #ffffff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: none; }
@@ -24,262 +22,289 @@
             background-color: var(--dark); 
             color: white; 
             height: 100vh;
-            display: flex; overflow: hidden;
+            display: flex; flex-direction: column; overflow: hidden;
         }
 
-        .main-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            width: 100%;
-            height: 100%;
+        /* --- UI --- */
+        header { 
+            padding: 15px 5%; background: rgba(0,0,0,0.8); 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 100;
         }
-
-        .youtube-sidebar {
-            background: #111;
-            border-right: 1px solid #222;
-            display: flex; flex-direction: column;
-            padding: 20px; z-index: 10;
-        }
-        .youtube-sidebar h3 { font-family: 'Rubik'; margin-bottom: 15px; color: var(--amber); font-size: 1.1rem; }
-        #yt-frame { width: 100%; aspect-ratio: 16/9; border-radius: 15px; border: 1px solid #333; }
-        .yt-presets { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .preset-btn { background: #222; border: 1px solid #333; color: #888; padding: 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
-        .preset-btn:hover { background: #333; color: white; }
+        .logo { font-family: 'Rubik'; font-weight: 900; color: white; text-decoration: none; }
 
         #game-container {
-            flex: 1;
-            position: relative;
-            background: linear-gradient(to bottom, #050505, #111);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            flex: 1; position: relative; background: linear-gradient(to bottom, #001d3d, #003566);
+            display: flex; align-items: center; justify-content: center;
         }
 
-        canvas {
-            background: #000;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            max-width: 95%;
-            max-height: 70vh;
-            border: 2px solid #222;
-        }
+        canvas { background: transparent; width: 100%; height: 100%; }
 
-        .game-ui {
-            position: absolute; top: 40px; width: 90%;
-            display: flex; justify-content: space-between;
-            font-family: 'Rubik'; font-size: 1.5rem; font-weight: 900;
-            pointer-events: none; z-index: 100;
+        /* Overlay UI */
+        .hud {
+            position: absolute; top: 20px; width: 100%; padding: 0 30px;
+            display: flex; justify-content: space-between; font-family: 'Rubik';
+            font-size: 1.5rem; font-weight: 900; pointer-events: none;
         }
-        .score-box span { color: var(--amber); }
+        .distance-box span { color: var(--amber); }
 
-        #start-screen, #game-over-screen {
+        /* Launch Meter */
+        #launch-ui {
+            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+            text-align: center; z-index: 10;
+        }
+        .meter-bg { width: 200px; height: 20px; background: #222; border-radius: 10px; overflow: hidden; border: 2px solid white; }
+        #meter-fill { width: 0%; height: 100%; background: linear-gradient(to right, var(--green), var(--amber), red); transition: 0.05s; }
+
+        /* Game Over */
+        #game-over {
             position: absolute; inset: 0; background: rgba(0,0,0,0.85);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
             z-index: 200; text-align: center; backdrop-filter: blur(10px);
         }
 
         .btn {
             padding: 16px 40px; border-radius: 50px; border: none;
             background: var(--amber); color: black; font-weight: 900;
-            font-size: 1.2rem; cursor: pointer; transition: 0.3s;
-            margin-top: 20px;
+            font-size: 1.2rem; cursor: pointer; transition: 0.3s; margin-top: 20px;
         }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,185,0,0.4); }
+        .btn:hover { transform: scale(1.05); }
 
-        .instructions { color: #666; font-size: 0.9rem; margin-top: 20px; }
-
-        @media (max-width: 1000px) {
-            .main-wrapper { grid-template-columns: 1fr; }
-            .youtube-sidebar { display: none; }
-        }
+        .instr { position: absolute; bottom: 20px; color: rgba(255,255,255,0.5); font-size: 0.9rem; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="main-wrapper">
-        <div id="game-container">
-            <div class="game-ui">
-                <div class="score-box">Score: <span id="score">0</span></div>
-                <div class="score-box">Best: <span id="best">0</span></div>
-            </div>
+    <header>
+        <a href="../" class="logo">PUMBAA<span>HIT</span></a>
+        <div style="font-size: 0.8rem; color: #888;">שיא: <span id="best-dist">0</span> מ'</div>
+    </header>
 
-            <div id="start-screen">
-                <div style="font-size: 5rem; margin-bottom: 10px;">🐗</div>
-                <h1 style="font-family:'Rubik'; font-size: 3rem; color: var(--amber);">AUTOMATION RUNNER</h1>
-                <p>אספו נתונים, הימנעו מעבודה ידנית!</p>
-                <button class="btn" onclick="startGame()">התחל ריצה 🚀</button>
-                <p class="instructions">רווח או לחיצה: קפיצה | קפיצה כפולה נתמכת</p>
-            </div>
-
-            <div id="game-over-screen" style="display: none;">
-                <h1 style="font-size: 3.5rem; color: var(--red);">העסק קרס! 📉</h1>
-                <p style="font-size: 1.5rem; margin: 10px 0;">ניקוד סופי: <span id="final-score">0</span></p>
-                <button class="btn" onclick="startGame()">נסה שוב 🔄</button>
-                <a href="../" style="margin-top: 20px; color: #555; text-decoration: none; font-weight: bold; display: block;">חזרה לאתר</a>
-            </div>
-
-            <canvas id="gameCanvas"></canvas>
+    <div id="game-container">
+        <div class="hud">
+            <div class="distance-box">מרחק: <span id="dist-val">0</span> מ'</div>
         </div>
 
-        <aside class="youtube-sidebar">
-            <h3>🎵 פלייליסט עבודה</h3>
-            <iframe id="yt-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk" frameborder="0" allow="autoplay; encrypted-media"></iframe>
-            <div class="yt-presets">
-                <button class="preset-btn" onclick="changeVid('jfKfPfyJRdk')">Lo-Fi ☕</button>
-                <button class="preset-btn" onclick="changeVid('17mYv7-O_t8')">ג'ונגל 🌴</button>
-                <button class="preset-btn" onclick="changeVid('S_MOd40zlYU')">Focus</button>
-                <button class="preset-btn" onclick="changeVid('5qap5aO4i9A')">Lofi Hip Hop</button>
-            </div>
-        </aside>
+        <!-- שלב ההשקה -->
+        <div id="launch-ui">
+            <p style="margin-bottom: 10px; font-weight: bold;">עוצמת חבטה</p>
+            <div class="meter-bg"><div id="meter-fill"></div></div>
+            <p style="margin-top: 10px; font-size: 0.8rem;">לחץ כדי לחבוט!</p>
+        </div>
+
+        <!-- סיום -->
+        <div id="game-over">
+            <h1 style="font-size: 3rem; color: var(--amber);">הטיסה הסתיימה!</h1>
+            <p id="final-dist-text" style="font-size: 1.5rem; margin: 10px 0;"></p>
+            <button class="btn" onclick="resetGame()">חבטה נוספת 🐗</button>
+            <a href="../" style="margin-top: 20px; color: #555; text-decoration: none; font-weight: bold; display: block;">חזרה לאתר</a>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+        <div class="instr">לחיצה באוויר: צלילה מהירה (Slam) ⚡</div>
     </div>
 
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const scoreEl = document.getElementById('score');
-    const bestEl = document.getElementById('best');
-    const finalScoreEl = document.getElementById('final-score');
-    
+    const meterFill = document.getElementById('meter-fill');
+    const distVal = document.getElementById('dist-val');
+    const bestVal = document.getElementById('best-dist');
+    const gameOverScreen = document.getElementById('game-over');
+
+    // --- Physics & Config ---
+    let width, height;
+    let state = 'WAITING'; // WAITING, LAUNCHING, FLYING, ENDED
     let score = 0;
-    let highScore = localStorage.getItem('pumbaaRunnerBest') || 0;
-    bestEl.innerText = highScore;
-    let gameSpeed = 6;
-    let isPlaying = false;
-    let frame = 0;
-    let obstacles = [];
-    let items = [];
+    let highScore = localStorage.getItem('pumbaaHitBest') || 0;
+    bestVal.innerText = highScore;
 
-    function resize() {
-        canvas.width = 800;
-        canvas.height = 400;
-    }
-    resize();
+    let meterPos = 0;
+    let meterDir = 1;
+    let cameraX = 0;
 
-    const pumbaa = {
-        x: 80, y: 300, w: 60, h: 60,
-        dy: 0, jumpForce: -15, gravity: 0.8,
-        grounded: false, jumps: 0,
-        rotation: 0,
-        update() {
-            if (this.y + this.h < canvas.height - 40) {
-                this.dy += this.gravity;
-                this.grounded = false;
-            } else {
-                this.dy = 0;
-                this.y = canvas.height - 40 - this.h;
-                this.grounded = true;
-                this.jumps = 0;
-            }
-            this.y += this.dy;
-            this.rotation = this.grounded ? 0 : this.dy * 0.05;
-            this.draw();
-        },
-        draw() {
-            ctx.save();
-            ctx.translate(this.x + this.w/2, this.y + this.h/2);
-            ctx.rotate(this.rotation);
-            ctx.font = '50px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('🐗', 0, 0);
-            ctx.restore();
-        },
-        jump() {
-            if (this.jumps < 2) {
-                this.dy = this.jumpForce;
-                this.jumps++;
-                this.grounded = false;
-            }
-        }
+    const penguin = {
+        x: 100, y: 0, vx: 0, vy: 0,
+        radius: 25, rotation: 0,
+        gravity: 0.25, friction: 0.992,
+        isSlamming: false
     };
 
-    class GameObject {
-        constructor(x, y, w, h, char) {
-            this.x = x; this.y = y; this.w = w; this.h = h; this.char = char;
-        }
-        draw() {
-            ctx.font = `${this.w}px serif`;
-            ctx.fillText(this.char, this.x, this.y + this.h);
-        }
-        update() {
-            this.x -= gameSpeed;
-            this.draw();
+    const worldObjects = []; // עננים וכלבי ים
+
+    function init() {
+        resize();
+        resetGame();
+        requestAnimationFrame(update);
+    }
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight - 80;
+        penguin.y = height - 100;
+    }
+
+    function resetGame() {
+        state = 'WAITING';
+        score = 0;
+        cameraX = 0;
+        penguin.x = 100;
+        penguin.y = height - 100;
+        penguin.vx = 0;
+        penguin.vy = 0;
+        penguin.isSlamming = false;
+        penguin.rotation = 0;
+        worldObjects.length = 0;
+        generateObjects(500);
+        gameOverScreen.style.display = 'none';
+        document.getElementById('launch-ui').style.display = 'block';
+    }
+
+    function generateObjects(startX) {
+        for (let i = 0; i < 10; i++) {
+            const x = startX + i * 600 + Math.random() * 300;
+            const type = Math.random() > 0.5 ? 'SEAL' : 'CLOUD';
+            worldObjects.push({
+                x: x,
+                y: type === 'SEAL' ? height - 60 : 100 + Math.random() * (height - 250),
+                type: type,
+                active: true
+            });
         }
     }
 
-    function startGame() {
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('game-over-screen').style.display = 'none';
-        score = 0; gameSpeed = 6; frame = 0;
-        obstacles = []; items = [];
-        pumbaa.y = 200; pumbaa.dy = 0;
-        isPlaying = true;
-        requestAnimationFrame(animate);
-    }
-
-    function gameOver() {
-        isPlaying = false;
-        document.getElementById('game-over-screen').style.display = 'flex';
-        finalScoreEl.innerText = Math.floor(score);
-        if (score > highScore) {
-            highScore = Math.floor(score);
-            localStorage.setItem('pumbaaRunnerBest', highScore);
-            bestEl.innerText = highScore;
+    function handleInput() {
+        if (state === 'WAITING') {
+            state = 'LAUNCHING';
+        } else if (state === 'LAUNCHING') {
+            const power = meterPos / 100;
+            penguin.vx = 15 + (power * 25);
+            penguin.vy = -10 - (power * 15);
+            state = 'FLYING';
+            document.getElementById('launch-ui').style.display = 'none';
+        } else if (state === 'FLYING' && !penguin.isSlamming) {
+            penguin.vy += 15; // Slam down
+            penguin.isSlamming = true;
         }
     }
 
-    function changeVid(id) { document.getElementById('yt-frame').src = `https://www.youtube.com/embed/${id}?autoplay=1`; }
+    function update() {
+        ctx.clearRect(0, 0, width, height);
 
-    function animate() {
-        if (!isPlaying) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Floor
-        ctx.fillStyle = '#222';
-        ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
-        ctx.strokeStyle = '#ffb900'; // Fixed: used hex instead of var()
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(0, canvas.height-40); ctx.lineTo(canvas.width, canvas.height-40); ctx.stroke();
-
-        pumbaa.update();
-
-        // Spawn
-        if (frame % 100 === 0) {
-            obstacles.push(new GameObject(canvas.width, canvas.height - 85, 45, 45, '🌵'));
-        }
-        if (frame % 150 === 0) {
-            items.push(new GameObject(canvas.width, canvas.height - 180 - Math.random()*100, 40, 40, '💎'));
+        if (state === 'LAUNCHING') {
+            meterPos += 3 * meterDir;
+            if (meterPos > 100 || meterPos < 0) meterDir *= -1;
+            meterFill.style.width = meterPos + '%';
         }
 
-        // Obstacles
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-            obstacles[i].update();
-            // Collision
-            if (pumbaa.x < obstacles[i].x + 30 && pumbaa.x + 40 > obstacles[i].x && pumbaa.y < obstacles[i].y + 40 && pumbaa.y + 50 > obstacles[i].y) {
-                gameOver();
+        if (state === 'FLYING') {
+            // Physics
+            penguin.vy += penguin.gravity;
+            penguin.vx *= penguin.friction;
+            penguin.x += penguin.vx;
+            penguin.y += penguin.vy;
+            penguin.rotation += penguin.vx * 0.01;
+
+            // Camera follow
+            cameraX = penguin.x - 150;
+
+            // Ground collision
+            if (penguin.y > height - 60) {
+                penguin.y = height - 60;
+                penguin.vy *= -0.4; // Bounce loss
+                penguin.vx *= 0.8;
+                penguin.isSlamming = false;
+
+                if (penguin.vx < 0.5) {
+                    state = 'ENDED';
+                    endGame();
+                }
             }
-            if (obstacles[i].x < -100) obstacles.splice(i, 1);
-        }
 
-        // Items
-        for (let i = items.length - 1; i >= 0; i--) {
-            items[i].update();
-            if (pumbaa.x < items[i].x + 40 && pumbaa.x + 40 > items[i].x && pumbaa.y < items[i].y + 40 && pumbaa.y + 50 > items[i].y) {
-                score += 500;
-                items.splice(i, 1);
+            // Object collisions
+            worldObjects.forEach(obj => {
+                if (!obj.active) return;
+                const dx = penguin.x - (obj.x);
+                const dy = penguin.y - (obj.y);
+                const dist = Math.sqrt(dx*dx + dy*dy);
+
+                if (dist < 60) {
+                    if (obj.type === 'SEAL') {
+                        penguin.vy = -18;
+                        penguin.vx += 10;
+                        penguin.isSlamming = false;
+                    } else if (obj.type === 'CLOUD') {
+                        penguin.vx += 15;
+                        penguin.vy -= 5;
+                    }
+                    obj.active = false;
+                    score += 1000;
+                }
+            });
+
+            // Generate more objects
+            if (penguin.x > worldObjects[worldObjects.length - 5].x) {
+                generateObjects(worldObjects[worldObjects.length - 1].x + 600);
             }
-            if (items[i] && items[i].x < -100) items.splice(i, 1);
+
+            score = Math.max(score, Math.floor(penguin.x / 10));
+            distVal.innerText = Math.floor(penguin.x / 10);
         }
 
-        score += 0.2;
-        scoreEl.innerText = Math.floor(score);
-        gameSpeed += 0.001;
-        frame++;
-        requestAnimationFrame(animate);
+        draw();
+        requestAnimationFrame(update);
     }
 
-    // Controls
-    window.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') pumbaa.jump(); });
-    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); pumbaa.jump(); }, {passive: false});
-    canvas.addEventListener('mousedown', () => pumbaa.jump());
+    function draw() {
+        // Draw Ground
+        ctx.fillStyle = '#001524';
+        ctx.fillRect(0, height - 40, width, 40);
+        
+        // Draw Objects
+        worldObjects.forEach(obj => {
+            const screenX = obj.x - cameraX;
+            if (screenX > -100 && screenX < width + 100) {
+                ctx.font = '50px serif';
+                ctx.globalAlpha = obj.active ? 1 : 0.3;
+                ctx.fillText(obj.type === 'SEAL' ? '🦭' : '☁️', screenX, obj.y);
+                ctx.globalAlpha = 1;
+            }
+        });
+
+        // Draw Hitter (Pumbaa)
+        if (penguin.x < 300) {
+            ctx.font = '80px serif';
+            ctx.fillText('🐗', 20 - cameraX, height - 40);
+        }
+
+        // Draw Penguin
+        ctx.save();
+        ctx.translate(penguin.x - cameraX, penguin.y);
+        ctx.rotate(penguin.rotation);
+        ctx.font = '40px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🐧', 0, 0);
+        ctx.restore();
+    }
+
+    function endGame() {
+        gameOverScreen.style.display = 'flex';
+        const finalDist = Math.floor(penguin.x / 10);
+        document.getElementById('final-dist-text').innerText = `מרחק סופי: ${finalDist} מטרים`;
+        
+        if (finalDist > highScore) {
+            highScore = finalDist;
+            localStorage.setItem('pumbaaHitBest', highScore);
+            bestVal.innerText = highScore;
+        }
+    }
+
+    window.addEventListener('mousedown', handleInput);
+    window.addEventListener('touchstart', (e) => { e.preventDefault(); handleInput(); }, {passive: false});
+    window.addEventListener('resize', resize);
+
+    init();
 </script>
 </body>
 </html>
