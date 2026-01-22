@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>שחור ופתור PRO | 40x40</title>
+    <title>שחור ופתור דינמי | טימון ופומבה</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐗</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;900&family=Rubik:wght@700&display=swap" rel="stylesheet">
@@ -11,10 +11,10 @@
     <style>
         :root {
             --amber: #ffb900;
-            --bg-main: #222; /* רקע מובהר */
+            --bg-main: #2a2a2a; /* רקע מובהר ונעים */
             --surface: #333;
             --green: #25D366;
-            --cell-size: 15px; /* גודל קטן כדי שייכנס למסך */
+            --cell-size: 30px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
@@ -24,118 +24,96 @@
             color: white; 
             min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
-            padding: 10px;
         }
 
-        header { width: 100%; padding: 15px; text-align: center; background: rgba(0,0,0,0.2); border-bottom: 1px solid #444; margin-bottom: 20px; }
-        .logo { font-family: 'Rubik'; font-weight: 900; color: white; text-decoration: none; font-size: 1.2rem; }
-
-        h1 { font-family: 'Rubik'; color: var(--amber); font-size: 1.5rem; margin-bottom: 5px; }
-
-        /* --- Game Layout --- */
+        /* --- Menu Screen --- */
+        #menu-screen {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; text-align: center;
+        }
+        .menu-card {
+            background: #1a1a1a; padding: 40px; border-radius: 30px;
+            border: 2px solid var(--amber); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .menu-card h1 { font-family: 'Rubik'; font-size: 2.5rem; margin-bottom: 10px; color: var(--amber); }
+        .size-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        
+        /* --- Game Screen --- */
+        #game-screen { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px; }
+        
+        header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; margin-bottom: 20px; }
+        
         .game-scroll-container {
-            max-width: 95vw;
-            max-height: 70vh;
-            overflow: auto; /* מאפשר גלילה בטלפון */
-            border: 2px solid #444;
-            border-radius: 10px;
-            background: #111;
+            max-width: 95vw; max-height: 75vh; overflow: auto;
+            border: 2px solid #444; border-radius: 15px; background: #111;
         }
 
-        .nonogram-wrapper {
-            display: grid;
-            grid-template-columns: auto auto;
-            padding: 10px;
-            width: max-content;
-        }
-
-        .top-hints {
-            display: grid;
-            grid-template-columns: repeat(40, var(--cell-size));
-            gap: 1px;
-            padding-bottom: 5px;
-        }
-
-        .side-hints {
-            display: grid;
-            grid-template-rows: repeat(40, var(--cell-size));
-            gap: 1px;
-            padding-left: 10px;
-        }
+        .nonogram-wrapper { display: grid; grid-template-columns: auto auto; padding: 15px; width: max-content; }
+        .top-hints { display: grid; gap: 1px; padding-bottom: 5px; }
+        .side-hints { display: grid; gap: 1px; padding-left: 10px; }
 
         .hint-box {
-            display: flex;
-            background: #222;
-            font-weight: bold;
-            color: #888;
-            font-size: 9px;
-            justify-content: center;
-            align-items: center;
+            display: flex; background: #222; font-weight: bold; color: #888;
+            justify-content: center; align-items: center;
         }
+        .top-hints .hint-box { flex-direction: column; justify-content: flex-end; padding-bottom: 5px; }
+        .side-hints .hint-box { flex-direction: row; justify-content: flex-end; padding-left: 8px; }
 
-        .top-hints .hint-box { flex-direction: column; justify-content: flex-end; height: 80px; }
-        .side-hints .hint-box { flex-direction: row; justify-content: flex-end; width: 80px; padding-left: 5px; }
+        .grid { display: grid; gap: 1px; background: #444; border: 1px solid #444; }
+        .cell { width: var(--cell-size); height: var(--cell-size); background: var(--bg-main); cursor: pointer; }
+        
+        /* קווי עזר */
+        .cell.border-right { border-left: 2px solid #555; }
+        .cell.border-bottom { border-bottom: 2px solid #555; }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(40, var(--cell-size));
-            grid-template-rows: repeat(40, var(--cell-size));
-            gap: 1px;
-            background: #444; /* צבע הקווים */
-            border: 1px solid #444;
+        .cell.filled { background: var(--amber); box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
+        .cell.marked { position: relative; background: #333; }
+        .cell.marked::after { content: '×'; position: absolute; top:50%; left:50%; transform:translate(-50%, -50%); color: #666; font-size: calc(var(--cell-size) * 0.7); }
+
+        /* --- UI Elements --- */
+        .btn {
+            padding: 12px 25px; border-radius: 50px; border: none;
+            background: var(--amber); color: black; font-weight: 900;
+            cursor: pointer; transition: 0.3s; font-family: inherit;
         }
+        .btn:hover { transform: scale(1.05); opacity: 0.9; }
+        .btn-outline { background: transparent; border: 2px solid #555; color: #ccc; }
 
-        .cell {
-            width: var(--cell-size);
-            height: var(--cell-size);
-            background: var(--bg-main);
-            cursor: pointer;
-            transition: background 0.1s;
-        }
-
-        /* הדגשת קווי 5x5 */
-        .cell:nth-child(5n) { border-left: 1px solid #555; }
-        .grid div:nth-child(n+161):nth-child(-n+200), /* דוגמה לקו אופקי */
-        .grid div:nth-child(400n) { border-bottom: 1px solid #555; }
-
-        .cell.filled { background: var(--amber); }
-        .cell.marked { background: #444; position: relative; }
-        .cell.marked::after { content: '×'; position: absolute; top:50%; left:50%; transform:translate(-50%, -50%); color: #666; font-size: 10px; }
-
-        /* --- Win Bar (Doesn't hide the drawing) --- */
         #win-bar {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(37, 211, 102, 0.95);
-            color: black; padding: 20px;
+            background: var(--green); color: black; padding: 20px;
             display: none; justify-content: center; align-items: center;
-            gap: 20px; z-index: 1000;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+            gap: 20px; z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
         }
 
-        .btn {
-            padding: 10px 25px; border-radius: 50px; border: none;
-            background: black; color: white; font-weight: 900;
-            cursor: pointer;
-        }
-
-        .controls-info { margin-top: 15px; color: #666; font-size: 0.8rem; text-align: center; }
-
-        @media (max-width: 600px) {
-            :root { --cell-size: 12px; }
-            .top-hints .hint-box { height: 60px; }
-            .side-hints .hint-box { width: 60px; }
-        }
+        .mode-indicator { margin-top: 10px; color: #888; font-size: 0.9rem; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <header>
-        <a href="../" class="logo">טימון<span>ופומבה</span></a>
-    </header>
+    <!-- מסך בחירת גודל -->
+    <div id="menu-screen">
+        <div class="menu-card">
+            <h1>שחור ופתור 🐗</h1>
+            <p>בחרו רמת קושי כדי להתחיל</p>
+            <div class="size-options">
+                <button class="btn" onclick="startGame(5)">קל (5x5)</button>
+                <button class="btn" onclick="startGame(10)">בינוני (10x10)</button>
+                <button class="btn" onclick="startGame(20)">קשה (20x20)</button>
+                <button class="btn" onclick="startGame(40)">מומחה (40x40)</button>
+            </div>
+            <a href="../" style="display:block; margin-top:20px; color:#666; text-decoration:none;">חזרה לאתר</a>
+        </div>
+    </div>
 
-    <div class="game-container">
-        <h1>שחור ופתור 40x40</h1>
-        
+    <!-- מסך המשחק -->
+    <div id="game-screen">
+        <header>
+            <button class="btn btn-outline" onclick="showMenu()">← תפריט</button>
+            <div style="font-family:'Rubik'; font-weight:900; font-size:1.2rem;">גודל: <span id="size-label"></span></div>
+            <button class="btn btn-outline" onclick="resetCurrentGame()">איפוס 🔄</button>
+        </header>
+
         <div class="game-scroll-container">
             <div class="nonogram-wrapper">
                 <div></div>
@@ -145,59 +123,68 @@
             </div>
         </div>
 
-        <div class="controls-info">
-            לחיצה וגרירה לצביעה | קליק ימני (או לחיצה ארוכה) לסימון איקס
+        <div class="mode-indicator">
+            לחיצה וגרירה לצביעה | קליק ימני לסימון איקס (X)
         </div>
-        <button class="btn" style="margin-top: 15px; background: #444;" onclick="initGame()">החלף ציור 🔄</button>
     </div>
 
+    <!-- סרגל ניצחון -->
     <div id="win-bar">
-        <strong style="font-size: 1.2rem;">פיצחתם את המטריצה! 🚀</strong>
-        <button class="btn" onclick="initGame()">לציור הבא 🐗</button>
+        <strong style="font-size: 1.2rem;">כל הכבוד! הציור הושלם 🚀</strong>
+        <button class="btn" style="background:black; color:white;" onclick="showMenu()">חזרה לתפריט</button>
     </div>
 
 <script>
-    const SIZE = 40;
+    let SIZE = 10;
     let targetGrid = [];
     let userGrid = [];
     let isMouseDown = false;
-    let drawMode = 1; // 1 = fill, 2 = mark, 0 = erase
+    let drawMode = 1; // 1=fill, 2=mark, 0=erase
 
-    // יצירת ציור "קל" (צורות גיאומטריות גדולות)
-    function generatePattern() {
-        let newGrid = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
+    function showMenu() {
+        document.getElementById('menu-screen').style.display = 'flex';
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('win-bar').style.display = 'none';
+    }
+
+    function startGame(size) {
+        SIZE = size;
+        document.getElementById('menu-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'flex';
+        document.getElementById('size-label').innerText = `${size}x${size}`;
+        
+        // התאמת גודל משבצת
+        let cellSize = 35;
+        if(size === 20) cellSize = 22;
+        if(size === 40) cellSize = 14;
+        document.documentElement.style.setProperty('--cell-size', cellSize + 'px');
+
+        initGame();
+    }
+
+    function generatePattern(size) {
+        let grid = Array(size).fill().map(() => Array(size).fill(0));
         const type = Math.floor(Math.random() * 3);
         
-        if(type === 0) { // לב ענק
-            for(let r=0; r<SIZE; r++) {
-                for(let c=0; c<SIZE; c++) {
-                    let x = (c - SIZE/2) / (SIZE/2.5);
-                    let y = -(r - SIZE/2.5) / (SIZE/2.5);
-                    if (Math.pow(x*x + y*y - 1, 3) - x*x * y*y*y <= 0) newGrid[r][c] = 1;
-                }
-            }
-        } else if(type === 1) { // סמיילי
-            for(let r=0; r<SIZE; r++) {
-                for(let c=0; c<SIZE; c++) {
-                    let dist = Math.hypot(r-SIZE/2, c-SIZE/2);
-                    if(dist < SIZE/2.2 && dist > SIZE/2.5) newGrid[r][c] = 1; // עיגול
-                    if(dist < 3 && (Math.abs(r-SIZE/3) < 2) && (Math.abs(c-SIZE/3) < 5 || Math.abs(c-SIZE/1.5) < 5)) newGrid[r][c] = 1; // עיניים
-                    if(r > SIZE/1.8 && r < SIZE/1.5 && Math.abs(c-SIZE/2) < SIZE/4) newGrid[r][c] = 1; // פה
-                }
-            }
-        } else { // יהלום
-            for(let r=0; r<SIZE; r++) {
-                for(let c=0; c<SIZE; c++) {
-                    if(Math.abs(r-SIZE/2) + Math.abs(c-SIZE/2) < SIZE/2.5) newGrid[r][c] = 1;
+        for(let r=0; r<size; r++) {
+            for(let c=0; c<size; c++) {
+                if(type === 0) { // לב
+                    let x = (c - size/2) / (size/2.5);
+                    let y = -(r - size/2.5) / (size/2.5);
+                    if (Math.pow(x*x + y*y - 1, 3) - x*x * y*y*y <= 0) grid[r][c] = 1;
+                } else if(type === 1) { // יהלום/מעוין
+                    if(Math.abs(r-size/2) + Math.abs(c-size/2) < size/2.5) grid[r][c] = 1;
+                } else { // עיגול/סמיילי בסיסי
+                    let dist = Math.hypot(r-size/2, c-size/2);
+                    if(dist < size/2.5) grid[r][c] = 1;
                 }
             }
         }
-        return newGrid;
+        return grid;
     }
 
     function calculateHints(arr) {
-        let hints = [];
-        let count = 0;
+        let hints = [], count = 0;
         for (let val of arr) {
             if (val === 1) count++;
             else { if (count > 0) hints.push(count); count = 0; }
@@ -208,15 +195,22 @@
 
     function initGame() {
         document.getElementById('win-bar').style.display = 'none';
-        targetGrid = generatePattern();
+        targetGrid = generatePattern(SIZE);
         userGrid = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
         renderHints();
+        renderGrid();
+    }
+
+    function resetCurrentGame() {
+        userGrid = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
         renderGrid();
     }
 
     function renderHints() {
         const topEl = document.getElementById('topHints');
         const sideEl = document.getElementById('sideHints');
+        topEl.style.gridTemplateColumns = `repeat(${SIZE}, var(--cell-size))`;
+        sideEl.style.gridTemplateRows = `repeat(${SIZE}, var(--cell-size))`;
         topEl.innerHTML = ''; sideEl.innerHTML = '';
 
         for (let c = 0; c < SIZE; c++) {
@@ -225,6 +219,7 @@
             const hints = calculateHints(col);
             const box = document.createElement('div');
             box.className = 'hint-box';
+            box.style.fontSize = SIZE > 20 ? '8px' : '11px';
             hints.forEach(h => box.innerHTML += `<span>${h}</span>`);
             topEl.appendChild(box);
         }
@@ -233,6 +228,7 @@
             const hints = calculateHints(targetGrid[r]);
             const box = document.createElement('div');
             box.className = 'hint-box';
+            box.style.fontSize = SIZE > 20 ? '8px' : '11px';
             hints.forEach(h => box.innerHTML += `<span style="margin:0 2px">${h}</span>`);
             sideEl.appendChild(box);
         }
@@ -240,17 +236,34 @@
 
     function renderGrid() {
         const gridEl = document.getElementById('grid');
+        gridEl.style.gridTemplateColumns = `repeat(${SIZE}, var(--cell-size))`;
         gridEl.innerHTML = '';
+        
         for (let r = 0; r < SIZE; r++) {
             for (let c = 0; c < SIZE; c++) {
                 const cell = document.createElement('div');
                 cell.className = 'cell';
+                if ((c + 1) % 5 === 0 && c !== SIZE - 1) cell.classList.add('border-right');
+                if ((r + 1) % 5 === 0 && r !== SIZE - 1) cell.classList.add('border-bottom');
+                
                 cell.onmousedown = (e) => {
                     isMouseDown = true;
-                    drawMode = e.button === 2 ? 2 : (userGrid[r][c] === 1 ? 0 : 1);
+                    if (e.button === 2) drawMode = (userGrid[r][c] === 2 ? 0 : 2);
+                    else drawMode = (userGrid[r][c] === 1 ? 0 : 1);
                     handleCell(r, c, cell);
                 };
                 cell.onmouseenter = () => { if(isMouseDown) handleCell(r, c, cell); };
+                
+                // תמיכה במובייל
+                cell.ontouchstart = (e) => {
+                    isMouseDown = true;
+                    drawMode = (userGrid[r][c] === 1 ? 0 : 1);
+                    handleCell(r, c, cell);
+                };
+
+                if(userGrid[r][c] === 1) cell.classList.add('filled');
+                if(userGrid[r][c] === 2) cell.classList.add('marked');
+                
                 gridEl.appendChild(cell);
             }
         }
@@ -265,6 +278,7 @@
     }
 
     window.onmouseup = () => isMouseDown = false;
+    window.ontouchend = () => isMouseDown = false;
 
     function checkWin() {
         for (let r = 0; r < SIZE; r++) {
@@ -276,8 +290,6 @@
         }
         document.getElementById('win-bar').style.display = 'flex';
     }
-
-    initGame();
 </script>
 </body>
 </html>
