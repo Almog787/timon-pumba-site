@@ -65,11 +65,11 @@
         }
 
         .btn {
-            padding: 16px 45px; border-radius: 50px; border: none;
-            background: var(--amber); color: black; font-weight: 900;
+            padding: 16px 45px; border-radius: 100px; border: none;
+            background: #ffb900; color: black; font-weight: 900;
             font-size: 1.2rem; cursor: pointer; transition: 0.3s;
         }
-        .btn:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--amber); }
+        .btn:hover { transform: scale(1.1); box-shadow: 0 0 20px #ffb900; }
 
         .instr { position: absolute; bottom: 10px; color: rgba(255,255,255,0.4); font-size: 0.8rem; width: 100%; text-align: center; }
     </style>
@@ -78,13 +78,13 @@
 
     <header>
         <a href="../" class="logo">PUMBAA<span>HIT</span></a>
-        <div style="font-size: 0.9rem;">שיא: <span id="best-dist" style="color:var(--amber)">0</span> מ'</div>
+        <div style="font-size: 0.9rem;">שיא: <span id="best-dist" style="color:#ffb900">0</span> מ'</div>
     </header>
 
     <div id="game-container">
         <div class="hud">
-            <div>מרחק: <span id="dist-val" style="color:var(--amber)">0</span> מ'</div>
-            <div id="speed-hud" style="color:var(--blue)">מהירות: 0</div>
+            <div>מרחק: <span id="dist-val" style="color:#ffb900">0</span> מ'</div>
+            <div id="speed-hud" style="color:#00a8ff">מהירות: 0</div>
         </div>
 
         <div id="launch-ui">
@@ -93,7 +93,7 @@
         </div>
 
         <div id="game-over">
-            <h1 style="font-size: 3.5rem; color: var(--amber); margin-bottom: 10px;">נחיתה! 🐧</h1>
+            <h1 style="font-size: 3.5rem; color: #ffb900; margin-bottom: 10px;">נחיתה! 🐧</h1>
             <p id="final-dist-text" style="font-size: 1.8rem; margin-bottom: 30px;"></p>
             <button class="btn" onclick="resetGame()">חבטה חוזרת 🐗</button>
             <a href="../" style="margin-top: 20px; color: #666; text-decoration: none; font-weight: bold; display: block;">חזרה לאתר</a>
@@ -115,7 +115,6 @@
 
     let width, height;
     let gameState = 'LAUNCH'; 
-    let score = 0;
     let highScore = localStorage.getItem('pumbaaHitBest') || 0;
     bestVal.innerText = highScore;
 
@@ -149,7 +148,9 @@
         draw() {
             ctx.globalAlpha = this.alpha;
             ctx.fillStyle = this.color;
-            ctx.beginPath(); ctx.arc(this.x - cameraX, this.y, this.size, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); 
+            ctx.arc(this.x - cameraX, this.y, this.size, 0, Math.PI*2); 
+            ctx.fill();
             ctx.globalAlpha = 1;
         }
     }
@@ -180,7 +181,7 @@
 
     function resetGame() {
         gameState = 'LAUNCH';
-        score = 0; cameraX = 0; power = 0;
+        cameraX = 0; power = 0;
         penguin.x = 100; penguin.y = height - 100;
         penguin.vx = 0; penguin.vy = 0; penguin.rotation = 0;
         penguin.isSlamming = false; penguin.trail = [];
@@ -198,7 +199,7 @@
             gameState = 'FLY';
             launchUI.style.display = 'none';
             shake = 10;
-            createExplosion(penguin.x, penguin.y, '#fff', 20);
+            createExplosion(penguin.x, penguin.y, '#ffffff', 20);
         } else if (gameState === 'FLY' && !penguin.isSlamming) {
             penguin.vy = 22; 
             penguin.isSlamming = true;
@@ -227,19 +228,17 @@
             penguin.y += penguin.vy;
             penguin.rotation += penguin.vx * 0.015;
 
-            // Trail
             penguin.trail.push({x: penguin.x, y: penguin.y});
             if(penguin.trail.length > 15) penguin.trail.shift();
 
             cameraX = penguin.x - 150;
 
-            // Ground hit
             if (penguin.y > height - 60) {
                 penguin.y = height - 60;
                 if (penguin.isSlamming) {
                     penguin.vy *= -0.6;
                     shake = 5;
-                    createExplosion(penguin.x, penguin.y, '#fff');
+                    createExplosion(penguin.x, penguin.y, '#ffffff');
                 } else {
                     penguin.vy *= -0.3;
                 }
@@ -252,7 +251,6 @@
                 }
             }
 
-            // Collisions
             objects.forEach(obj => {
                 if (!obj.active) return;
                 const dx = penguin.x - obj.x;
@@ -276,7 +274,7 @@
                         case 'CLOUD':
                             penguin.vx += 15;
                             penguin.vy -= 8;
-                            createExplosion(obj.x, obj.y, '#fff');
+                            createExplosion(obj.x, obj.y, '#ffffff');
                             break;
                         case 'ROCKET':
                             penguin.vx += 40;
@@ -285,10 +283,9 @@
                             break;
                         case 'BIRD':
                             penguin.vx *= 0.4;
-                            createExplosion(obj.x, obj.y, '#555');
+                            createExplosion(obj.x, obj.y, '#555555');
                             break;
                         case 'BUG':
-                            score += 5000;
                             createExplosion(obj.x, obj.y, '#25D366');
                             break;
                     }
@@ -296,13 +293,12 @@
                 }
             });
 
-            if (penguin.x > objects[objects.length - 4].x) spawnObjects(objects[objects.length - 1].x + 500);
+            if (penguin.x > (objects[objects.length - 4]?.x || 0)) spawnObjects(objects[objects.length - 1].x + 500);
 
             distVal.innerText = Math.floor(penguin.x / 10);
             speedHud.innerText = `מהירות: ${Math.floor(penguin.vx * 10)}`;
         }
 
-        // Particles
         for(let i=particles.length-1; i>=0; i--) {
             particles[i].update();
             particles[i].draw();
@@ -315,11 +311,9 @@
     }
 
     function draw() {
-        // Ground
         ctx.fillStyle = '#001524';
         ctx.fillRect(0, height - 40, width, 40);
 
-        // Objects
         objects.forEach(obj => {
             const sx = obj.x - cameraX;
             if (sx > -100 && sx < width + 100) {
@@ -330,7 +324,6 @@
             }
         });
 
-        // Trail
         if (gameState === 'FLY') {
             ctx.beginPath();
             ctx.strokeStyle = penguin.vx > 30 ? '#ff4b4b' : '#00a8ff';
@@ -343,13 +336,11 @@
             ctx.stroke();
         }
 
-        // Pumbaa
         if (penguin.x < 600) {
             ctx.font = '90px serif';
             ctx.fillText('🐗', 20 - cameraX, height - 35);
         }
 
-        // Penguin
         ctx.save();
         ctx.translate(penguin.x - cameraX, penguin.y);
         ctx.rotate(penguin.rotation);
