@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-18YM6QFN0C');</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-18YM6QFN0C');
+    </script>
     
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>טימון ופומבה | פתרונות אוטומציה ודיגיטל</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טימון ופומבה | אוטומציה ופתרונות דיגיטליים</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
     
+    <!-- Scripts -->
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root { 
@@ -23,310 +29,193 @@
             --surface: #111111;
             --white: #ffffff; 
             --green: #25D366; 
-            --red: #ff4b4b;
             --border: rgba(255, 255, 255, 0.08);
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
 
-        /* --- New Side Navigation (Luxury Tabs) --- */
-        .side-nav {
-            position: fixed; top: 50%; right: 30px; transform: translateY(-50%);
-            z-index: 2000; display: flex; flex-direction: column; gap: 15px;
+        /* --- Dynamic Background Canvas --- */
+        #bgCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
         }
-        .nav-item {
-            display: flex; align-items: center; justify-content: flex-end;
-            cursor: pointer; group: hover;
-        }
-        .nav-label {
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
-            border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px;
-            font-size: 0.85rem; font-weight: 700; color: #888;
-            margin-left: 15px; transition: 0.3s; opacity: 0; transform: translateX(10px);
-        }
-        .nav-dot { width: 10px; height: 10px; background: rgba(255,255,255,0.2); border-radius: 50%; transition: 0.3s; border: 2px solid transparent; }
-        
-        .nav-item:hover .nav-label, .nav-item.active .nav-label { opacity: 1; transform: translateX(0); color: var(--white); }
-        .nav-item.active .nav-dot { background: var(--amber); box-shadow: 0 0 15px var(--amber); transform: scale(1.4); }
-        .nav-item.active .nav-label { border-color: var(--amber); color: var(--amber); }
 
-        /* --- Header --- */
+        /* --- Luxury Header --- */
         header { 
             position: fixed; top: 0; width: 100%; padding: 20px 5%; 
-            background: rgba(5,5,5,0.8); backdrop-filter: blur(20px); 
+            background: rgba(5,5,5,0.8); backdrop-filter: blur(15px); 
             display: flex; justify-content: space-between; align-items: center; 
             border-bottom: 1px solid var(--border); z-index: 1000; 
         }
         .logo { font-family: 'Rubik'; font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
         .logo span { color: var(--amber); }
 
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-link { color: white; text-decoration: none; font-weight: bold; font-size: 0.95rem; transition: 0.3s; position: relative; }
+        .nav-link:hover { color: var(--amber); }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--amber); transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+
         /* --- Hero Section (30% Overlay) --- */
-        section { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 100px 10%; }
+        section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 10%; }
         #hero { 
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/hero.jpg') center/cover no-repeat fixed; 
-            text-align: center; 
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('./images/hero.jpg') center/cover no-repeat fixed; 
+            text-align: center; width: 100%;
         }
-        h1 { font-family: 'Rubik'; font-size: clamp(2.5rem, 8vw, 5.5rem); margin-bottom: 20px; line-height: 1.1; }
+        h1 { font-family: 'Rubik'; font-size: clamp(2.5rem, 8vw, 5.5rem); margin-bottom: 20px; line-height: 1.1; text-shadow: 0 5px 20px rgba(0,0,0,0.8); }
         
-        /* --- Buttons --- */
         .btn { display: inline-block; padding: 16px 40px; border-radius: 100px; font-weight: 900; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1.1rem; }
         .btn-amber { background: var(--amber); color: #000; }
         .btn-green { background: var(--green); color: #fff; }
-        .btn-game { background: #6c5ce7; color: white; margin-top: 20px; } /* צבע סגול למשחק */
         .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
 
-        /* --- Transformation Switcher (Fixed) --- */
-        .transformation-box { background: #0a0a0a; padding: 60px; border-radius: 50px; border: 1px solid var(--border); width: 100%; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
-        .custom-switch { background: #000; border: 2px solid #222; padding: 4px; border-radius: 100px; display: flex; position: relative; cursor: pointer; width: 340px; height: 60px; margin: 0 auto 50px; align-items: center; }
-        .switch-option { flex: 1; text-align: center; font-weight: 900; z-index: 2; transition: 0.4s; color: #555; pointer-events: none; }
-        .switch-option.active { color: #000; }
-        .switch-glider { position: absolute; width: calc(50% - 4px); height: calc(100% - 8px); background: var(--amber); right: 4px; border-radius: 100px; transition: 0.4s cubic-bezier(0.65, 0, 0.35, 1); z-index: 1; }
-        .automated .switch-glider { transform: translateX(calc(-100%)); background: var(--green); }
+        /* --- Services Grid --- */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .service-card { background: rgba(255,255,255,0.03); padding: 40px; border-radius: 30px; border: 1px solid var(--border); backdrop-filter: blur(10px); transition: 0.4s; }
+        .service-card:hover { border-color: var(--amber); transform: translateY(-10px); background: rgba(255,255,255,0.05); }
+        .service-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
 
-        .comparison-display { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .glass-card { background: rgba(255,255,255,0.02); padding: 40px; border-radius: 30px; border: 1px solid var(--border); text-align: right; transition: 0.4s; }
-        .status-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
+        /* --- Portfolio --- */
+        .portfolio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 40px; }
+        .portfolio-item { position: relative; border-radius: 20px; overflow: hidden; height: 350px; border: 1px solid var(--border); }
+        .portfolio-bg { width: 100%; height: 100%; background-size: cover; background-position: center; transition: 0.6s; opacity: 0.7; }
+        .portfolio-item:hover .portfolio-bg { transform: scale(1.05); opacity: 1; }
+        .portfolio-overlay { position: absolute; bottom: 0; width: 100%; padding: 30px; background: linear-gradient(to top, black, transparent); }
 
-        /* --- About Section (1tali.jpg) --- */
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
-        .about-image { border-radius: 40px; overflow: hidden; height: 500px; border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
-        .about-image img { width: 100%; height: 100%; object-fit: cover; }
+        footer { padding: 60px 5%; text-align: center; border-top: 1px solid var(--border); color: #666; }
 
-        /* --- Calculator --- */
-        .calc-card { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; background: var(--surface); padding: 50px; border-radius: 40px; border: 1px solid var(--border); }
-        .val-display { color: var(--amber); font-weight: 900; font-size: 1.4rem; }
-        input[type=range] { width: 100%; accent-color: var(--amber); cursor: pointer; margin: 15px 0; }
-        .big-number { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; color: var(--red); margin: 10px 0; }
-
-        /* --- Contact --- */
-        .contact-card { background: var(--surface); padding: 50px; border-radius: 40px; border: 1px solid #333; max-width: 650px; margin: 0 auto; }
-        input, select, textarea { width: 100%; padding: 16px; margin-bottom: 20px; background: #080808; border: 1px solid #222; border-radius: 12px; color: white; font-family: inherit; font-size: 1rem; }
-
-        footer { padding: 60px 5%; text-align: center; border-top: 1px solid #111; color: #444; }
-
-        #backToTop { position: fixed; bottom: 30px; left: 30px; background: var(--amber); color: #000; width: 50px; height: 50px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; display: none; z-index: 1000; }
-
-        @media (max-width: 900px) {
-            .side-nav { display: none; }
-            .comparison-display, .calc-card, .about-grid { grid-template-columns: 1fr; }
-            section { padding: 80px 5% 40px; }
-            .about-image { height: 350px; order: -1; }
+        @media (max-width: 850px) {
+            .nav-links { display: none; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            section { padding: 80px 5%; }
         }
     </style>
 </head>
 <body>
 
-<!-- הסרגל הצדדי החדש -->
-<nav class="side-nav">
-    <div class="nav-item active" onclick="scrollToSection('hero')"><span class="nav-label">דף הבית</span><div class="nav-dot"></div></div>
-    <div class="nav-item" onclick="scrollToSection('transform')"><span class="nav-label">המהפך העסקי</span><div class="nav-dot"></div></div>
-    <div class="nav-item" onclick="scrollToSection('about')"><span class="nav-label">מי אנחנו?</span><div class="nav-dot"></div></div>
-    <div class="nav-item" onclick="scrollToSection('calc')"><span class="nav-label">מחשבון חיסכון</span><div class="nav-dot"></div></div>
-    <div class="nav-item" onclick="scrollToSection('contact')"><span class="nav-label">צור קשר</span><div class="nav-dot"></div></div>
-    <!-- קישור למשחק -->
-    <div class="nav-item" onclick="window.location.href='./game/'"><span class="nav-label">משחק בונוס 🎮</span><div class="nav-dot" style="background:#6c5ce7"></div></div>
-</nav>
+    <!-- רקע דינמי -->
+    <canvas id="bgCanvas"></canvas>
 
-<header>
-    <a href="#" class="logo">טימון<span>ופומבה</span></a>
-    <a href="#contact" class="btn btn-amber" style="padding: 10px 25px; font-size: 0.9rem;">שיחת אפיון</a>
-</header>
+    <header>
+        <a href="./" class="logo">טימון<span>ופומבה</span></a>
+        <nav class="nav-links">
+            <a href="./excel-automation/" class="nav-link">אוטומציה לאקסל/שיטס</a>
+            <a href="./game/" class="nav-link">משחק 3D</a>
+            <a href="./contact/" class="nav-link">צור קשר</a>
+        </nav>
+        <a href="./contact/" class="btn btn-amber" style="padding: 10px 20px; font-size: 0.85rem;">שיחת אפיון</a>
+    </header>
 
-<main>
-    <!-- Section 1: Hero -->
-    <section id="hero">
-        <div class="container">
-            <h1 class="reveal">הפסיקו לעבוד ידנית.<br><span style="color:var(--amber)">תנו לטכנולוגיה לעבוד.</span></h1>
-            <p class="reveal">מומחים באוטומציה ל-Excel ו-Google Sheets שחוסכים לכם עשרות שעות עבודה בחודש.</p>
-            <div class="reveal">
-                <a href="#calc" class="btn btn-green">גלו כמה כסף אתם שורפים 📉</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 2: Transformation -->
-    <section id="transform" style="background: #030303;">
-        <div class="container">
-            <div class="transformation-box reveal" id="tBox">
-                <h2 style="text-align: center; margin-bottom: 40px;">המהפך שלכם מתחיל כאן</h2>
-                
-                <div class="custom-switch" id="uiSwitch" onclick="triggerUpgrade()">
-                    <div class="switch-glider"></div>
-                    <div class="switch-option" id="optA">מחר (אוטומטי)</div>
-                    <div class="switch-option active" id="optM">היום (ידני)</div>
+    <main>
+        <!-- Hero -->
+        <section id="hero">
+            <div class="container">
+                <h1 class="reveal">הפסיקו לעבוד ידנית.<br><span style="color:var(--amber)">תנו לטכנולוגיה לעבוד.</span></h1>
+                <p class="reveal" style="font-size: 1.3rem; margin-bottom: 40px; color: #eee;">אנחנו בונים מערכות חכמות שמחזירות לכם את הזמן היקר.</p>
+                <div class="reveal">
+                    <a href="./excel-automation/" class="btn btn-green">גלו כמה תחסכו 📊</a>
                 </div>
+            </div>
+        </section>
 
-                <div class="comparison-display">
-                    <div class="glass-card" id="card1">
-                        <span class="status-icon" id="icon1">📉</span>
-                        <h3 id="title1" style="color:var(--red)">בזבוז משאבים</h3>
-                        <p id="desc1">העובדים שלכם מבזבזים שעות יקרות על פעולות טכניות שרובוט עושה בשניות.</p>
+        <!-- Services -->
+        <section id="services" style="background: rgba(0,0,0,0.4);">
+            <div class="container">
+                <h2 class="reveal" style="text-align: center; font-size: 2.5rem; margin-bottom: 50px;">ההתמחויות שלנו</h2>
+                <div class="services-grid">
+                    <div class="service-card reveal">
+                        <span class="service-icon">📊</span>
+                        <h3>אוטומציה לאקסל</h3>
+                        <p>הופכים טבלאות מסורבלות למערכות חכמות שמתעדכנות לבד.</p>
+                        <a href="./excel-automation/" style="color: var(--amber); text-decoration: none; font-weight: bold; display: block; margin-top: 15px;">למידע נוסף ←</a>
                     </div>
-                    <div class="glass-card" id="card2">
-                        <span class="status-icon" id="icon2">⚠️</span>
-                        <h3 id="title2" style="color:var(--red)">חוסר ודאות</h3>
-                        <p id="desc2">טעויות אנוש בטבלאות גורמות להחלטות שגויות ולהפסדים כספיים.</p>
+                    <div class="service-card reveal">
+                        <span class="service-icon">🛍️</span>
+                        <h3>בניית אתרים</h3>
+                        <p>חנויות איקומרס ואתרי תדמית שמעוצבים להביא מכירות.</p>
+                        <a href="./contact/" style="color: var(--amber); text-decoration: none; font-weight: bold; display: block; margin-top: 15px;">הצעת מחיר ←</a>
+                    </div>
+                    <div class="service-card reveal">
+                        <span class="service-icon">🔧</span>
+                        <h3>תיקון תקלות</h3>
+                        <p>האתר נפל? האקסל נתקע? אנחנו ה"הנדימן" הדיגיטלי שלכם.</p>
+                        <a href="./contact/" style="color: var(--amber); text-decoration: none; font-weight: bold; display: block; margin-top: 15px;">עזרה טכנית ←</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Section 3: About (Team) -->
-    <section id="about">
-        <div class="container about-grid">
-            <div class="about-image reveal">
-                <img src="images/1tali.jpg" alt="צוות טימון ופומבה">
-            </div>
-            <div class="reveal">
-                <h2>הנבחרת שבונה לכם <br><span style="color:var(--amber)">שקט תעשייתי</span></h2>
-                <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px;">אנחנו בטימון ופומבה לא רק כותבים קוד, אנחנו פותרים בעיות עסקיות. אנחנו לוקחים את התהליכים הכי מעצבנים שלכם והופכים אותם לאוטומטיים לחלוטין.</p>
-                <a href="#contact" class="btn btn-amber">בואו נדבר תכל'ס</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 4: Calculator -->
-    <section id="calc" style="background: #080808;">
-        <div class="container">
-            <h2 style="text-align: center; margin-bottom: 50px;">מחשבון פוטנציאל חיסכון</h2>
-            <div class="calc-card reveal">
-                <div style="background:#1a1a1a; padding:30px; border-radius:20px;">
-                    <div style="margin-bottom: 40px;">
-                        <div style="display:flex; justify-content:space-between;"><strong>שעות עבודה ביום</strong><span class="val-display" id="hVal">2</span></div>
-                        <input type="range" id="hInput" min="0.5" max="15" step="0.5" value="2" oninput="updateLogic()">
+        <!-- Portfolio -->
+        <section>
+            <div class="container">
+                <h2 class="reveal" style="text-align: center; margin-bottom: 40px;">פרויקטים נבחרים</h2>
+                <div class="portfolio-grid">
+                    <div class="portfolio-item reveal">
+                        <div class="portfolio-bg" style="background-image: url('./images/hero.jpg');"></div>
+                        <div class="portfolio-overlay"><h3>מערכות אוטומציה</h3></div>
                     </div>
-                    <div>
-                        <div style="display:flex; justify-content:space-between;"><strong>שכר שעתי</strong><span class="val-display" id="rVal">60 ₪</span></div>
-                        <input type="range" id="rInput" min="30" max="500" step="10" value="60" oninput="updateLogic()">
+                    <div class="portfolio-item reveal">
+                        <div class="portfolio-bg" style="background-image: url('./images/1tali.jpg');"></div>
+                        <div class="portfolio-overlay"><h3>בניית חנויות</h3></div>
                     </div>
                 </div>
-                <div style="text-align: center;">
-                    <h4 style="color:#888;">הפסד שנתי שניתן לחסוך:</h4>
-                    <div class="big-number" id="totalResult">0 ₪</div>
-                    <div style="height: 200px; width: 100%; margin: 20px 0;"><canvas id="roiChart"></canvas></div>
-                    <a href="#contact" class="btn btn-green">אני רוצה לחסוך את הכסף הזה 💰</a>
-                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- Section 5: Contact -->
-    <section id="contact">
-        <div class="container">
-            <div class="contact-card reveal">
-                <h2 style="text-align: center; margin-bottom: 10px;">מוכנים לצאת מהג'ונגל?</h2>
-                <p style="text-align: center; color: #888; margin-bottom: 40px;">השאירו פרטים ונחזור אליכם עם תוכנית לחיסכון בזמן.</p>
-                <form action="https://formspree.io/f/xkqjqbvz" method="POST">
-                    <input type="text" name="name" required placeholder="שם מלא">
-                    <input type="email" name="email" required placeholder="אימייל לחזרה">
-                    <select name="service">
-                        <option value="אוטומציה">אוטומציה לאקסל / גוגל שיטס</option>
-                        <option value="אתר">בניית אתר או חנות דיגיטלית</option>
-                    </select>
-                    <textarea name="message" rows="4" placeholder="תארו בקצרה את הצורך שלכם..."></textarea>
-                    <button type="submit" class="btn btn-amber" style="width:100%">שלח פנייה לצוות 🚀</button>
-                </form>
-            </div>
-        </div>
-    </section>
-</main>
+    <footer>
+        <p>&copy; 2025 טימון ופומבה פתרונות דיגיטליים. <a href="./game/" style="color: var(--amber); text-decoration: none;">שחקו במשחק ה-3D 🎮</a></p>
+    </footer>
 
-<footer>
-    <div class="container">
-        <p>&copy; 2025 טימון ופומבה פתרונות דיגיטליים. ללא דאגות.</p>
-        <div style="margin-top: 15px;">
-            <a href="./game/" class="btn btn-game" style="padding: 10px 20px; font-size: 0.8rem;">שחק בציד החרקים 🐗</a>
-        </div>
-    </div>
-</footer>
+    <script>
+        // --- 1. Plexus Background Logic ---
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
 
-<button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆</button>
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+            }
+        }
+        for(let i=0; i<80; i++) particles.push(new Particle());
 
-<script>
-    const lenis = new Lenis();
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
+        function animateBg() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(255, 185, 0, 0.3)";
+            ctx.strokeStyle = "rgba(255, 185, 0, 0.1)";
+            particles.forEach((p, i) => {
+                p.update();
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill();
+                for(let j=i; j<particles.length; j++) {
+                    let d = Math.hypot(p.x-particles[j].x, p.y-particles[j].y);
+                    if(d<150) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke(); }
+                }
+            });
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
 
-    function scrollToSection(id) { lenis.scrollTo('#' + id); }
+        // --- 2. Smooth Scroll & Animations ---
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
 
-    gsap.registerPlugin(ScrollTrigger);
-    
-    // Revel Animations
-    document.querySelectorAll('.reveal').forEach((el) => {
-        gsap.from(el, {
-            scrollTrigger: { trigger: el, start: "top 90%" },
-            opacity: 0, y: 40, duration: 0.8, ease: "power2.out"
+        gsap.registerPlugin(ScrollTrigger);
+        document.querySelectorAll('.reveal').forEach((el) => {
+            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 90%" }, opacity: 0, y: 30, duration: 1, ease: "power4.out" });
         });
-    });
-
-    // Side Nav Tracking
-    const sectionIds = ['hero', 'transform', 'about', 'calc', 'contact'];
-    sectionIds.forEach((id, i) => {
-        ScrollTrigger.create({
-            trigger: '#' + id, start: "top 50%", end: "bottom 50%",
-            onEnter: () => updateNav(i), onEnterBack: () => updateNav(i)
-        });
-    });
-
-    function updateNav(index) {
-        const items = document.querySelectorAll('.nav-item');
-        items.forEach((item, i) => item.classList.toggle('active', i === index));
-    }
-
-    // Transformation Switch Logic
-    const content = {
-        manual: { color: '#ff4b4b', i1: "📉", t1: "בזבוז משאבים", d1: "העובדים שלכם מבזבזים שעות על העתק-הדבק שרובוט עושה בשניות.", i2: "⚠️", t2: "חוסר ודאות", d2: "טעויות אנוש בטבלאות גורמות להחלטות שגויות והפסדים." },
-        automated: { color: '#25D366', i1: "📈", t1: "שליטה בזמן אמת", d1: "דשבורד חי שמתעדכן בכל שנייה ונותן לך תמונת מצב ניהולית מלאה.", i2: "🚀", t2: "דיוק מקסימלי", d2: "הנתונים נשאבים לבד ב-100% דיוק. המחשב לא טועה לעולם." }
-    };
-
-    function triggerUpgrade() {
-        const ui = document.getElementById('uiSwitch');
-        ui.classList.toggle('automated');
-        const state = ui.classList.contains('automated') ? 'automated' : 'manual';
-        const data = content[state];
-
-        document.getElementById('optM').classList.toggle('active', state === 'manual');
-        document.getElementById('optA').classList.toggle('active', state === 'automated');
-
-        gsap.to('.glass-card', { opacity: 0, scale: 0.95, duration: 0.2, onComplete: () => {
-            document.getElementById('icon1').innerText = data.i1;
-            document.getElementById('title1').innerText = data.t1;
-            document.getElementById('title1').style.color = data.color;
-            document.getElementById('desc1').innerText = data.d1;
-            document.getElementById('icon2').innerText = data.i2;
-            document.getElementById('title2').innerText = data.t2;
-            document.getElementById('title2').style.color = data.color;
-            document.getElementById('desc2').innerText = data.d2;
-            gsap.to('.glass-card', { opacity: 1, scale: 1, duration: 0.3 });
-        }});
-    }
-
-    // Calculator Logic
-    let myChart = null;
-    function initChart() {
-        const ctx = document.getElementById('roiChart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'bar',
-            data: { labels: ['היום (ידני)', 'עם אוטומציה'], datasets: [{ data: [0, 0], backgroundColor: ['rgba(255,75,75,0.8)', 'rgba(37,211,102,0.8)'], borderRadius: 10 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false }, ticks: { color: '#fff' } } } }
-        });
-    }
-
-    function updateLogic() {
-        const h = parseFloat(document.getElementById('hInput').value);
-        const r = parseInt(document.getElementById('rInput').value);
-        document.getElementById('hVal').innerText = h;
-        document.getElementById('rVal').innerText = r + ' ₪';
-        const annual = h * 22 * 12 * r;
-        document.getElementById('totalResult').innerText = annual.toLocaleString() + ' ₪';
-        if (myChart) { myChart.data.datasets[0].data = [annual, annual * 0.1]; myChart.update(); }
-    }
-
-    window.addEventListener('load', () => { initChart(); updateLogic(); });
-    window.onscroll = function() { document.getElementById("backToTop").style.display = (window.pageYOffset > 400) ? "block" : "none"; };
-</script>
-
+    </script>
 </body>
 </html>
