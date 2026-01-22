@@ -3,336 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>מבוך האוטומציה 3D | טימון ופומבה</title>
+    <title>PUMBAA DOOM 3D | המבוך</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐗</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;900&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --amber: #ffb900;
-            --dark: #050505;
-            --green: #25D366;
-        }
-
+        :root { --amber: #ffb900; --dark: #050505; --red: #ff4b4b; }
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: none; }
-        body { 
-            font-family: 'Rubik', sans-serif; 
-            background-color: #000; 
-            color: white; 
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        body { font-family: 'Rubik', sans-serif; background-color: #000; color: white; overflow: hidden; height: 100vh; }
 
-        #ui-layer {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
+        #game-container { position: relative; width: 100vw; height: 100vh; cursor: crosshair; }
+        canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 
-        /* מפה קטנה (Minimap) */
+        /* לוח בקרה תחתון (Doom Style) */
+        #status-bar {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
+            background: #222; border-top: 4px solid #444;
+            display: flex; align-items: center; justify-content: space-around;
+            z-index: 50; padding: 0 20px;
+        }
+        .stat-box { text-align: center; font-weight: 900; }
+        .stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+        .stat-value { font-size: 2rem; color: var(--red); }
+        #pumbaa-face { font-size: 3.5rem; background: #333; padding: 5px 15px; border-radius: 10px; border: 2px solid #555; }
+
+        /* Minimap */
         #minimap {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 150px;
-            height: 150px;
-            background: rgba(0,0,0,0.7);
-            border: 2px solid var(--amber);
-            border-radius: 10px;
+            position: absolute; top: 20px; right: 20px; width: 120px; height: 120px;
+            background: rgba(0,0,0,0.8); border: 2px solid #555; border-radius: 5px; z-index: 60;
         }
 
-        .stats {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.6);
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid var(--amber);
-            font-weight: 900;
-        }
-
-        #game-canvas {
-            width: 100vw;
-            height: 100vh;
-            background: #111;
-        }
-
-        #crosshair {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px; height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-        }
-
-        .instructions {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9rem;
-        }
-
-        /* מסך סיום */
         #msg-layer {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            pointer-events: all;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 100;
         }
-
-        .btn {
-            padding: 15px 40px; border-radius: 100px; border: none;
-            background: var(--amber); color: #000;
-            font-weight: 900; font-size: 1.2rem; cursor: pointer; margin-top: 20px;
-        }
+        .btn { padding: 15px 40px; border-radius: 5px; border: none; background: var(--red); color: white; font-weight: 900; font-size: 1.5rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="ui-layer">
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
         <canvas id="minimap"></canvas>
-        <div class="stats">
-            <div>ניקוד: <span id="score">0</span></div>
-            <div style="color: var(--green)">חרקים שנמצאו: <span id="bugs">0</span></div>
+
+        <div id="status-bar">
+            <div class="stat-box">
+                <div class="stat-label">ניקוד</div>
+                <div class="stat-value" id="score-val">000</div>
+            </div>
+            <div id="pumbaa-face">🐗</div>
+            <div class="stat-box">
+                <div class="stat-label">חרקים</div>
+                <div class="stat-value" id="bugs-val">0</div>
+            </div>
         </div>
-        <div id="crosshair"></div>
-        <div class="instructions">WASD / חצים לתנועה | מצא את ה-🐛 במבוך</div>
-    </div>
 
-    <div id="msg-layer">
-        <h2 id="msg-title" style="font-size: 3rem; color: var(--amber);">המבוך הושלם!</h2>
-        <p id="msg-body">מצאת את החרק של פומבה.</p>
-        <button class="btn" onclick="startNewLevel()">למבוך הבא 🐗</button>
+        <div id="msg-layer">
+            <h2 style="font-size: 3rem; color: var(--red); margin-bottom: 20px;">האקונה מטטה!</h2>
+            <p style="margin-bottom: 30px;">מצאת חרק טעים במיוחד.</p>
+            <button class="btn" onclick="nextLevel()">לשלב הבא</button>
+        </div>
     </div>
-
-    <canvas id="game-canvas"></canvas>
 
 <script>
-    /**
-     * פרויקט המבוך התלת-ממדי - טימון ופומבה
-     * מבוסס על טכנולוגיית Raycasting
-     */
-
-    const canvas = document.getElementById('game-canvas');
+    const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const miniCanvas = document.getElementById('minimap');
     const miniCtx = miniCanvas.getContext('2d');
 
-    // הגדרות עולם
-    let mapSize = 12;
-    let map = [];
+    // --- הגדרות עולם ---
+    const MAP_SIZE = 16;
     const CELL_SIZE = 64;
+    let map = [];
+    let sprites = []; // חרקים וצבועים
 
-    // שחקן
-    let player = {
-        x: 100,
-        y: 100,
-        angle: 0,
-        speed: 0,
-        rotSpeed: 0,
-        fov: Math.PI / 3 // 60 מעלות
+    const player = {
+        x: 150, y: 150, dir: 0, 
+        speed: 0, rotSpeed: 0,
+        moveSpeed: 3.5, rotStep: 0.06,
+        bob: 0, bobSpeed: 0.15, bobAmount: 8
     };
 
-    // משחק
     let score = 0;
-    let bugsFound = 0;
-    let target = { x: 0, y: 0 };
+    let bugs = 0;
 
-    function generateMaze(size) {
-        let newMap = Array(size).fill().map(() => Array(size).fill(1));
-        
-        function carve(x, y) {
-            newMap[y][x] = 0;
-            let dirs = [[0, 2], [0, -2], [2, 0], [-2, 0]].sort(() => Math.random() - 0.5);
-            for (let [dx, dy] of dirs) {
-                let nx = x + dx, ny = y + dy;
-                if (nx > 0 && nx < size - 1 && ny > 0 && ny < size - 1 && newMap[ny][nx] === 1) {
-                    newMap[y + dy / 2][x + dx / 2] = 0;
-                    carve(nx, ny);
+    // יצירת טקסטורת קיר (לבנים בסגנון רטרו)
+    const wallTex = document.createElement('canvas');
+    wallTex.width = 64; wallTex.height = 64;
+    const wCtx = wallTex.getContext('2d');
+    wCtx.fillStyle = '#4a2c0a'; wCtx.fillRect(0,0,64,64);
+    wCtx.strokeStyle = '#2a1805';
+    for(let i=0; i<4; i++) {
+        wCtx.strokeRect(0, i*16, 32, 16);
+        wCtx.strokeRect(32, i*16+8, 32, 16);
+    }
+
+    function generateMap() {
+        map = Array(MAP_SIZE).fill().map(() => Array(MAP_SIZE).fill(1));
+        function walk(x, y) {
+            map[y][x] = 0;
+            const dirs = [[0,1],[0,-1],[1,0],[-1,0]].sort(() => Math.random() - 0.5);
+            for(let [dx, dy] of dirs) {
+                let nx = x + dx*2, ny = y + dy*2;
+                if(nx > 0 && nx < MAP_SIZE-1 && ny > 0 && ny < MAP_SIZE-1 && map[ny][nx] === 1) {
+                    map[y+dy][x+dx] = 0;
+                    walk(nx, ny);
                 }
             }
         }
-        carve(1, 1);
-        
-        // מיקום החרק (המטרה)
-        let tx, ty;
-        do {
-            tx = Math.floor(Math.random() * (size-2)) + 1;
-            ty = Math.floor(Math.random() * (size-2)) + 1;
-        } while (newMap[ty][tx] === 1);
-        target = { x: tx * CELL_SIZE + 32, y: ty * CELL_SIZE + 32 };
-        
-        return newMap;
+        walk(1, 1);
+        spawnBugs();
     }
 
-    function init() {
-        resize();
-        map = generateMaze(mapSize);
-        player.x = CELL_SIZE * 1.5;
-        player.y = CELL_SIZE * 1.5;
-        loop();
+    function spawnBugs() {
+        sprites = [];
+        for(let i=0; i<3; i++) {
+            let sx, sy;
+            do { sx = Math.floor(Math.random()*MAP_SIZE); sy = Math.floor(Math.random()*MAP_SIZE); } 
+            while(map[sy][sx] !== 0);
+            sprites.push({ x: sx*CELL_SIZE+32, y: sy*CELL_SIZE+32, char: '🐛', collected: false });
+        }
     }
 
     function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        miniCanvas.width = 150;
-        miniCanvas.height = 150;
-    }
-
-    // לוגיקת Raycasting
-    function castRays() {
-        const numRays = canvas.width;
-        const stepAngle = player.fov / numRays;
-
-        for (let i = 0; i < numRays; i++) {
-            let rayAngle = (player.angle - player.fov / 2) + (i * stepAngle);
-            let distance = 0;
-            let hitWall = false;
-
-            let eyeX = Math.cos(rayAngle);
-            let eyeY = Math.sin(rayAngle);
-
-            while (!hitWall && distance < 1000) {
-                distance += 2;
-                let testX = Math.floor((player.x + eyeX * distance) / CELL_SIZE);
-                let testY = Math.floor((player.y + eyeY * distance) / CELL_SIZE);
-
-                if (testX < 0 || testX >= mapSize || testY < 0 || testY >= mapSize) {
-                    hitWall = true;
-                    distance = 1000;
-                } else if (map[testY][testX] === 1) {
-                    hitWall = true;
-                }
-            }
-
-            // תיקון אפקט עין הדג
-            let actualDist = distance * Math.cos(rayAngle - player.angle);
-            
-            // חישוב גובה קיר
-            let wallHeight = (CELL_SIZE * canvas.height) / actualDist;
-            
-            // צבעים
-            let brightness = 150 - (actualDist / 5); // עומק
-            ctx.fillStyle = `rgb(${brightness}, ${brightness * 0.8}, 0)`; // גוון זהוב/חום של ג'ונגל
-            
-            ctx.fillRect(i, (canvas.height / 2) - (wallHeight / 2), 1, wallHeight);
-        }
+        canvas.width = window.innerWidth / 2; // רזולוציה נמוכה לסגנון רטרו
+        canvas.height = (window.innerHeight - 100) / 2;
+        miniCanvas.width = 120; miniCanvas.height = 120;
     }
 
     function drawMinimap() {
-        let s = miniCanvas.width / mapSize;
-        miniCtx.clearRect(0,0,150,150);
-        
-        for(let y=0; y<mapSize; y++) {
-            for(let x=0; x<mapSize; x++) {
-                if(map[y][x] === 1) {
-                    miniCtx.fillStyle = '#444';
-                    miniCtx.fillRect(x*s, y*s, s, s);
-                }
+        const s = 120 / MAP_SIZE;
+        miniCtx.fillStyle = '#000'; miniCtx.fillRect(0,0,120,120);
+        for(let y=0; y<MAP_SIZE; y++) {
+            for(let x=0; x<MAP_SIZE; x++) {
+                if(map[y][x]) { miniCtx.fillStyle = '#555'; miniCtx.fillRect(x*s, y*s, s, s); }
             }
         }
-
-        // שחקן במפה
-        miniCtx.fillStyle = 'var(--amber)';
-        miniCtx.beginPath();
-        miniCtx.arc((player.x/CELL_SIZE)*s, (player.y/CELL_SIZE)*s, 4, 0, Math.PI*2);
-        miniCtx.fill();
-
-        // חרק במפה
-        miniCtx.fillStyle = 'var(--green)';
-        miniCtx.beginPath();
-        miniCtx.arc((target.x/CELL_SIZE)*s, (target.y/CELL_SIZE)*s, 3, 0, Math.PI*2);
-        miniCtx.fill();
+        miniCtx.fillStyle = 'red';
+        miniCtx.fillRect((player.x/CELL_SIZE)*s-2, (player.y/CELL_SIZE)*s-2, 4, 4);
     }
 
-    function update() {
-        // תנועה
-        let nextX = player.x + Math.cos(player.angle) * player.speed;
-        let nextY = player.y + Math.sin(player.angle) * player.speed;
+    function render() {
+        // שמיים ורצפה
+        ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0, 0, canvas.width, canvas.height/2);
+        ctx.fillStyle = '#333'; ctx.fillRect(0, canvas.height/2, canvas.width, canvas.height/2);
 
-        // בדיקת התנגשות
-        if (map[Math.floor(nextY / CELL_SIZE)][Math.floor(nextX / CELL_SIZE)] === 0) {
-            player.x = nextX;
-            player.y = nextY;
+        const zBuffer = [];
+
+        // Raycasting
+        for(let i=0; i<canvas.width; i++) {
+            let rayAngle = (player.dir - 0.5) + (i / canvas.width);
+            let distance = 0;
+            let x = player.x, y = player.y;
+            let cos = Math.cos(rayAngle), sin = Math.sin(rayAngle);
+
+            while(distance < 800) {
+                x += cos * 2; y += sin * 2; distance += 2;
+                if(map[Math.floor(y/CELL_SIZE)][Math.floor(x/CELL_SIZE)]) break;
+            }
+
+            zBuffer[i] = distance;
+            let fixDist = distance * Math.cos(rayAngle - player.dir);
+            let h = (CELL_SIZE * canvas.height) / fixDist;
+            
+            // ציור קיר עם הצללה
+            let shade = Math.min(255, 20000 / (distance * 1.5));
+            ctx.globalAlpha = shade / 255;
+            ctx.drawImage(wallTex, (x+y)%64, 0, 1, 64, i, (canvas.height/2 - h/2) + player.bob, 1, h);
+            ctx.globalAlpha = 1;
         }
-        
-        player.angle += player.rotSpeed;
 
-        // בדיקת הגעה לחרק
-        let dx = player.x - target.x;
-        let dy = player.y - target.y;
-        if (Math.sqrt(dx*dx + dy*dy) < 30) {
-            winLevel();
+        // רינדור ספרייטים (חרקים)
+        sprites.forEach(s => {
+            if(s.collected) return;
+            let dx = s.x - player.x, dy = s.y - player.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            let angle = Math.atan2(dy, dx) - player.dir;
+            if(angle < -Math.PI) angle += Math.PI*2;
+            if(angle > Math.PI) angle -= Math.PI*2;
+
+            if(Math.abs(angle) < 1) {
+                let x = (0.5 * (angle / 0.5) + 0.5) * canvas.width;
+                let h = (CELL_SIZE * canvas.height) / dist;
+                if(dist < zBuffer[Math.floor(x)]) {
+                    ctx.font = `${h}px serif`;
+                    ctx.textAlign = 'center';
+                    ctx.fillText(s.char, x, (canvas.height/2 + h/3) + player.bob);
+                }
+            }
+            // איסוף
+            if(dist < 30) { s.collected = true; bugs++; score += 500; updateUI(); checkWin(); }
+        });
+    }
+
+    function updateUI() {
+        document.getElementById('score-val').innerText = score.toString().padStart(3, '0');
+        document.getElementById('bugs-val').innerText = bugs;
+        const face = document.getElementById('pumbaa-face');
+        face.innerText = '😋'; setTimeout(() => face.innerText = '🐗', 500);
+    }
+
+    function checkWin() {
+        if(sprites.every(s => s.collected)) {
+            document.getElementById('msg-layer').style.display = 'flex';
         }
     }
 
-    function winLevel() {
-        document.getElementById('msg-layer').style.display = 'flex';
-        bugsFound++;
-        score += 1000;
-        document.getElementById('bugs').innerText = bugsFound;
-        document.getElementById('score').innerText = score;
-        player.speed = 0;
-        player.rotSpeed = 0;
-    }
-
-    function startNewLevel() {
+    function nextLevel() {
         document.getElementById('msg-layer').style.display = 'none';
-        mapSize += 2; // הגדלת המבוך
-        map = generateMaze(mapSize);
-        player.x = CELL_SIZE * 1.5;
-        player.y = CELL_SIZE * 1.5;
+        generateMap();
+        player.x = 100; player.y = 100;
     }
 
     function loop() {
-        // תפאורה
-        ctx.fillStyle = '#050505'; ctx.fillRect(0,0,canvas.width, canvas.height/2); // שמיים
-        ctx.fillStyle = '#111'; ctx.fillRect(0,canvas.height/2, canvas.width, canvas.height/2); // רצפה
+        // תנועה
+        let nx = player.x + Math.cos(player.dir) * player.speed;
+        let ny = player.y + Math.sin(player.dir) * player.speed;
+        if(map[Math.floor(ny/CELL_SIZE)][Math.floor(nx/CELL_SIZE)] === 0) {
+            player.x = nx; player.y = ny;
+        }
+        player.dir += player.rotSpeed;
 
-        update();
-        castRays();
+        // אפקט הליכה (Bobbing)
+        if(player.speed !== 0) {
+            player.bob = Math.sin(Date.now() * player.bobSpeed) * player.bobAmount;
+        } else {
+            player.bob *= 0.9;
+        }
+
+        render();
         drawMinimap();
-        
         requestAnimationFrame(loop);
     }
 
     // שליטה
     window.addEventListener('keydown', e => {
-        if(e.key === 'w' || e.key === 'ArrowUp') player.speed = 3;
-        if(e.key === 's' || e.key === 'ArrowDown') player.speed = -3;
-        if(e.key === 'a' || e.key === 'ArrowLeft') player.rotSpeed = -0.05;
-        if(e.key === 'd' || e.key === 'ArrowRight') player.rotSpeed = 0.05;
+        if(e.key === 'w' || e.key === 'ArrowUp') player.speed = player.moveSpeed;
+        if(e.key === 's' || e.key === 'ArrowDown') player.speed = -player.moveSpeed;
+        if(e.key === 'a' || e.key === 'ArrowLeft') player.rotSpeed = -player.rotStep;
+        if(e.key === 'd' || e.key === 'ArrowRight') player.rotSpeed = player.rotStep;
     });
     window.addEventListener('keyup', e => {
         if(['w','s','ArrowUp','ArrowDown'].includes(e.key)) player.speed = 0;
         if(['a','d','ArrowLeft','ArrowRight'].includes(e.key)) player.rotSpeed = 0;
     });
 
-    // תמיכה בטאץ' (פשוט)
+    // תמיכה בטאץ'
     window.addEventListener('touchstart', e => {
-        let x = e.touches[0].clientX;
-        if (x < window.innerWidth / 2) player.rotSpeed = -0.05;
-        else player.rotSpeed = 0.05;
-        player.speed = 3;
+        const x = e.touches[0].clientX;
+        if(x < window.innerWidth/3) player.rotSpeed = -player.rotStep;
+        else if(x > window.innerWidth*0.6) player.rotSpeed = player.rotStep;
+        else player.speed = player.moveSpeed;
     });
     window.addEventListener('touchend', () => { player.speed = 0; player.rotSpeed = 0; });
 
-    init();
+    window.addEventListener('resize', resize);
+    resize();
+    generateMap();
+    loop();
 </script>
 </body>
 </html>
