@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ציד החרקים של פומבה | משחק אוטומציה</title>
+    <title>ציד החרקים של פומבה 2.0 | Pro Edition</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐗</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@900&family=Rubik:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -18,7 +18,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body { 
-            font-family: 'Heebo', sans-serif; 
+            font-family: 'Rubik', sans-serif; 
             background-color: var(--dark); 
             color: white; 
             overflow: hidden; 
@@ -29,229 +29,306 @@
             height: 100vh;
         }
 
-        #game-container {
+        #game-wrapper {
             position: relative;
-            width: 100%;
+            width: 95vw;
             max-width: 800px;
             height: 400px;
-            background: #111;
-            border-bottom: 4px solid var(--amber);
+            border-radius: 30px;
             overflow: hidden;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 30px 100px rgba(0,0,0,0.8);
+            background: #000;
         }
 
-        canvas { display: block; background: linear-gradient(to bottom, #0a0a0a, #1a1a1a); }
+        canvas { display: block; }
 
-        /* UI Elements */
-        .ui-overlay {
+        /* UI Styling */
+        .game-ui {
             position: absolute; top: 20px; width: 100%; padding: 0 30px;
             display: flex; justify-content: space-between;
-            font-family: 'Rubik'; font-size: 1.5rem; pointer-events: none;
-            z-index: 10;
+            font-weight: 900; font-size: 1.5rem; pointer-events: none;
+            z-index: 100;
         }
-
-        #score-board span { color: var(--amber); }
+        .score-box { background: rgba(0,0,0,0.5); padding: 5px 20px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .score-box span { color: var(--amber); }
 
         /* Game Over Screen */
         #game-over {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 20; text-align: center;
+            z-index: 200; text-align: center; backdrop-filter: blur(15px);
         }
-
-        #game-over h2 { font-size: 3rem; color: var(--red); margin-bottom: 10px; }
-        #game-over p { font-size: 1.2rem; margin-bottom: 30px; color: #ccc; }
+        #game-over h2 { font-size: 4rem; color: var(--red); margin-bottom: 10px; text-shadow: 0 0 30px var(--red); }
+        .final-score-text { font-size: 1.5rem; color: #ccc; margin-bottom: 30px; }
 
         .btn {
-            padding: 15px 40px; border-radius: 100px; border: none;
-            font-weight: 900; font-size: 1.2rem; cursor: pointer; transition: 0.3s;
+            padding: 18px 50px; border-radius: 100px; border: none;
+            font-weight: 900; font-size: 1.3rem; cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--amber); color: #000;
         }
-        .btn-restart { background: var(--amber); color: #000; }
-        .btn-restart:hover { transform: scale(1.1); }
+        .btn:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(255, 185, 0, 0.4); }
 
-        .instructions {
-            margin-top: 20px; color: #555; font-size: 0.9rem;
+        .back-home {
+            position: absolute; bottom: 30px; color: #555; text-decoration: none; 
+            font-weight: bold; transition: 0.3s;
         }
+        .back-home:hover { color: var(--white); }
 
-        .back-link { position: absolute; bottom: 20px; color: #444; text-decoration: none; font-weight: bold; }
+        /* Screen Shake Class */
+        .shake { animation: shake 0.4s; }
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-5px, -2px); }
+            20%, 40%, 60%, 80% { transform: translate(5px, 2px); }
+        }
     </style>
 </head>
 <body>
 
-    <div id="game-container">
-        <div class="ui-overlay">
-            <div id="score-board">ניקוד: <span id="current-score">0</span></div>
-            <div id="high-score">שיא: <span id="best-score">0</span></div>
+    <div id="game-wrapper">
+        <div class="game-ui">
+            <div class="score-box">ניקוד: <span id="current-score">0</span></div>
+            <div class="score-box">שיא: <span id="best-score">0</span></div>
         </div>
 
         <div id="game-over">
-            <h2>הצבועים ניצחו! 🐺</h2>
-            <p>אבל פומבה לא מוותר בקלות...</p>
-            <button class="btn btn-restart" onclick="resetGame()">נסה שוב 🐗</button>
+            <h2>פסילה! 🐺</h2>
+            <p class="final-score-text">הגעת לניקוד: <span id="result-score">0</span></p>
+            <button class="btn" onclick="resetGame()">לצוד מחדש 🐗</button>
         </div>
 
         <canvas id="gameCanvas"></canvas>
     </div>
 
-    <p class="instructions">במחשב: מקש רווח | בטלפון: טאפ למסך</p>
-    <a href="../" class="back-link">חזרה לאתר</a>
+    <div style="margin-top: 20px; color: #444; font-weight: bold; text-align: center;">
+        רווח/קליק: קפיצה | אכול חרקים 🐛 | הזהר מצבועים 🐺
+    </div>
+
+    <a href="../" class="back-home">← חזרה לעסק של טימון ופומבה</a>
 
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    const wrapper = document.getElementById('game-wrapper');
     const scoreEl = document.getElementById('current-score');
     const bestEl = document.getElementById('best-score');
+    const resultEl = document.getElementById('result-score');
     const gameOverScreen = document.getElementById('game-over');
 
-    // התאמת גודל הקנבס
     function resize() {
-        canvas.width = Math.min(window.innerWidth - 40, 800);
-        canvas.height = 400;
+        canvas.width = wrapper.offsetWidth;
+        canvas.height = wrapper.offsetHeight;
     }
+    window.addEventListener('resize', resize);
     resize();
 
-    // הגדרות משחק
+    // הגדרות
     let score = 0;
     let highScore = localStorage.getItem('pumbaaBest') || 0;
     bestEl.innerText = highScore;
     
-    let gameSpeed = 5;
+    let gameSpeed = 6;
     let isGameOver = false;
     let frame = 0;
+    let particles = [];
 
-    // פומבה
-    const pumbaa = {
-        x: 50,
-        y: 300,
-        w: 60,
-        h: 60,
-        dy: 0,
-        jumpForce: -15,
-        gravity: 0.8,
-        grounded: false,
-        draw() {
-            ctx.font = '50px serif';
-            ctx.fillText('🐗', this.x, this.y + this.h);
-        },
-        jump() {
-            if (this.grounded) {
-                this.dy = this.jumpForce;
-                this.grounded = false;
-            }
-        },
+    // --- Particle System ---
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x; this.y = y;
+            this.size = Math.random() * 5 + 2;
+            this.speedX = Math.random() * 6 - 3;
+            this.speedY = Math.random() * 6 - 3;
+            this.color = color;
+            this.life = 1;
+        }
         update() {
-            this.dy += this.gravity;
-            this.y += this.dy;
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.life -= 0.02;
+        }
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.life;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
 
-            if (this.y + this.h > canvas.height - 20) {
-                this.y = canvas.height - 20 - this.h;
+    function createExplosion(x, y, color) {
+        for(let i=0; i<15; i++) particles.push(new Particle(x, y, color));
+    }
+
+    // --- Player (Pumbaa) ---
+    const pumbaa = {
+        x: 80, y: 0, w: 70, h: 70,
+        dy: 0, jumpForce: -16, gravity: 0.8,
+        grounded: false,
+        rotation: 0,
+        update() {
+            if (this.y + this.h < canvas.height - 40) {
+                this.dy += this.gravity;
+                this.grounded = false;
+                this.rotation = Math.min(this.dy * 0.03, 0.4);
+            } else {
                 this.dy = 0;
+                this.y = canvas.height - 40 - this.h;
                 this.grounded = true;
+                this.rotation = 0;
             }
+            this.y += this.dy;
             this.draw();
+        },
+        draw() {
+            ctx.save();
+            ctx.translate(this.x + this.w/2, this.y + this.h/2);
+            ctx.rotate(this.rotation);
+            ctx.font = '60px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🐗', 0, 0);
+            ctx.restore();
         }
     };
 
-    // אוביקטים (צבועים וזחלים)
-    const obstacles = [];
-    class Obstacle {
+    // --- Obstacles & Items ---
+    const entities = [];
+    class Entity {
         constructor(type) {
             this.type = type; // 'enemy' or 'food'
+            this.w = 50; this.h = 50;
             this.x = canvas.width + 100;
-            this.y = type === 'enemy' ? canvas.height - 70 : canvas.height - 150 - Math.random() * 100;
-            this.w = 40;
-            this.h = 40;
-            this.speed = gameSpeed;
-        }
-        draw() {
-            ctx.font = '35px serif';
-            ctx.fillText(this.type === 'enemy' ? '🐺' : '🐛', this.x, this.y + this.h);
+            this.y = type === 'enemy' ? canvas.height - 40 - this.h : canvas.height - 150 - Math.random() * 100;
+            this.speed = gameSpeed + (Math.random() * 2);
         }
         update() {
             this.x -= this.speed;
             this.draw();
         }
+        draw() {
+            ctx.font = '40px serif';
+            ctx.fillText(this.type === 'enemy' ? '🐺' : '🐛', this.x, this.y + this.h - 5);
+        }
     }
 
-    function handleObstacles() {
-        if (frame % Math.max(20, 100 - Math.floor(score/10)) === 0) {
+    function spawnLogic() {
+        if (frame % Math.max(30, 90 - Math.floor(score/500)) === 0) {
             const type = Math.random() > 0.3 ? 'enemy' : 'food';
-            obstacles.push(new Obstacle(type));
+            entities.push(new Entity(type));
         }
+    }
 
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-            obstacles[i].update();
-
-            // בדיקת התנגשות
+    function checkCollisions() {
+        for (let i = entities.length - 1; i >= 0; i--) {
+            const e = entities[i];
+            
+            // Hitbox מוקטן לדיוק (הורדת 20% מכל צד)
+            const margin = 15;
             if (
-                pumbaa.x < obstacles[i].x + obstacles[i].w &&
-                pumbaa.x + pumbaa.w > obstacles[i].x &&
-                pumbaa.y < obstacles[i].y + obstacles[i].h &&
-                pumbaa.y + pumbaa.h > obstacles[i].y
+                pumbaa.x + margin < e.x + e.w - margin &&
+                pumbaa.x + pumbaa.w - margin > e.x + margin &&
+                pumbaa.y + margin < e.y + e.h - margin &&
+                pumbaa.y + pumbaa.h - margin > e.y + margin
             ) {
-                if (obstacles[i].type === 'enemy') {
-                    endGame();
+                if (e.type === 'enemy') {
+                    triggerGameOver();
                 } else {
-                    score += 100;
+                    score += 150;
+                    gameSpeed += 0.05;
+                    createExplosion(e.x + 25, e.y + 25, '#25D366');
+                    entities.splice(i, 1);
                     scoreEl.innerText = score;
-                    gameSpeed += 0.1; // העלאת קושי
-                    obstacles.splice(i, 1);
                 }
             }
 
-            // הסרה כשיוצא מהמסך
-            if (obstacles[i] && obstacles[i].x + obstacles[i].w < 0) {
-                if (obstacles[i].type === 'enemy') score += 10; // נקודות על התחמקות
+            if (e.x + e.w < 0) {
+                if (e.type === 'enemy') score += 10;
+                entities.splice(i, 1);
                 scoreEl.innerText = score;
-                obstacles.splice(i, 1);
             }
         }
     }
 
-    function endGame() {
+    function triggerGameOver() {
         isGameOver = true;
-        gameOverScreen.style.display = 'flex';
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem('pumbaaBest', highScore);
-            bestEl.innerText = highScore;
-        }
+        wrapper.classList.add('shake');
+        createExplosion(pumbaa.x + 35, pumbaa.y + 35, '#ff4b4b');
+        setTimeout(() => {
+            gameOverScreen.style.display = 'flex';
+            resultEl.innerText = score;
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('pumbaaBest', highScore);
+                bestEl.innerText = highScore;
+            }
+        }, 500);
     }
 
     function resetGame() {
-        score = 0;
-        scoreEl.innerText = 0;
-        gameSpeed = 5;
-        isGameOver = false;
-        obstacles.length = 0;
+        score = 0; scoreEl.innerText = 0;
+        gameSpeed = 6; isGameOver = false;
+        entities.length = 0; particles.length = 0;
         gameOverScreen.style.display = 'none';
+        wrapper.classList.remove('shake');
+        pumbaa.y = 0; pumbaa.dy = 0;
         animate();
+    }
+
+    function drawBackground() {
+        // רצפה
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+        ctx.strokeStyle = 'rgba(255, 185, 0, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height - 40);
+        ctx.lineTo(canvas.width, canvas.height - 40);
+        ctx.stroke();
+
+        // קווי מהירות (Motion blur effect)
+        if (gameSpeed > 8) {
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            for(let i=0; i<5; i++) {
+                let y = (i * 80) + (frame % 100);
+                ctx.beginPath();
+                ctx.moveTo(canvas.width - ((frame * gameSpeed) % canvas.width), y);
+                ctx.lineTo(canvas.width - ((frame * gameSpeed) % canvas.width) + 100, y);
+                ctx.stroke();
+            }
+        }
     }
 
     function animate() {
         if (isGameOver) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // ציור רצפה
-        ctx.strokeStyle = '#333';
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height - 20);
-        ctx.lineTo(canvas.width, canvas.height - 20);
-        ctx.stroke();
-
+        drawBackground();
+        spawnLogic();
         pumbaa.update();
-        handleObstacles();
-        
+
+        entities.forEach(e => e.update());
+        checkCollisions();
+
+        // עדכון חלקיקים
+        for(let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update();
+            particles[i].draw();
+            if(particles[i].life <= 0) particles.splice(i, 1);
+        }
+
         frame++;
         requestAnimationFrame(animate);
     }
 
-    // מאזינים
-    window.addEventListener('keydown', (e) => { if (e.code === 'Space') pumbaa.jump(); });
+    // שליטה
+    const jumpAction = () => { if (!isGameOver) pumbaa.jump(); };
+    window.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') pumbaa.jump(); });
     canvas.addEventListener('touchstart', (e) => { pumbaa.jump(); e.preventDefault(); }, {passive: false});
-    window.addEventListener('click', () => { if (!isGameOver) pumbaa.jump(); });
+    canvas.addEventListener('mousedown', pumbaa.jump.bind(pumbaa));
 
     animate();
 </script>
