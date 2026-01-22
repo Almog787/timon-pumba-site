@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ציד החרקים של פומבה | משחק אוטומציה</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐗</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@900&family=Rubik:wght@900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --amber: #ffb900;
+            --dark: #050505;
+            --green: #25D366;
+            --red: #ff4b4b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body { 
+            font-family: 'Heebo', sans-serif; 
+            background-color: var(--dark); 
+            color: white; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            background: #111;
+            border-bottom: 4px solid var(--amber);
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        canvas { display: block; background: linear-gradient(to bottom, #0a0a0a, #1a1a1a); }
+
+        /* UI Elements */
+        .ui-overlay {
+            position: absolute; top: 20px; width: 100%; padding: 0 30px;
+            display: flex; justify-content: space-between;
+            font-family: 'Rubik'; font-size: 1.5rem; pointer-events: none;
+            z-index: 10;
+        }
+
+        #score-board span { color: var(--amber); }
+
+        /* Game Over Screen */
+        #game-over {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 20; text-align: center;
+        }
+
+        #game-over h2 { font-size: 3rem; color: var(--red); margin-bottom: 10px; }
+        #game-over p { font-size: 1.2rem; margin-bottom: 30px; color: #ccc; }
+
+        .btn {
+            padding: 15px 40px; border-radius: 100px; border: none;
+            font-weight: 900; font-size: 1.2rem; cursor: pointer; transition: 0.3s;
+        }
+        .btn-restart { background: var(--amber); color: #000; }
+        .btn-restart:hover { transform: scale(1.1); }
+
+        .instructions {
+            margin-top: 20px; color: #555; font-size: 0.9rem;
+        }
+
+        .back-link { position: absolute; bottom: 20px; color: #444; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <div class="ui-overlay">
+            <div id="score-board">ניקוד: <span id="current-score">0</span></div>
+            <div id="high-score">שיא: <span id="best-score">0</span></div>
+        </div>
+
+        <div id="game-over">
+            <h2>הצבועים ניצחו! 🐺</h2>
+            <p>אבל פומבה לא מוותר בקלות...</p>
+            <button class="btn btn-restart" onclick="resetGame()">נסה שוב 🐗</button>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <p class="instructions">במחשב: מקש רווח | בטלפון: טאפ למסך</p>
+    <a href="../" class="back-link">חזרה לאתר</a>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('current-score');
+    const bestEl = document.getElementById('best-score');
+    const gameOverScreen = document.getElementById('game-over');
+
+    // התאמת גודל הקנבס
+    function resize() {
+        canvas.width = Math.min(window.innerWidth - 40, 800);
+        canvas.height = 400;
+    }
+    resize();
+
+    // הגדרות משחק
+    let score = 0;
+    let highScore = localStorage.getItem('pumbaaBest') || 0;
+    bestEl.innerText = highScore;
+    
+    let gameSpeed = 5;
+    let isGameOver = false;
+    let frame = 0;
+
+    // פומבה
+    const pumbaa = {
+        x: 50,
+        y: 300,
+        w: 60,
+        h: 60,
+        dy: 0,
+        jumpForce: -15,
+        gravity: 0.8,
+        grounded: false,
+        draw() {
+            ctx.font = '50px serif';
+            ctx.fillText('🐗', this.x, this.y + this.h);
+        },
+        jump() {
+            if (this.grounded) {
+                this.dy = this.jumpForce;
+                this.grounded = false;
+            }
+        },
+        update() {
+            this.dy += this.gravity;
+            this.y += this.dy;
+
+            if (this.y + this.h > canvas.height - 20) {
+                this.y = canvas.height - 20 - this.h;
+                this.dy = 0;
+                this.grounded = true;
+            }
+            this.draw();
+        }
+    };
+
+    // אוביקטים (צבועים וזחלים)
+    const obstacles = [];
+    class Obstacle {
+        constructor(type) {
+            this.type = type; // 'enemy' or 'food'
+            this.x = canvas.width + 100;
+            this.y = type === 'enemy' ? canvas.height - 70 : canvas.height - 150 - Math.random() * 100;
+            this.w = 40;
+            this.h = 40;
+            this.speed = gameSpeed;
+        }
+        draw() {
+            ctx.font = '35px serif';
+            ctx.fillText(this.type === 'enemy' ? '🐺' : '🐛', this.x, this.y + this.h);
+        }
+        update() {
+            this.x -= this.speed;
+            this.draw();
+        }
+    }
+
+    function handleObstacles() {
+        if (frame % Math.max(20, 100 - Math.floor(score/10)) === 0) {
+            const type = Math.random() > 0.3 ? 'enemy' : 'food';
+            obstacles.push(new Obstacle(type));
+        }
+
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            obstacles[i].update();
+
+            // בדיקת התנגשות
+            if (
+                pumbaa.x < obstacles[i].x + obstacles[i].w &&
+                pumbaa.x + pumbaa.w > obstacles[i].x &&
+                pumbaa.y < obstacles[i].y + obstacles[i].h &&
+                pumbaa.y + pumbaa.h > obstacles[i].y
+            ) {
+                if (obstacles[i].type === 'enemy') {
+                    endGame();
+                } else {
+                    score += 100;
+                    scoreEl.innerText = score;
+                    gameSpeed += 0.1; // העלאת קושי
+                    obstacles.splice(i, 1);
+                }
+            }
+
+            // הסרה כשיוצא מהמסך
+            if (obstacles[i] && obstacles[i].x + obstacles[i].w < 0) {
+                if (obstacles[i].type === 'enemy') score += 10; // נקודות על התחמקות
+                scoreEl.innerText = score;
+                obstacles.splice(i, 1);
+            }
+        }
+    }
+
+    function endGame() {
+        isGameOver = true;
+        gameOverScreen.style.display = 'flex';
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('pumbaaBest', highScore);
+            bestEl.innerText = highScore;
+        }
+    }
+
+    function resetGame() {
+        score = 0;
+        scoreEl.innerText = 0;
+        gameSpeed = 5;
+        isGameOver = false;
+        obstacles.length = 0;
+        gameOverScreen.style.display = 'none';
+        animate();
+    }
+
+    function animate() {
+        if (isGameOver) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // ציור רצפה
+        ctx.strokeStyle = '#333';
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height - 20);
+        ctx.lineTo(canvas.width, canvas.height - 20);
+        ctx.stroke();
+
+        pumbaa.update();
+        handleObstacles();
+        
+        frame++;
+        requestAnimationFrame(animate);
+    }
+
+    // מאזינים
+    window.addEventListener('keydown', (e) => { if (e.code === 'Space') pumbaa.jump(); });
+    canvas.addEventListener('touchstart', (e) => { pumbaa.jump(); e.preventDefault(); }, {passive: false});
+    window.addEventListener('click', () => { if (!isGameOver) pumbaa.jump(); });
+
+    animate();
+</script>
+</body>
+</html>
