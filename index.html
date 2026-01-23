@@ -5,13 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AvinTattoo - סטודיו לקעקועים ופירסינג</title>
     
-    <!-- גופנים (פונטים) -->
+    <!-- גופנים -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- עיצוב כללי (CSS) --- */
+        /* --- משתנים ועיצוב בסיס --- */
+        :root {
+            --bg-dark: #2d0b0b;
+            --bg-darker: #1a0606;
+            --accent-green: #25d366;
+            --accent-red: #a12626;
+            --border-color: #471717;
+            --text-color: #ffffff;
+            --transition-speed: 0.6s;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -20,28 +30,42 @@
 
         body {
             font-family: 'Heebo', sans-serif;
-            background-color: #2d0b0b;
-            color: white;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
             direction: rtl;
             line-height: 1.6;
-            margin: 0;
+            overflow-x: hidden; /* למניעת גלילה אופקית */
         }
 
         a {
             text-decoration: none;
             color: inherit;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
         }
 
-        a:hover {
-            opacity: 0.8;
+        /* --- אנימציות גלילה (JS Classes) --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
         }
 
-        /* --- וידאו ראשי (Hero) --- */
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* דיליי לאלמנטים שנכנסים אחד אחרי השני */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+
+        /* --- וידאו ו-Hero --- */
         .hero-section {
             position: relative;
             width: 100%;
             overflow: hidden;
+            background: #000;
         }
 
         .hero-video {
@@ -49,52 +73,41 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            opacity: 0; /* JS will fade it in */
+            transition: opacity 1s ease-in;
         }
 
-        /* שכבת כהות על הוידאו */
+        .hero-video.loaded {
+            opacity: 1;
+        }
+
         .hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), var(--bg-dark));
             pointer-events: none;
         }
 
-        .hero-desktop {
-            height: 755px;
-            display: block;
-        }
+        .hero-desktop { height: 755px; display: block; }
+        .hero-mobile { height: 100vh; display: none; }
 
-        .hero-mobile {
-            height: 100vh;
-            display: none;
-        }
-
-        /* --- אזורי תוכן --- */
+        /* --- כותרות וקונטיינרים --- */
         .section-container {
-            padding: 3rem 1rem;
+            padding: 4rem 1.5rem;
             text-align: center;
         }
 
-        .dark-bg {
-            background-color: #2d0b0b;
-        }
-
-        .darker-bg {
-            background-color: #1a0606;
-        }
+        .dark-bg { background-color: var(--bg-dark); }
+        .darker-bg { background-color: var(--bg-darker); }
 
         h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
             font-weight: 700;
-        }
-
-        h5 {
-            font-size: 1.1rem;
-            font-weight: 600;
+            letter-spacing: -1px;
         }
 
         /* --- כפתורים --- */
@@ -102,69 +115,80 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        .button-group.wrap {
-            flex-wrap: wrap;
-        }
+        .button-group.wrap { flex-wrap: wrap; }
 
         .btn {
             display: inline-block;
-            padding: 10px 25px;
+            padding: 12px 30px;
             border-radius: 50px;
             font-weight: 500;
             font-size: 1.1rem;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
 
+        /* אפקט מילוי במעבר עכבר לכפתורי Outline */
         .btn-outline {
             border: 2px solid white;
             color: white;
             background: transparent;
         }
 
-        .btn-outline:hover {
+        .btn-outline::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0%; height: 100%;
             background: white;
-            color: #2d0b0b;
+            z-index: -1;
+            transition: width 0.3s ease;
         }
+
+        .btn-outline:hover::before { width: 100%; }
+        .btn-outline:hover { color: var(--bg-dark); border-color: white; }
 
         .btn-fill {
             color: white;
             border: none;
             font-size: 1.3rem;
-            padding: 15px 30px;
+            padding: 15px 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transform: scale(1);
+            transition: transform 0.2s;
         }
 
-        .whatsapp-bg { background-color: #25d366; }
-        .red-bg { background-color: #a12626; }
-        
-        /* כפתור ירוק קטן למוצרים */
-        .btn-small {
-            padding: 5px 20px;
-            font-size: 0.9rem;
-            border-radius: 5px;
-            background-color: #25d366;
-            color: white;
-            display: inline-block;
-            margin-top: 10px;
-        }
+        .btn-fill:hover { transform: scale(1.05); }
 
-        /* --- גריד מוצרים (חנות) --- */
+        .whatsapp-bg { background-color: var(--accent-green); }
+        .red-bg { background-color: var(--accent-red); }
+
+        /* --- חנות ומוצרים --- */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            gap: 25px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .product-card {
-            border: 1px solid #471717;
-            border-radius: 8px;
-            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
             text-align: center;
-            background-color: rgba(255,255,255,0.02);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(5px);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-color: #6e2b2b;
         }
 
         .product-card img {
@@ -173,18 +197,27 @@
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 15px;
+            cursor: zoom-in;
+            transition: opacity 0.3s;
         }
 
-        .material {
-            color: #ccc;
-            font-size: 0.9rem;
-            margin: 5px 0;
+        .product-card img:hover { opacity: 0.9; }
+
+        .product-card h5 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        .sku {
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            color: #999;
+        .btn-small {
+            padding: 8px 25px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            background-color: var(--accent-green);
+            color: white;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
         }
 
         /* --- טופס יצירת קשר --- */
@@ -193,8 +226,8 @@
             flex-direction: column;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 5rem 2rem;
-            gap: 3rem;
+            padding: 6rem 2rem;
+            gap: 4rem;
         }
 
         .contact-text ul {
@@ -204,136 +237,170 @@
             padding: 0;
         }
         
-        .contact-text li {
-            margin-bottom: 10px;
+        .contact-text li { 
+            margin-bottom: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
         }
 
         .contact-form-wrapper {
-            background-color: black;
-            padding: 2rem;
-            border: 1px solid #4e1b1b;
-            border-radius: 16px;
+            background: linear-gradient(145deg, #000000, #1a0505);
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
         .custom-form label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             text-align: right;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #ccc;
         }
 
         .custom-form input, 
         .custom-form textarea {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            background-color: #4b1616;
-            border: 1px solid #662222;
+            padding: 14px;
+            margin-bottom: 20px;
+            background-color: #2c0e0e;
+            border: 1px solid #5c1e1e;
             color: white;
-            border-radius: 5px;
+            border-radius: 8px;
             font-family: inherit;
             font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .custom-form input:focus,
+        .custom-form textarea:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 8px rgba(161, 38, 38, 0.4);
         }
 
         .custom-form button {
             width: 100%;
-            background-color: #471717;
+            background-color: var(--border-color);
             color: white;
-            padding: 15px;
+            padding: 16px;
             border: none;
             border-radius: 50px;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
 
         .custom-form button:hover {
-            background-color: #5e1e1e;
+            background-color: var(--accent-red);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(161, 38, 38, 0.4);
         }
 
-        /* --- מפה --- */
+        /* --- מפה וסטיקי --- */
         .map-container {
             width: 100%;
-            margin-bottom: 60px; /* רווח לכפתור סטיקי */
+            margin-bottom: 60px;
             line-height: 0;
-        }
-        
-        .map-iframe {
-            width: 100%;
-            height: 400px;
-            border: 0;
+            filter: grayscale(100%) contrast(1.2); /* עיצוב שחור לבן למפה */
+            transition: filter 0.5s;
         }
 
-        /* --- כפתור סטיקי למטה --- */
+        .map-container:hover { filter: grayscale(0%); }
+        
+        .map-iframe { width: 100%; height: 450px; border: 0; }
+
         .sticky-cta {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #25d366;
+            bottom: 0; left: 0; width: 100%;
+            background-color: var(--accent-green);
             text-align: center;
             z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
         }
 
         .sticky-cta a {
             display: block;
-            padding: 15px;
+            padding: 18px;
             color: white;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
-        /* --- רספונסיביות (התאמה למובייל/דסקטופ) --- */
+        /* --- LIGHTBOX (חלון צף לתמונות) --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(255,255,255,0.1);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox.active img { transform: scale(1); }
+
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        /* --- רספונסיביות --- */
         @media (min-width: 768px) {
             .contact-layout {
                 flex-direction: row;
                 align-items: center;
             }
-            
-            .contact-text, .contact-form-wrapper {
-                flex: 1;
-            }
-            
-            .contact-text {
-                text-align: right;
-            }
-            
-            .contact-text h2 {
-                font-size: 3rem;
-                line-height: 1.2;
-            }
-
-            /* וידאו דסקטופ פעיל */
+            .contact-text, .contact-form-wrapper { flex: 1; }
+            .contact-text { text-align: right; }
             .hero-desktop { display: block; }
             .hero-mobile { display: none; }
         }
 
         @media (max-width: 767px) {
-            /* וידאו מובייל פעיל */
             .hero-desktop { display: none; }
             .hero-mobile { display: block; }
-            
-            .contact-text {
-                text-align: center;
-            }
-            
-            .button-group {
-                flex-wrap: wrap;
-            }
-            
-            .button-group.horizontal-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .btn-fill {
-                text-align: center;
-            }
+            .contact-text { text-align: center; }
+            .contact-text li { justify-content: center; }
+            .button-group.horizontal-actions { flex-direction: column; }
+            h2 { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- וידאו לדסקטופ -->
+    <!-- LIGHTBOX CONTAINER -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="Full size" id="lightbox-img">
+    </div>
+
+    <!-- HERO SECTION -->
     <div class="hero-section hero-desktop">
         <video autoplay muted loop playsinline class="hero-video">
             <source src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/vid-20251208-wa0052.mp4" type="video/mp4">
@@ -341,7 +408,6 @@
         <div class="hero-overlay"></div>
     </div>
 
-    <!-- וידאו למובייל -->
     <div class="hero-section hero-mobile">
         <video autoplay muted loop playsinline class="hero-video">
             <source src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/vid-20251208-wa0039.mp4" type="video/mp4">
@@ -349,15 +415,15 @@
         <div class="hero-overlay"></div>
     </div>
 
-    <!-- תפריט כפתורים -->
+    <!-- NAVIGATION -->
     <div class="section-container dark-bg">
-        <h2>לאן תרצו להמשיך?</h2>
+        <h2 class="reveal">לאן תרצו להמשיך?</h2>
         
-        <div class="button-group">
+        <div class="button-group reveal delay-100">
             <a href="https://avintattoo.com/avintattoo-store/" class="btn btn-outline">SHOP</a>
         </div>
 
-        <div class="button-group wrap">
+        <div class="button-group wrap reveal delay-200">
             <a href="https://avintattoo.com/63-2/#piercings-gallery" class="btn btn-outline">גלריית פירסינג</a>
             <a href="https://avintattoo.com/63-2/" class="btn btn-outline">לאתר המלא</a>
             <a href="https://avintattoo.com/63-2/#tattoos-gallery" class="btn btn-outline">גלריית קעקועים</a>
@@ -365,59 +431,56 @@
             <a href="https://avintattoo.com/63-2/piercing-pots/" class="btn btn-outline">מידע פירסינג</a>
         </div>
 
-        <div class="button-group horizontal-actions">
+        <div class="button-group horizontal-actions reveal delay-300">
             <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הי,%20קיבלתי%20את%20הפרטים%20ליצירת%20קשר%20איתך%20ב-WhatsApp%20מאתר%20האינטרנט%20שלך" class="btn btn-fill whatsapp-bg">WhatsApp</a>
-            <a href="#lead-form" class="btn btn-fill red-bg">תיאום ייעוץ</a>
+            <a href="#lead-form" class="btn btn-fill red-bg smooth-scroll">תיאום ייעוץ</a>
         </div>
     </div>
 
-    <!-- חנות מוצרים -->
+    <!-- SHOP GRID -->
     <div class="section-container darker-bg" id="shop-gallery">
-        <h2 class="section-title">בוטיק פירסינג בסטודיו</h2>
-        <p class="subtitle" style="margin-bottom:20px; font-size: 0.9rem;">מבחר תכשיטים בסטנדרט רפואי | לפרטים והזמנה לחצו על הפריט</p>
+        <h2 class="section-title reveal">בוטיק פירסינג בסטודיו</h2>
+        <p class="subtitle reveal delay-100" style="margin-bottom:30px; color:#aaa;">מבחר תכשיטים בסטנדרט רפואי | לפרטים והזמנה לחצו על הפריט</p>
 
         <div class="product-grid">
-            <!-- מוצר 1 -->
-            <div class="product-card">
+            <!-- Products with Reveal Animation -->
+            <div class="product-card reveal">
                 <img src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/d79ed7a7d798-1052-d79cd795d798d795d7a1-d7a7d798d79f-d7a2d79d-d7a9d7a8d7a9d7a8d7aa-d7a6d791d7a2-d7a6d799d7a4d795d799-d796d794d791.jpg" alt="לוטוס אבן">
                 <h5>לוטוס אבן עם שרשרת</h5>
-                <p class="material">🟡 ציפוי זהב</p>
-                <p class="sku">מק"ט: 1052</p>
-                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=היי אבי, אשמח לברר אם קיים במלאי: לוטוס אבן עם שרשרת (מק'ט 1052)" class="btn-small">הזמנה</a>
+                <p class="material" style="color:#e0c970;">🟡 ציפוי זהב</p>
+                <p class="sku" style="font-size:0.8rem; color:#888;">מק"ט: 1052</p>
+                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הזמנה: לוטוס אבן (1052)" class="btn-small">הזמנה</a>
             </div>
 
-            <!-- מוצר 2 -->
-            <div class="product-card">
+            <div class="product-card reveal delay-100">
                 <img src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/d79ed7a7d798-1023-d79cd791d7a8d798-d796d7a8d799d7a7d795d79f-d7a7d798d79f-d798d799d798d7a0d799d795d79d.jpg?w=1024" alt="לאברט זירקון">
                 <h5>לאברט זירקון</h5>
-                <p class="material">⚪️ טיטניום</p>
-                <p class="sku">מק"ט: 1023</p>
-                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=היי אבי, אשמח לברר אם קיים במלאי: לאברט זירקון (מק'ט 1023)" class="btn-small">הזמנה</a>
+                <p class="material" style="color:#silver;">⚪️ טיטניום</p>
+                <p class="sku" style="font-size:0.8rem; color:#888;">מק"ט: 1023</p>
+                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הזמנה: לאברט זירקון (1023)" class="btn-small">הזמנה</a>
             </div>
 
-            <!-- מוצר 3 -->
-            <div class="product-card">
+            <div class="product-card reveal delay-200">
                 <img src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/d79ed7a7d798-1071-d7a4d7a8d797-d791d7a8d7a7d799d796d795d7aa-d7a6d799d7a4d795d799-d796d794d791.jpg" alt="פרח מרקיזות">
                 <h5>פרח מרקיזות</h5>
-                <p class="material">🟡 ציפוי זהב</p>
-                <p class="sku">מק"ט: 1071</p>
-                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=היי אבי, אשמח לברר אם קיים במלאי: פרח מרקיזות (מק'ט 1071)" class="btn-small">הזמנה</a>
+                <p class="material" style="color:#e0c970;">🟡 ציפוי זהב</p>
+                <p class="sku" style="font-size:0.8rem; color:#888;">מק"ט: 1071</p>
+                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הזמנה: פרח מרקיזות (1071)" class="btn-small">הזמנה</a>
             </div>
 
-            <!-- מוצר 4 -->
-            <div class="product-card">
+            <div class="product-card reveal delay-300">
                 <img src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/d79ed7a7d798-1054-d798d799d7a4d794-d7a0d795d7a4d79cd7aa-4d79ed79e-d7a6d799d7a4d795d799-d796d794d791.jpg" alt="טיפה נופלת">
                 <h5>טיפה נופלת 4מ"מ</h5>
-                <p class="material">🟡 ציפוי זהב</p>
-                <p class="sku">מק"ט: 1054</p>
-                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=היי אבי, אשמח לברר אם קיים במלאי: טיפה נופלת (מק'ט 1054)" class="btn-small">הזמנה</a>
+                <p class="material" style="color:#e0c970;">🟡 ציפוי זהב</p>
+                <p class="sku" style="font-size:0.8rem; color:#888;">מק"ט: 1054</p>
+                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הזמנה: טיפה נופלת (1054)" class="btn-small">הזמנה</a>
             </div>
         </div>
     </div>
 
-    <!-- אזור יצירת קשר -->
+    <!-- CONTACT SECTION -->
     <div class="section-container dark-bg contact-layout" id="lead-form">
-        <div class="contact-text">
+        <div class="contact-text reveal">
             <h2>בואו נדבר תכל'ס על הקעקוע שלך.</h2>
             <p>משאירים פרטים כאן, ומקבלים שיחת ייעוץ ראשונית ללא עלות.</p>
             <ul>
@@ -427,37 +490,106 @@
             </ul>
         </div>
         
-        <div class="contact-form-wrapper">
-            <!-- 
-                הערה לבונה האתר:
-                כדי שהטופס יעבוד באתר סטטי כמו GitHub Pages, 
-                מומלץ להירשם ל-Formspree.io ולקבל כתובת שליחה אישית.
-                החלף את הכתובת ב-action למטה בכתובת שתקבל.
-            -->
+        <div class="contact-form-wrapper reveal delay-200">
             <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="custom-form">
                 <label>שם מלא</label>
-                <input type="text" name="name" required placeholder="השם שלך">
+                <input type="text" name="name" required placeholder="השם שלך...">
                 
                 <label>טלפון לחזרה</label>
-                <input type="tel" name="phone" required placeholder="מספר נייד">
+                <input type="tel" name="phone" required placeholder="050-0000000">
                 
                 <label>מה הרעיון שלך לקעקוע?</label>
-                <textarea name="idea" rows="4" placeholder="תאר בקצרה את הרעיון..."></textarea>
+                <textarea name="idea" rows="4" placeholder="ספר לי קצת על הרעיון, מיקום בגוף וגודל משוער..."></textarea>
                 
-                <button type="submit">אני רוצה לקבוע ייעוץ</button>
+                <button type="submit">אני רוצה לקבוע ייעוץ &larr;</button>
             </form>
         </div>
     </div>
 
-    <!-- מפה (אריאל) -->
-    <div class="map-container">
+    <!-- MAP -->
+    <div class="map-container reveal">
         <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3380.5!2d35.168467!3d32.102309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzLCsDA2JzA4LjMiTiAzNcKwMTAnMDYuNSJF!5e0!3m2!1she!2sil!4v1600000000000!5m2!1she!2sil" allowfullscreen="" loading="lazy"></iframe>
     </div>
 
-    <!-- כפתור צף -->
+    <!-- STICKY BUTTON -->
     <div class="sticky-cta">
         <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הי,%20קיבלתי%20את%20הפרטים%20ליצירת%20קשר%20איתך%20ב-WhatsApp%20מאתר%20האינטרנט%20שלך">דברו איתי ב-WhatsApp 💬</a>
     </div>
 
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. Video Loading Fade-in
+        document.addEventListener("DOMContentLoaded", function() {
+            const videos = document.querySelectorAll('.hero-video');
+            videos.forEach(video => {
+                video.addEventListener('canplay', () => {
+                    video.classList.add('loaded');
+                });
+            });
+        });
+
+        // 2. Scroll Reveal Animation (Intersection Observer)
+        const observerOptions = {
+            threshold: 0.1, // Trigger when 10% of the element is visible
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Run once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 3. Lightbox Functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.querySelector('.lightbox-close');
+        const productImages = document.querySelectorAll('.product-card img');
+
+        productImages.forEach(img => {
+            img.addEventListener('click', (e) => {
+                lightboxImg.src = e.target.src;
+                lightbox.style.display = 'flex';
+                // Small timeout to allow display:flex to apply before adding opacity class
+                setTimeout(() => {
+                    lightbox.classList.add('active');
+                }, 10);
+            });
+        });
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            setTimeout(() => {
+                lightbox.style.display = 'none';
+            }, 300); // Wait for transition
+        };
+
+        closeBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg) {
+                closeLightbox();
+            }
+        });
+
+        // 4. Smooth Scroll for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
