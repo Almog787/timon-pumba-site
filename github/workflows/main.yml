@@ -1,0 +1,32 @@
+name: Update Real Estate Data
+
+on:
+  schedule:
+    - cron: '0 8 * * *' # כל יום ב-8 בבוקר
+  workflow_dispatch: # מאפשר הרצה ידנית
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Scraper
+        run: python scraper.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add data.json
+          git commit -m "Update real estate data" || exit 0
+          git push
