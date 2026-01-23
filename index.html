@@ -1,221 +1,58 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-18YM6QFN0C"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-18YM6QFN0C');
-    </script>
-    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טימון ופומבה | אוטומציה ופתרונות דיגיטליים</title>
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Scripts -->
-    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
+    <title>צייד הנדל"ן | הזדמנויות מתחת למחיר השוק</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --amber: #ffb900; 
-            --dark: #050505; 
-            --surface: #111111;
-            --white: #ffffff; 
-            --green: #25D366; 
-            --border: rgba(255, 255, 255, 0.08);
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Heebo', sans-serif; background-color: var(--dark); color: var(--white); overflow-x: hidden; }
-
-        /* --- Dynamic Background Canvas --- */
-        #bgCanvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none;
-        }
-
-        /* --- Luxury Header --- */
-        header { 
-            position: fixed; top: 0; width: 100%; padding: 20px 5%; 
-            background: rgba(5,5,5,0.8); backdrop-filter: blur(15px); 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--border); z-index: 1000; 
-        }
-        .logo { font-family: 'Rubik'; font-weight: 900; font-size: 1.5rem; color: var(--white); text-decoration: none; }
-        .logo span { color: var(--amber); }
-
-        .nav-links { display: flex; gap: 30px; align-items: center; }
-        .nav-link { color: white; text-decoration: none; font-weight: bold; font-size: 0.95rem; transition: 0.3s; position: relative; }
-        .nav-link:hover { color: var(--amber); }
-        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--amber); transition: 0.3s; }
-        .nav-link:hover::after { width: 100%; }
-
-        /* --- Hero Section (30% Overlay) --- */
-        section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 10%; }
-        #hero { 
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('./images/hero.jpg') center/cover no-repeat fixed; 
-            text-align: center; width: 100%;
-        }
-        h1 { font-family: 'Rubik'; font-size: clamp(2.5rem, 8vw, 5.5rem); margin-bottom: 20px; line-height: 1.1; text-shadow: 0 5px 20px rgba(0,0,0,0.8); }
-        
-        .btn { display: inline-block; padding: 16px 40px; border-radius: 100px; font-weight: 900; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1.1rem; }
-        .btn-amber { background: var(--amber); color: #000; }
-        .btn-green { background: var(--green); color: #fff; }
-        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
-
-        /* --- Services Grid --- */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
-        .service-card { background: rgba(255,255,255,0.03); padding: 40px; border-radius: 30px; border: 1px solid var(--border); backdrop-filter: blur(10px); transition: 0.4s; }
-        .service-card:hover { border-color: var(--amber); transform: translateY(-10px); background: rgba(255,255,255,0.05); }
-        .service-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
-
-        /* --- Portfolio --- */
-        .portfolio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 40px; }
-        .portfolio-item { position: relative; border-radius: 20px; overflow: hidden; height: 350px; border: 1px solid var(--border); }
-        .portfolio-bg { width: 100%; height: 100%; background-size: cover; background-position: center; transition: 0.6s; opacity: 0.7; }
-        .portfolio-item:hover .portfolio-bg { transform: scale(1.05); opacity: 1; }
-        .portfolio-overlay { position: absolute; bottom: 0; width: 100%; padding: 30px; background: linear-gradient(to top, black, transparent); }
-
-        footer { padding: 60px 5%; text-align: center; border-top: 1px solid var(--border); color: #666; }
-
-        @media (max-width: 850px) {
-            .nav-links { display: none; }
-            .portfolio-grid { grid-template-columns: 1fr; }
-            section { padding: 80px 5%; }
-        }
+        body { font-family: 'Heebo', sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; background: #2c3e50; color: white; border-radius: 15px; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #e74c3c; }
+        .price { font-size: 1.5rem; color: #e74c3c; font-weight: 900; }
+        .savings { color: #27ae60; font-weight: bold; font-size: 0.9rem; }
+        .btn { display: block; text-align: center; padding: 10px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <!-- רקע דינמי -->
-    <canvas id="bgCanvas"></canvas>
+    <div class="header">
+        <h1>צייד הנדל"ן 🏠</h1>
+        <p>הזדמנויות שנמצאו ב-20% מתחת למחיר השוק (מבוסס נתוני רשות המיסים)</p>
+    </div>
 
-    <header>
-        <a href="./" class="logo">טימון<span>ופומבה</span></a>
-        <nav class="nav-links">
-            <a href="./excel-automation/" class="nav-link">אוטומציה לאקסל/שיטס</a>
-            <a href="./game/" class="nav-link">משחק 3D</a>
-            <a href="./contact/" class="nav-link">צור קשר</a>
-        </nav>
-        <a href="./contact/" class="btn btn-amber" style="padding: 10px 20px; font-size: 0.85rem;">שיחת אפיון</a>
-    </header>
-
-    <main>
-        <!-- Hero -->
-        <section id="hero">
-            <div class="container">
-                <h1 class="reveal">הפסיקו לעבוד ידנית.<br><span style="color:var(--amber)">תנו לטכנולוגיה לעבוד.</span></h1>
-                <p class="reveal" style="font-size: 1.3rem; margin-bottom: 40px; color: #eee;">אנחנו בונים מערכות חכמות שמחזירות לכם את הזמן היקר.</p>
-                <div class="reveal">
-                    <a href="./excel-automation/" class="btn btn-green">גלו כמה תחסכו 📊</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Services -->
-        <section id="services" style="background: rgba(0,0,0,0.4);">
-            <div class="container">
-                <h2 class="reveal" style="text-align: center; font-size: 2.5rem; margin-bottom: 50px;">ההתמחויות שלנו</h2>
-                <div class="services-grid">
-                    <div class="service-card reveal">
-                        <span class="service-icon">📊</span>
-                        <h3>אוטומציה לאקסל</h3>
-                        <p>הופכים טבלאות מסורבלות למערכות חכמות שמתעדכנות לבד.</p>
-                        <a href="./excel-automation/" style="color: var(--amber); text-decoration: none; font-weight: bold; display: block; margin-top: 15px;">למידע נוסף ←</a>
-                    </div>
-                    <div class="service-card reveal">
-                        <span class="service-icon">🛍️</span>
-                        <h3>בניית אתרים</h3>
-                        <p>חנויות איקומרס ואתרי תדמית שמעוצבים להביא מכירות.</p>
-                        <a href="./contact/" style="color: var(--amber); text-decoration: none; font-weight: bold; display: block; margin-top: 15px;">הצעת מחיר ←</a>
-                    </div>
-                    <div class="service-card reveal">
-                        <span class="service-icon">🔧</span>
-                        <h3>תיקון תקלות</h3>
-                        <p>האתר נפל? האקסל נתקע? אנחנו ה"הנדימן" הדיגיטלי שלכם.</p>
-                        <a href="./contact/" style="color: var(--amber); text-decoration: none; font-weight: bold; display: block; margin-top: 15px;">עזרה טכנית ←</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Portfolio -->
-        <section>
-            <div class="container">
-                <h2 class="reveal" style="text-align: center; margin-bottom: 40px;">פרויקטים נבחרים</h2>
-                <div class="portfolio-grid">
-                    <div class="portfolio-item reveal">
-                        <div class="portfolio-bg" style="background-image: url('./images/hero.jpg');"></div>
-                        <div class="portfolio-overlay"><h3>מערכות אוטומציה</h3></div>
-                    </div>
-                    <div class="portfolio-item reveal">
-                        <div class="portfolio-bg" style="background-image: url('./images/1tali.jpg');"></div>
-                        <div class="portfolio-overlay"><h3>בניית חנויות</h3></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 טימון ופומבה פתרונות דיגיטליים. <a href="./game/" style="color: var(--amber); text-decoration: none;">שחקו במשחק ה-3D 🎮</a></p>
-    </footer>
+    <div class="grid" id="deals-grid">
+        <!-- הנתונים ייטענו כאן -->
+    </div>
 
     <script>
-        // --- 1. Plexus Background Logic ---
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5;
-            }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-            }
-        }
-        for(let i=0; i<80; i++) particles.push(new Particle());
-
-        function animateBg() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(255, 185, 0, 0.3)";
-            ctx.strokeStyle = "rgba(255, 185, 0, 0.1)";
-            particles.forEach((p, i) => {
-                p.update();
-                ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill();
-                for(let j=i; j<particles.length; j++) {
-                    let d = Math.hypot(p.x-particles[j].x, p.y-particles[j].y);
-                    if(d<150) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke(); }
+        async function loadDeals() {
+            try {
+                const response = await fetch('data.json');
+                const deals = await response.json();
+                const grid = document.getElementById('deals-grid');
+                
+                if (deals.length === 0) {
+                    grid.innerHTML = "<p>לא נמצאו הזדמנויות חדשות היום...</p>";
+                    return;
                 }
-            });
-            requestAnimationFrame(animateBg);
+
+                deals.forEach(deal => {
+                    grid.innerHTML += `
+                        <div class="card">
+                            <h3>${deal.city} - ${deal.rooms} חדרים</h3>
+                            <div class="price">₪${deal.price.toLocaleString()}</div>
+                            <div class="savings">חיסכון מוערך: ₪${deal.savings.toLocaleString()}</div>
+                            <p>מקור: ${deal.source}</p>
+                            <a href="${deal.link}" target="_blank" class="btn">לצפייה במודעה</a>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.log("עדיין אין נתונים. הסקריפט ירוץ בקרוב.");
+            }
         }
-        animateBg();
-
-        // --- 2. Smooth Scroll & Animations ---
-        const lenis = new Lenis();
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
-
-        gsap.registerPlugin(ScrollTrigger);
-        document.querySelectorAll('.reveal').forEach((el) => {
-            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 90%" }, opacity: 0, y: 30, duration: 1, ease: "power4.out" });
-        });
+        loadDeals();
     </script>
 </body>
 </html>
