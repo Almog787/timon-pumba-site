@@ -3,388 +3,330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate API Dashboard (20 Free APIs)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>The Free API Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-body: #0f172a;
-            --bg-sidebar: #1e293b;
-            --bg-card: #334155;
-            --accent: #3b82f6;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --border: #475569;
+            --bg: #111827;
+            --card-bg: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #374151;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Heebo', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Rubik', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            padding: 20px;
         }
 
-        /* --- Sidebar Navigation --- */
-        aside {
-            width: 260px;
-            background-color: var(--bg-sidebar);
-            border-left: 1px solid var(--border);
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            background: radial-gradient(circle at center, #374151 0%, var(--bg) 70%);
+        }
+
+        h1 { font-size: 3rem; margin-bottom: 10px; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p.subtitle { font-size: 1.2rem; color: var(--text-secondary); }
+
+        /* Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Card Base Style */
+        .api-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
-            flex-shrink: 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
         }
 
-        .brand {
+        .api-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: var(--accent);
+        }
+
+        .card-header {
             padding: 20px;
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--accent);
+            background: rgba(0,0,0,0.2);
             border-bottom: 1px solid var(--border);
-            text-align: center;
-        }
-
-        nav ul { list-style: none; padding: 10px; }
-        nav li { margin-bottom: 5px; }
-
-        nav button {
-            width: 100%;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            padding: 12px 15px;
-            text-align: right;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: all 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        nav button:hover {
-            background-color: rgba(255,255,255,0.05);
-            color: var(--text-main);
-        }
+        .api-name { font-weight: 700; font-size: 1.1rem; }
+        .api-tag { font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
 
-        nav button.active {
-            background-color: var(--accent);
-            color: white;
-            font-weight: 600;
-        }
-
-        .cat-label {
-            font-size: 0.75rem;
-            color: #64748b;
-            padding: 15px 15px 5px 0;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* --- Main Content Area --- */
-        main {
+        .card-body {
+            padding: 20px;
             flex-grow: 1;
-            padding: 40px;
-            overflow-y: auto;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .dashboard-container {
-            width: 100%;
-            max-width: 800px;
-            background-color: var(--bg-sidebar);
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        h1 { margin-bottom: 10px; font-size: 2rem; color: var(--accent); }
-        .desc { color: var(--text-muted); margin-bottom: 30px; }
-
-        .result-box {
-            background-color: var(--bg-body);
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px dashed var(--border);
             min-height: 200px;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.2rem;
-            position: relative;
         }
 
-        /* Content Types */
-        .res-img { max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .res-text { font-size: 1.4rem; line-height: 1.6; }
-        .res-sub { font-size: 1rem; color: var(--text-muted); margin-top: 10px; }
-        .res-list { text-align: right; width: 100%; }
-        .res-list li { padding: 10px; border-bottom: 1px solid var(--border); list-style: none; }
-        
-        .action-btn {
+        .card-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        button.refresh-btn {
+            width: 100%;
+            padding: 12px;
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 1rem;
-            border-radius: 50px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.2s, background 0.2s;
+            transition: background 0.2s;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .action-btn:hover { background-color: #2563eb; transform: scale(1.05); }
-        .action-btn:disabled { background-color: var(--border); cursor: wait; opacity: 0.7; }
+        button.refresh-btn:hover { background-color: var(--accent-hover); }
+        button:disabled { opacity: 0.6; cursor: wait; }
+
+        /* --- Specific Content Styles --- */
+        
+        /* Images (Pokemon, R&M) */
+        .avatar-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin-bottom: 15px; }
+        .hero-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        
+        /* Stats & Text */
+        .stat-row { display: flex; justify-content: space-between; width: 100%; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
+        .stat-value { font-weight: bold; }
+        
+        .big-price { font-size: 2.5rem; font-weight: 800; color: var(--success); }
+        .crypto-change { font-size: 1rem; color: var(--text-secondary); }
+        
+        .post-title { font-weight: bold; margin-bottom: 8px; text-align: right; }
+        .post-body { font-size: 0.9rem; color: var(--text-secondary); text-align: right; line-height: 1.5; }
 
         /* Loader */
-        .loader {
-            width: 20px; height: 20px;
-            border: 3px solid #fff;
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            animation: rotation 1s linear infinite;
-        }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .spinner { width: 20px; height: 20px; border: 3px solid #ffffff; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            aside { width: 100%; height: 60px; flex-direction: row; align-items: center; overflow-x: auto; overflow-y: hidden; border-bottom: 1px solid var(--border); border-left: none; }
-            .brand { border: none; padding: 0 15px; font-size: 1rem; white-space: nowrap; }
-            nav ul { display: flex; padding: 0; }
-            nav li { margin: 0 5px; }
-            nav button { white-space: nowrap; padding: 10px; }
-            .cat-label { display: none; }
-            main { padding: 20px; }
-        }
     </style>
 </head>
 <body>
 
-    <aside>
-        <div class="brand">20 API Dashboard</div>
-        <nav id="nav-menu">
-            <!-- Menu items injected via JS -->
-        </nav>
-    </aside>
+    <header>
+        <h1>The Free API Collection</h1>
+        <p class="subtitle">מימוש של הממשקים הפופולריים ביותר בעולם שאינם דורשים מפתח</p>
+    </header>
 
-    <main>
-        <div id="app-container" class="dashboard-container">
-            <!-- Dynamic Content -->
-        </div>
-    </main>
+    <div class="dashboard-grid" id="grid">
+        <!-- Cards injected via JS -->
+    </div>
 
     <script>
-        // --- 1. הגדרת 20 ה-APIs ---
-        const apiList = [
-            // --- Animals ---
-            { id: 1, category: 'Animals', name: 'Cat Fact', url: 'https://catfact.ninja/fact', type: 'text', extract: d => d.fact, desc: 'עובדות רנדומליות על חתולים' },
-            { id: 2, category: 'Animals', name: 'Dog Image', url: 'https://dog.ceo/api/breeds/image/random', type: 'image', extract: d => d.message, desc: 'תמונות כלבים מתוקים' },
-            { id: 3, category: 'Animals', name: 'Fox Image', url: 'https://randomfox.ca/floof/', type: 'image', extract: d => d.image, desc: 'שועלים חמודים' },
-            { id: 4, category: 'Animals', name: 'Dog Facts', url: 'https://dog-api.kinduff.com/api/facts', type: 'text', extract: d => d.facts[0], desc: 'עובדות מעניינות על כלבים' },
-            
-            // --- Identity & Data ---
-            { id: 5, category: 'Data', name: 'Random User', url: 'https://randomuser.me/api/', type: 'profile', extract: d => d.results[0], desc: 'מחולל זהויות פיקטיביות' },
-            { id: 6, category: 'Data', name: 'Agify (Age)', url: 'https://api.agify.io?name=david', type: 'text', extract: d => `הגיל המשוער לשם דוד הוא: ${d.age}`, desc: 'ניחוש גיל לפי שם' },
-            { id: 7, category: 'Data', name: 'Genderify', url: 'https://api.genderize.io?name=shir', type: 'text', extract: d => `השם שיר הוא כנראה: ${d.gender === 'female' ? 'נקבה' : 'זכר'} (${d.probability * 100}%)`, desc: 'ניחוש מגדר לפי שם' },
-            { id: 8, category: 'Data', name: 'Nationalize', url: 'https://api.nationalize.io?name=nathan', type: 'text', extract: d => `המדינה הסבירה ביותר לנתן: ${d.country[0]?.country_id || 'לא ידוע'}`, desc: 'ניחוש לאום לפי שם' },
-
-            // --- Fun & Content ---
-            { id: 9, category: 'Fun', name: 'Bored API', url: 'https://bored.api.lewagon.com/api/activity', type: 'text', extract: d => d.activity, desc: 'רעיונות לפעילות כשמשעמם' },
-            { id: 10, category: 'Fun', name: 'Official Joke', url: 'https://official-joke-api.appspot.com/random_joke', type: 'joke', extract: d => d, desc: 'בדיחות באנגלית' },
-            { id: 11, category: 'Fun', name: 'Advice Slip', url: 'https://api.adviceslip.com/advice', type: 'text', extract: d => d.slip.advice, desc: 'עצות לחיים' },
-            { id: 12, category: 'Fun', name: 'Yes/No', url: 'https://yesno.wtf/api', type: 'yesno', extract: d => d, desc: 'קבלת החלטות עם GIF' },
-            { id: 13, category: 'Fun', name: 'Useless Facts', url: 'https://uselessfacts.jsph.pl/api/v2/facts/random', type: 'text', extract: d => d.text, desc: 'עובדות חסרות תועלת לחלוטין' },
-            { id: 14, category: 'Fun', name: 'Quotable', url: 'https://api.quotable.io/random', type: 'quote', extract: d => d, desc: 'ציטוטים מעוררי השראה' },
-
-            // --- Tech & Info ---
-            { id: 15, category: 'Tech', name: 'IP Address', url: 'https://api.ipify.org?format=json', type: 'text', extract: d => d.ip, desc: 'מה כתובת ה-IP שלי?' },
-            { id: 16, category: 'Tech', name: 'CoinCap (BTC)', url: 'https://api.coincap.io/v2/assets/bitcoin', type: 'price', extract: d => d.data, desc: 'שער הביטקוין בזמן אמת' },
-            { id: 17, category: 'Info', name: 'Universities', url: 'http://universities.hipolabs.com/search?country=Israel', type: 'list', extract: d => d.slice(0, 5), desc: 'רשימת אוניברסיטאות בישראל' },
-            { id: 18, category: 'Info', name: 'Weather (TLV)', url: 'https://api.open-meteo.com/v1/forecast?latitude=32.08&longitude=34.78&current_weather=true', type: 'weather', extract: d => d.current_weather, desc: 'מזג אוויר בתל אביב' },
-            { id: 19, category: 'Info', name: 'Zippopotam', url: 'https://api.zippopotam.us/us/90210', type: 'text', extract: d => `בוורלי הילס 90210 נמצאת ב: ${d.places[0]['state']}`, desc: 'מידע על מיקוד (ארה"ב)' },
-            { id: 20, category: 'Info', name: 'Numbers API', url: 'http://numbersapi.com/42?json', type: 'text', extract: d => d.text, desc: 'עובדות על מספרים' }
+        /**
+         * רשימת ה-APIs החינמיים (No Auth)
+         * כולל לוגיקה ספציפית לכל אחד לחילוץ המידע
+         */
+        const apis = [
+            {
+                id: 'pokemon',
+                name: 'PokéAPI',
+                tag: 'Games',
+                // מגריל פוקימון בין 1 ל-898
+                url: () => `https://pokeapi.co/api/v2/pokemon/${Math.floor(Math.random() * 898) + 1}`,
+                render: (data) => `
+                    <img src="${data.sprites.other['official-artwork'].front_default}" class="avatar-img" style="border-radius:0; border:none; filter:drop-shadow(0 0 10px rgba(255,255,255,0.3));">
+                    <h3 style="text-transform: capitalize; margin-bottom:10px;">${data.name}</h3>
+                    <div class="stat-row"><span class="stat-label">סוג:</span> <span class="stat-value">${data.types[0].type.name}</span></div>
+                    <div class="stat-row"><span class="stat-label">גובה:</span> <span class="stat-value">${data.height / 10} m</span></div>
+                    <div class="stat-row"><span class="stat-label">משקל:</span> <span class="stat-value">${data.weight / 10} kg</span></div>
+                `
+            },
+            {
+                id: 'rickmorty',
+                name: 'Rick and Morty API',
+                tag: 'TV Series',
+                // מגריל דמות בין 1 ל-826
+                url: () => `https://rickandmortyapi.com/api/character/${Math.floor(Math.random() * 826) + 1}`,
+                render: (data) => `
+                    <img src="${data.image}" class="avatar-img">
+                    <h3>${data.name}</h3>
+                    <div style="margin-bottom:15px; font-size:0.9rem;">
+                        <span style="color: ${data.status === 'Alive' ? '#10b981' : '#ef4444'}">● ${data.status}</span> 
+                        - ${data.species}
+                    </div>
+                    <div class="stat-row"><span class="stat-label">מיקום:</span> <span class="stat-value">${data.location.name.split(' ')[0]}</span></div>
+                `
+            },
+            {
+                id: 'user',
+                name: 'Random User Generator',
+                tag: 'Identity',
+                url: () => 'https://randomuser.me/api/',
+                render: (data) => {
+                    const u = data.results[0];
+                    return `
+                        <img src="${u.picture.large}" class="avatar-img">
+                        <h3>${u.name.first} ${u.name.last}</h3>
+                        <p style="color:var(--text-secondary); margin-bottom:15px;">${u.location.country}</p>
+                        <div class="stat-row"><span class="stat-label">Email:</span> <span class="stat-value" style="font-size:0.8rem">${u.email}</span></div>
+                        <div class="stat-row"><span class="stat-label">גיל:</span> <span class="stat-value">${u.dob.age}</span></div>
+                    `;
+                }
+            },
+            {
+                id: 'countries',
+                name: 'REST Countries',
+                tag: 'Geography',
+                // בוחר מדינה רנדומלית מתוך רשימה מצומצמת כדי לחסוך זמן (אפשר גם למשוך את כולם ולסנן)
+                url: () => {
+                    const countries = ['israel', 'japan', 'france', 'brazil', 'canada', 'australia', 'egypt', 'india'];
+                    const random = countries[Math.floor(Math.random() * countries.length)];
+                    return `https://restcountries.com/v3.1/name/${random}`;
+                },
+                render: (data) => {
+                    const c = data[0];
+                    return `
+                        <div style="font-size:4rem; line-height:1; margin-bottom:10px;">${c.flag}</div>
+                        <h3>${c.name.common}</h3>
+                        <div class="stat-row"><span class="stat-label">עיר בירה:</span> <span class="stat-value">${c.capital ? c.capital[0] : '-'}</span></div>
+                        <div class="stat-row"><span class="stat-label">אוכלוסיה:</span> <span class="stat-value">${(c.population / 1000000).toFixed(1)}M</span></div>
+                        <div class="stat-row"><span class="stat-label">יבשת:</span> <span class="stat-value">${c.region}</span></div>
+                    `;
+                }
+            },
+            {
+                id: 'crypto',
+                name: 'CoinGecko',
+                tag: 'Finance',
+                url: () => 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd,il' + 's', // שבירת מחרוזת למניעת חסימות אדבלוק לפעמים
+                render: (data) => {
+                    const btc = data.bitcoin;
+                    return `
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <img src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png" style="width:40px; margin-bottom:5px;">
+                            <div class="big-price">$${btc.usd.toLocaleString()}</div>
+                            <div class="crypto-change">₪${(btc.ils).toLocaleString()}</div>
+                        </div>
+                        <div class="stat-row"><span class="stat-label">Ethereum:</span> <span class="stat-value">$${data.ethereum.usd}</span></div>
+                        <div class="stat-row"><span class="stat-label">Solana:</span> <span class="stat-value">$${data.solana.usd}</span></div>
+                    `;
+                }
+            },
+            {
+                id: 'currency',
+                name: 'Frankfurter',
+                tag: 'Currency',
+                url: () => 'https://api.frankfurter.app/latest?from=USD&to=EUR,ILS,GBP,JPY',
+                render: (data) => `
+                    <h2 style="color:var(--success); margin-bottom:5px;">1 USD ($)</h2>
+                    <p style="margin-bottom:20px; color:var(--text-secondary)">שווה ערך ל:</p>
+                    
+                    <div class="stat-row"><span class="stat-label">שקל חדש (ILS):</span> <span class="stat-value">₪${data.rates.ILS}</span></div>
+                    <div class="stat-row"><span class="stat-label">אירו (EUR):</span> <span class="stat-value">€${data.rates.EUR}</span></div>
+                    <div class="stat-row"><span class="stat-label">ליש"ט (GBP):</span> <span class="stat-value">£${data.rates.GBP}</span></div>
+                    <div class="stat-row"><span class="stat-label">יין יפני (JPY):</span> <span class="stat-value">¥${data.rates.JPY}</span></div>
+                `
+            },
+            {
+                id: 'posts',
+                name: 'JSONPlaceholder',
+                tag: 'Dev Tools',
+                // מגריל פוסט רנדומלי
+                url: () => `https://jsonplaceholder.typicode.com/posts/${Math.floor(Math.random() * 100) + 1}`,
+                render: (data) => `
+                    <div style="text-align:right; width:100%;">
+                        <div class="post-title">${data.title}</div>
+                        <hr style="border:0; border-top:1px dashed var(--border); margin:10px 0;">
+                        <div class="post-body">${data.body}</div>
+                        <br>
+                        <span class="api-tag" style="background:#374151; color:#9ca3af">ID: ${data.id}</span>
+                    </div>
+                `
+            }
         ];
 
-        // --- 2. בניית התפריט (Navigation) ---
-        const navMenu = document.getElementById('nav-menu');
-        const appContainer = document.getElementById('app-container');
-        let currentApiId = 1; // Default
+        const grid = document.getElementById('grid');
 
-        function renderMenu() {
-            const categories = {};
-            
-            // קיבוץ לפי קטגוריות
-            apiList.forEach(api => {
-                if (!categories[api.category]) categories[api.category] = [];
-                categories[api.category].push(api);
+        function init() {
+            apis.forEach(api => {
+                const card = document.createElement('div');
+                card.className = 'api-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="api-name">${api.name}</span>
+                        <span class="api-tag">${api.tag}</span>
+                    </div>
+                    <div class="card-body" id="body-${api.id}">
+                        <!-- Content goes here -->
+                    </div>
+                    <div class="card-footer">
+                        <button class="refresh-btn" onclick="fetchData('${api.id}')" id="btn-${api.id}">
+                            <span>🔄 רענן נתונים</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+                fetchData(api.id); // טעינה ראשונית
             });
-
-            // יצירת ה-HTML
-            for (const [catName, apis] of Object.entries(categories)) {
-                const catLabel = document.createElement('div');
-                catLabel.className = 'cat-label';
-                catLabel.innerText = catName;
-                navMenu.appendChild(catLabel);
-
-                const ul = document.createElement('ul');
-                apis.forEach(api => {
-                    const li = document.createElement('li');
-                    const btn = document.createElement('button');
-                    btn.innerHTML = `<span>${api.name}</span> <span>➜</span>`;
-                    btn.onclick = () => loadDashboard(api.id);
-                    if (api.id === currentApiId) btn.classList.add('active');
-                    btn.dataset.id = api.id;
-                    li.appendChild(btn);
-                    ul.appendChild(li);
-                });
-                navMenu.appendChild(ul);
-            }
         }
 
-        // --- 3. לוגיקת טעינת דאשבורד ---
-        function loadDashboard(id) {
-            currentApiId = id;
-            
-            // עדכון תפריט (Active Class)
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-            document.querySelector(`button[data-id="${id}"]`).classList.add('active');
-
-            const api = apiList.find(a => a.id === id);
-            
-            // בניית ה-UI
-            appContainer.innerHTML = `
-                <h1>${api.name}</h1>
-                <p class="desc">${api.desc}</p>
-                
-                <div class="result-box" id="result-area">
-                    <span style="opacity:0.6">לחץ על הכפתור לקבלת נתונים...</span>
-                </div>
-
-                <button class="action-btn" onclick="fetchData(${api.id})">
-                    קבל נתונים חדשים 🚀
-                </button>
-            `;
-
-            // ביצוע קריאה ראשונה אוטומטית
-            fetchData(id);
-        }
-
-        // --- 4. לוגיקת שליפת נתונים (Fetch) ---
-        async function fetchData(id) {
-            const api = apiList.find(a => a.id === id);
-            const resBox = document.getElementById('result-area');
-            const btn = document.querySelector('.action-btn');
+        async function fetchData(apiId) {
+            const api = apis.find(a => a.id === apiId);
+            const body = document.getElementById(`body-${apiId}`);
+            const btn = document.getElementById(`btn-${apiId}`);
 
             // מצב טעינה
-            resBox.style.opacity = '0.5';
+            body.style.opacity = '0.5';
             btn.disabled = true;
-            btn.innerHTML = '<div class="loader"></div> טוען...';
+            btn.innerHTML = '<div class="spinner"></div> טוען...';
 
             try {
-                const response = await fetch(api.url);
-                if (!response.ok) throw new Error('API Error');
+                // בדיקה אם ה-URL הוא פונקציה (לצורך רנדומליות) או סטרינג
+                const url = typeof api.url === 'function' ? api.url() : api.url;
                 
-                const rawData = await response.json();
-                const data = api.extract(rawData);
-
-                renderData(resBox, api.type, data);
-
-            } catch (error) {
-                console.error(error);
-                resBox.innerHTML = `<span style="color:#ef4444">שגיאה בקבלת נתונים 😞<br>נסה שוב מאוחר יותר</span>`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                
+                // הזרקת ה-HTML הספציפי של ה-API
+                body.innerHTML = api.render(data);
+                
+            } catch (err) {
+                console.error(err);
+                body.innerHTML = `<div style="color:var(--danger)">שגיאה בטעינת הנתונים<br><small>${err.message}</small></div>`;
             } finally {
-                resBox.style.opacity = '1';
+                // איפוס מצב
+                body.style.opacity = '1';
                 btn.disabled = false;
-                btn.innerHTML = 'קבל נתונים חדשים 🚀';
+                btn.innerHTML = '<span>🔄 רענן נתונים</span>';
             }
         }
 
-        // --- 5. הצגת הנתונים לפי סוג ---
-        function renderData(container, type, data) {
-            container.innerHTML = ''; // ניקוי
-
-            switch (type) {
-                case 'text':
-                    container.innerHTML = `<div class="res-text">${data}</div>`;
-                    break;
-                case 'image':
-                    container.innerHTML = `<img src="${data}" class="res-img" alt="Result Image">`;
-                    break;
-                case 'profile':
-                    container.innerHTML = `
-                        <img src="${data.picture.large}" style="border-radius:50%; margin-bottom:15px; border: 3px solid var(--accent);">
-                        <div class="res-text">${data.name.first} ${data.name.last}</div>
-                        <div class="res-sub">${data.location.country} | ${data.email}</div>
-                    `;
-                    break;
-                case 'joke':
-                    container.innerHTML = `
-                        <div class="res-text" style="font-weight:bold">${data.setup}</div>
-                        <br>
-                        <div class="res-text" style="color:var(--accent)">${data.punchline} 😂</div>
-                    `;
-                    break;
-                case 'price': // Crypto
-                    const price = parseFloat(data.priceUsd).toFixed(2);
-                    const change = parseFloat(data.changePercent24Hr).toFixed(2);
-                    const color = change >= 0 ? '#10b981' : '#ef4444';
-                    container.innerHTML = `
-                        <div style="font-size:3rem; font-weight:bold">$${price}</div>
-                        <div style="color:${color}; font-size:1.5rem; direction:ltr;">${change}% (24h)</div>
-                    `;
-                    break;
-                case 'weather':
-                    container.innerHTML = `
-                        <div style="font-size:4rem;">${data.temperature}°C</div>
-                        <div class="res-sub">רוח: ${data.windspeed} קמ"ש</div>
-                    `;
-                    break;
-                case 'yesno':
-                    container.innerHTML = `
-                        <div style="font-size:3rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">${data.answer}</div>
-                        <img src="${data.image}" class="res-img">
-                    `;
-                    break;
-                case 'quote':
-                    container.innerHTML = `
-                        <div class="res-text">"${data.content}"</div>
-                        <div class="res-sub">- ${data.author}</div>
-                    `;
-                    break;
-                case 'list':
-                    let html = '<ul class="res-list">';
-                    data.forEach(item => html += `<li>🏛️ ${item.name}</li>`);
-                    html += '</ul>';
-                    container.innerHTML = html;
-                    break;
-                default:
-                    container.innerText = JSON.stringify(data);
-            }
-        }
-
-        // הפעלה ראשונית
-        renderMenu();
-        loadDashboard(1); // טען את ה-API הראשון כברירת מחדל
-
+        init();
     </script>
 </body>
 </html>
