@@ -3,330 +3,397 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Free API Collection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>PokéDex Pro - The Ultimate Free API</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #111827;
-            --card-bg: #1f2937;
-            --text-primary: #f9fafb;
-            --text-secondary: #9ca3af;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --success: #10b981;
-            --danger: #ef4444;
-            --border: #374151;
+            --bg: #eff2f5;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
         }
+
+        /* צבעים דינמיים לפי סוג הפוקימון */
+        .type-fire { background-color: #f08030; }
+        .type-water { background-color: #6890f0; }
+        .type-grass { background-color: #78c850; }
+        .type-electric { background-color: #f8d030; }
+        .type-ice { background-color: #98d8d8; }
+        .type-fighting { background-color: #c03028; }
+        .type-poison { background-color: #a040a0; }
+        .type-ground { background-color: #e0c068; }
+        .type-flying { background-color: #a890f0; }
+        .type-psychic { background-color: #f85888; }
+        .type-bug { background-color: #a8b820; }
+        .type-rock { background-color: #b8a038; }
+        .type-ghost { background-color: #705898; }
+        .type-dragon { background-color: #7038f8; }
+        .type-steel { background-color: #b8b8d0; }
+        .type-fairy { background-color: #ee99ac; }
+        .type-normal { background-color: #a8a878; }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Rubik', sans-serif;
             background-color: var(--bg);
-            color: var(--text-primary);
-            padding: 20px;
+            color: var(--text);
+            padding-bottom: 50px;
         }
 
+        /* Header & Search */
         header {
+            background: #ef5350;
+            padding: 30px 20px;
             text-align: center;
-            margin-bottom: 50px;
-            padding: 40px 0;
-            background: radial-gradient(circle at center, #374151 0%, var(--bg) 70%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        h1 { font-size: 3rem; margin-bottom: 10px; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p.subtitle { font-size: 1.2rem; color: var(--text-secondary); }
+        h1 { color: white; font-size: 2.5rem; margin-bottom: 15px; text-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
 
-        /* Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            max-width: 1400px;
+        .search-container {
+            max-width: 500px;
             margin: 0 auto;
-        }
-
-        /* Card Base Style */
-        .api-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
         }
 
-        .api-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border-color: var(--accent);
-        }
-
-        .card-header {
-            padding: 20px;
-            background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .api-name { font-weight: 700; font-size: 1.1rem; }
-        .api-tag { font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
-
-        .card-body {
-            padding: 20px;
-            flex-grow: 1;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .card-footer {
-            padding: 15px;
-            border-top: 1px solid var(--border);
-        }
-
-        button.refresh-btn {
+        input#search {
             width: 100%;
-            padding: 12px;
-            background-color: var(--accent);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            outline: none;
+        }
+
+        /* Grid Layout */
+        .pokedex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Card Design */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .card-id {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-weight: bold;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .card-img {
+            width: 120px;
+            height: 120px;
+            margin: 10px auto;
+            z-index: 2;
+            position: relative;
+        }
+
+        .card-name {
+            text-transform: capitalize;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .types {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .type-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.8rem;
+            text-transform: capitalize;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Load More Button */
+        .btn-container { text-align: center; margin-top: 30px; }
+        
+        button#load-more {
+            padding: 12px 40px;
+            background: #ef5350;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
+            transition: background 0.3s;
+        }
+        button#load-more:hover { background: #c62828; }
+
+        /* Modal (Popup) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
         }
 
-        button.refresh-btn:hover { background-color: var(--accent-hover); }
-        button:disabled { opacity: 0.6; cursor: wait; }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
 
-        /* --- Specific Content Styles --- */
-        
-        /* Images (Pokemon, R&M) */
-        .avatar-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin-bottom: 15px; }
-        .hero-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-        
-        /* Stats & Text */
-        .stat-row { display: flex; justify-content: space-between; width: 100%; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
-        .stat-value { font-weight: bold; }
-        
-        .big-price { font-size: 2.5rem; font-weight: 800; color: var(--success); }
-        .crypto-change { font-size: 1rem; color: var(--text-secondary); }
-        
-        .post-title { font-weight: bold; margin-bottom: 8px; text-align: right; }
-        .post-body { font-size: 0.9rem; color: var(--text-secondary); text-align: right; line-height: 1.5; }
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
 
-        /* Loader */
-        .spinner { width: 20px; height: 20px; border: 3px solid #ffffff; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .stat-bar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-name { width: 60px; text-align: left; font-weight: bold; color: #777; }
+        .stat-val { width: 30px; text-align: right; margin-right: 10px; }
+        
+        .progress-bg {
+            flex-grow: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ef5350; /* Default */
+            border-radius: 4px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     </style>
 </head>
 <body>
 
     <header>
-        <h1>The Free API Collection</h1>
-        <p class="subtitle">מימוש של הממשקים הפופולריים ביותר בעולם שאינם דורשים מפתח</p>
+        <h1>PokéDex Pro</h1>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="חפש פוקימון לפי שם או מספר..." autocomplete="off">
+        </div>
     </header>
 
-    <div class="dashboard-grid" id="grid">
-        <!-- Cards injected via JS -->
+    <div class="pokedex-grid" id="grid">
+        <!-- Cards injected here -->
+    </div>
+
+    <div class="btn-container">
+        <button id="load-more">טען עוד פוקימונים 👇</button>
+    </div>
+
+    <!-- Modal Popup -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content" id="modal-content">
+            <!-- Details injected here -->
+        </div>
     </div>
 
     <script>
-        /**
-         * רשימת ה-APIs החינמיים (No Auth)
-         * כולל לוגיקה ספציפית לכל אחד לחילוץ המידע
-         */
-        const apis = [
-            {
-                id: 'pokemon',
-                name: 'PokéAPI',
-                tag: 'Games',
-                // מגריל פוקימון בין 1 ל-898
-                url: () => `https://pokeapi.co/api/v2/pokemon/${Math.floor(Math.random() * 898) + 1}`,
-                render: (data) => `
-                    <img src="${data.sprites.other['official-artwork'].front_default}" class="avatar-img" style="border-radius:0; border:none; filter:drop-shadow(0 0 10px rgba(255,255,255,0.3));">
-                    <h3 style="text-transform: capitalize; margin-bottom:10px;">${data.name}</h3>
-                    <div class="stat-row"><span class="stat-label">סוג:</span> <span class="stat-value">${data.types[0].type.name}</span></div>
-                    <div class="stat-row"><span class="stat-label">גובה:</span> <span class="stat-value">${data.height / 10} m</span></div>
-                    <div class="stat-row"><span class="stat-label">משקל:</span> <span class="stat-value">${data.weight / 10} kg</span></div>
-                `
-            },
-            {
-                id: 'rickmorty',
-                name: 'Rick and Morty API',
-                tag: 'TV Series',
-                // מגריל דמות בין 1 ל-826
-                url: () => `https://rickandmortyapi.com/api/character/${Math.floor(Math.random() * 826) + 1}`,
-                render: (data) => `
-                    <img src="${data.image}" class="avatar-img">
-                    <h3>${data.name}</h3>
-                    <div style="margin-bottom:15px; font-size:0.9rem;">
-                        <span style="color: ${data.status === 'Alive' ? '#10b981' : '#ef4444'}">● ${data.status}</span> 
-                        - ${data.species}
-                    </div>
-                    <div class="stat-row"><span class="stat-label">מיקום:</span> <span class="stat-value">${data.location.name.split(' ')[0]}</span></div>
-                `
-            },
-            {
-                id: 'user',
-                name: 'Random User Generator',
-                tag: 'Identity',
-                url: () => 'https://randomuser.me/api/',
-                render: (data) => {
-                    const u = data.results[0];
-                    return `
-                        <img src="${u.picture.large}" class="avatar-img">
-                        <h3>${u.name.first} ${u.name.last}</h3>
-                        <p style="color:var(--text-secondary); margin-bottom:15px;">${u.location.country}</p>
-                        <div class="stat-row"><span class="stat-label">Email:</span> <span class="stat-value" style="font-size:0.8rem">${u.email}</span></div>
-                        <div class="stat-row"><span class="stat-label">גיל:</span> <span class="stat-value">${u.dob.age}</span></div>
-                    `;
-                }
-            },
-            {
-                id: 'countries',
-                name: 'REST Countries',
-                tag: 'Geography',
-                // בוחר מדינה רנדומלית מתוך רשימה מצומצמת כדי לחסוך זמן (אפשר גם למשוך את כולם ולסנן)
-                url: () => {
-                    const countries = ['israel', 'japan', 'france', 'brazil', 'canada', 'australia', 'egypt', 'india'];
-                    const random = countries[Math.floor(Math.random() * countries.length)];
-                    return `https://restcountries.com/v3.1/name/${random}`;
-                },
-                render: (data) => {
-                    const c = data[0];
-                    return `
-                        <div style="font-size:4rem; line-height:1; margin-bottom:10px;">${c.flag}</div>
-                        <h3>${c.name.common}</h3>
-                        <div class="stat-row"><span class="stat-label">עיר בירה:</span> <span class="stat-value">${c.capital ? c.capital[0] : '-'}</span></div>
-                        <div class="stat-row"><span class="stat-label">אוכלוסיה:</span> <span class="stat-value">${(c.population / 1000000).toFixed(1)}M</span></div>
-                        <div class="stat-row"><span class="stat-label">יבשת:</span> <span class="stat-value">${c.region}</span></div>
-                    `;
-                }
-            },
-            {
-                id: 'crypto',
-                name: 'CoinGecko',
-                tag: 'Finance',
-                url: () => 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd,il' + 's', // שבירת מחרוזת למניעת חסימות אדבלוק לפעמים
-                render: (data) => {
-                    const btc = data.bitcoin;
-                    return `
-                        <div style="text-align:center; margin-bottom:20px;">
-                            <img src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png" style="width:40px; margin-bottom:5px;">
-                            <div class="big-price">$${btc.usd.toLocaleString()}</div>
-                            <div class="crypto-change">₪${(btc.ils).toLocaleString()}</div>
-                        </div>
-                        <div class="stat-row"><span class="stat-label">Ethereum:</span> <span class="stat-value">$${data.ethereum.usd}</span></div>
-                        <div class="stat-row"><span class="stat-label">Solana:</span> <span class="stat-value">$${data.solana.usd}</span></div>
-                    `;
-                }
-            },
-            {
-                id: 'currency',
-                name: 'Frankfurter',
-                tag: 'Currency',
-                url: () => 'https://api.frankfurter.app/latest?from=USD&to=EUR,ILS,GBP,JPY',
-                render: (data) => `
-                    <h2 style="color:var(--success); margin-bottom:5px;">1 USD ($)</h2>
-                    <p style="margin-bottom:20px; color:var(--text-secondary)">שווה ערך ל:</p>
-                    
-                    <div class="stat-row"><span class="stat-label">שקל חדש (ILS):</span> <span class="stat-value">₪${data.rates.ILS}</span></div>
-                    <div class="stat-row"><span class="stat-label">אירו (EUR):</span> <span class="stat-value">€${data.rates.EUR}</span></div>
-                    <div class="stat-row"><span class="stat-label">ליש"ט (GBP):</span> <span class="stat-value">£${data.rates.GBP}</span></div>
-                    <div class="stat-row"><span class="stat-label">יין יפני (JPY):</span> <span class="stat-value">¥${data.rates.JPY}</span></div>
-                `
-            },
-            {
-                id: 'posts',
-                name: 'JSONPlaceholder',
-                tag: 'Dev Tools',
-                // מגריל פוסט רנדומלי
-                url: () => `https://jsonplaceholder.typicode.com/posts/${Math.floor(Math.random() * 100) + 1}`,
-                render: (data) => `
-                    <div style="text-align:right; width:100%;">
-                        <div class="post-title">${data.title}</div>
-                        <hr style="border:0; border-top:1px dashed var(--border); margin:10px 0;">
-                        <div class="post-body">${data.body}</div>
-                        <br>
-                        <span class="api-tag" style="background:#374151; color:#9ca3af">ID: ${data.id}</span>
-                    </div>
-                `
-            }
-        ];
-
         const grid = document.getElementById('grid');
+        const loadMoreBtn = document.getElementById('load-more');
+        const searchInput = document.getElementById('search');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
 
-        function init() {
-            apis.forEach(api => {
-                const card = document.createElement('div');
-                card.className = 'api-card';
-                card.innerHTML = `
-                    <div class="card-header">
-                        <span class="api-name">${api.name}</span>
-                        <span class="api-tag">${api.tag}</span>
-                    </div>
-                    <div class="card-body" id="body-${api.id}">
-                        <!-- Content goes here -->
-                    </div>
-                    <div class="card-footer">
-                        <button class="refresh-btn" onclick="fetchData('${api.id}')" id="btn-${api.id}">
-                            <span>🔄 רענן נתונים</span>
-                        </button>
-                    </div>
-                `;
-                grid.appendChild(card);
-                fetchData(api.id); // טעינה ראשונית
-            });
-        }
+        let offset = 1; // Start from Pokemon #1
+        const limit = 20; // Load 20 at a time
+        let isSearching = false;
 
-        async function fetchData(apiId) {
-            const api = apis.find(a => a.id === apiId);
-            const body = document.getElementById(`body-${apiId}`);
-            const btn = document.getElementById(`btn-${apiId}`);
-
-            // מצב טעינה
-            body.style.opacity = '0.5';
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div> טוען...';
-
+        // 1. פונקציה ראשית לטעינת פוקימונים
+        async function fetchPokemons() {
             try {
-                // בדיקה אם ה-URL הוא פונקציה (לצורך רנדומליות) או סטרינג
-                const url = typeof api.url === 'function' ? api.url() : api.url;
+                // לולאה כדי למשוך נתונים מפורטים על כל פוקימון (ולא רק שם)
+                // אנו משתמשים ב-Promise.all כדי שהטעינה תהיה מהירה ומקבילית
+                const promises = [];
+                for (let i = offset; i < offset + limit; i++) {
+                    promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
+                }
+
+                const results = await Promise.all(promises);
+                results.forEach(pokemon => createPokemonCard(pokemon));
                 
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                
-                // הזרקת ה-HTML הספציפי של ה-API
-                body.innerHTML = api.render(data);
-                
-            } catch (err) {
-                console.error(err);
-                body.innerHTML = `<div style="color:var(--danger)">שגיאה בטעינת הנתונים<br><small>${err.message}</small></div>`;
-            } finally {
-                // איפוס מצב
-                body.style.opacity = '1';
-                btn.disabled = false;
-                btn.innerHTML = '<span>🔄 רענן נתונים</span>';
+                offset += limit; // קידום לקבוצה הבאה
+            } catch (error) {
+                console.error("Error fetching pokemons:", error);
             }
         }
 
-        init();
+        // 2. יצירת כרטיס HTML לפוקימון
+        function createPokemonCard(pokemon) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            
+            // צבע רקע לפי הסוג הראשון
+            const mainType = pokemon.types[0].type.name;
+            
+            // יצירת תגיות הסוגים
+            const typesHtml = pokemon.types.map(t => 
+                `<span class="type-badge type-${t.type.name}">${t.type.name}</span>`
+            ).join('');
+
+            // תמונה באיכות גבוהה
+            const imgUrl = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
+
+            card.innerHTML = `
+                <div class="card-id">#${pokemon.id.toString().padStart(3, '0')}</div>
+                <img src="${imgUrl}" class="card-img" alt="${pokemon.name}">
+                <h3 class="card-name">${pokemon.name}</h3>
+                <div class="types">
+                    ${typesHtml}
+                </div>
+            `;
+
+            // הוספת אירוע לחיצה לפתיחת המודל
+            card.addEventListener('click', () => openModal(pokemon));
+            
+            grid.appendChild(card);
+        }
+
+        // 3. לוגיקת החיפוש
+        searchInput.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.toLowerCase().trim();
+                grid.innerHTML = ''; // ניקוי
+                
+                if (!query) {
+                    offset = 1;
+                    isSearching = false;
+                    loadMoreBtn.style.display = 'inline-block';
+                    fetchPokemons();
+                    return;
+                }
+
+                isSearching = true;
+                loadMoreBtn.style.display = 'none';
+
+                try {
+                    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
+                    if (!res.ok) throw new Error('Not found');
+                    const pokemon = await res.json();
+                    createPokemonCard(pokemon);
+                } catch (err) {
+                    grid.innerHTML = `<h3 style="text-align:center; width:100%;">לא נמצא פוקימון בשם זה 😞</h3>`;
+                }
+            }
+        });
+
+        // 4. לוגיקת המודל (Popup)
+        function openModal(pokemon) {
+            const imgUrl = pokemon.sprites.other['official-artwork'].front_default;
+            const mainType = pokemon.types[0].type.name;
+            
+            // יצירת ברים לסטטיסטיקות (HP, Attack, etc)
+            const statsHtml = pokemon.stats.map(stat => {
+                const val = stat.base_stat;
+                // חישוב אחוזים (מתוך 200 שזה בערך המקסימום)
+                const percent = Math.min((val / 200) * 100, 100);
+                
+                return `
+                <div class="stat-bar-container">
+                    <div class="stat-name">${getShortStat(stat.stat.name)}</div>
+                    <div class="stat-val">${val}</div>
+                    <div class="progress-bg">
+                        <div class="progress-fill type-${mainType}" style="width: ${percent}%"></div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            modalContent.innerHTML = `
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+                <img src="${imgUrl}" style="width:150px; margin-bottom:10px;">
+                <h2 style="text-transform:capitalize; margin-bottom:10px;">${pokemon.name}</h2>
+                <div style="margin-bottom:20px;">
+                    <span style="background:#eee; padding:5px 10px; border-radius:10px; font-size:0.9rem;">
+                        גובה: ${pokemon.height / 10}m | משקל: ${pokemon.weight / 10}kg
+                    </span>
+                </div>
+                <div style="text-align:left;">
+                    ${statsHtml}
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+        
+        // סגירה בלחיצה בחוץ
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // קיצור שמות סטטיסטיקה
+        function getShortStat(name) {
+            const map = {
+                'hp': 'HP',
+                'attack': 'ATK',
+                'defense': 'DEF',
+                'special-attack': 'SpA',
+                'special-defense': 'SpD',
+                'speed': 'SPD'
+            };
+            return map[name] || name;
+        }
+
+        // Load More Event
+        loadMoreBtn.addEventListener('click', fetchPokemons);
+
+        // טעינה ראשונית
+        fetchPokemons();
+
     </script>
 </body>
 </html>
