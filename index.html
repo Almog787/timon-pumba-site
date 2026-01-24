@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokéDex Pro - Real Battle Mechanics</title>
+    <title>PokéDex Pro - 1v1 Battle & Info</title>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -72,69 +72,71 @@
         
         .card-img { width: 140px; height: 140px; z-index: 2; margin-top: 10px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); transition: transform 0.4s; }
         .card:hover .card-img { transform: scale(1.1); }
-        
+        .card-name { font-size: 1.5rem; font-weight: 900; text-transform: capitalize; margin-top: auto; margin-bottom: 5px; z-index: 2; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .types { display: flex; gap: 5px; z-index: 2; margin-bottom: 5px; }
+        .type-badge { padding: 4px 12px; border-radius: 20px; background: rgba(255,255,255,0.25); font-weight: bold; font-size: 0.75rem; text-transform: capitalize; }
+
         /* Effects */
         .effect-glow:hover .card-img { animation: heatPulse 1.5s infinite alternate; filter: drop-shadow(0 0 20px rgba(255, 200, 100, 0.8)); }
         @keyframes heatPulse { from { transform: scale(1.1); } to { transform: scale(1.2) translateY(-5px); } }
         .effect-wave:hover .card-img { animation: waveMotion 2s ease-in-out infinite; transform-origin: bottom center; }
         @keyframes waveMotion { 0%, 100% { transform: rotate(-5deg) scale(1.1); } 50% { transform: rotate(5deg) scale(1.1); } }
+        .effect-float:hover .card-img { animation: ghostFloat 2s ease-in-out infinite; }
+        @keyframes ghostFloat { 0%, 100% { transform: translateY(0) scale(1.1); opacity: 1; filter: drop-shadow(0 0 15px magenta); } 50% { transform: translateY(-20px) scale(1.1); opacity: 0.6; } }
+        .effect-flash:hover .card-img { animation: flashBright 0.2s infinite alternate; }
+        @keyframes flashBright { from { filter: brightness(1); transform: scale(1.1); } to { filter: brightness(1.5) drop-shadow(0 0 20px white); transform: scale(1.12); } }
+
+        /* --- INFO MODAL (DETAILS) --- */
+        #info-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+        #info-modal.active { display: flex; animation: fadeIn 0.3s; }
+        .info-content { background: rgba(30, 30, 30, 0.95); width: 90%; max-width: 450px; border-radius: 30px; padding: 40px; text-align: center; position: relative; border: 1px solid rgba(255,255,255,0.1); color: white; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        .info-img-container { width: 180px; height: 180px; margin: -90px auto 20px; background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 0 20px white; }
+        .info-img { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+        .stat-row { display: flex; align-items: center; margin: 12px 0; font-size: 0.9rem; }
+        .stat-label { width: 90px; text-align: start; font-weight: bold; color: #aaa; text-transform: uppercase; font-size: 0.75rem; }
+        .stat-num { width: 40px; text-align: end; font-weight: bold; margin: 0 15px; }
+        .progress-bar { flex-grow: 1; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 10px; }
+        .close-modal { position: absolute; top: 20px; font-size: 2rem; cursor: pointer; color: #fff; opacity: 0.6; }
+        .close-modal:hover { opacity: 1; }
+        body[dir="rtl"] .close-modal { left: 25px; } body[dir="ltr"] .close-modal { right: 25px; }
+
 
         /* --- Battle Dock --- */
         #battle-dock {
             position: fixed; bottom: -180px; left: 0; width: 100%; height: 140px;
             background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); border-top: 2px solid #ffcb05;
-            display: flex; justify-content: center; align-items: center; gap: 20px;
+            display: flex; justify-content: center; align-items: center; gap: 30px;
             transition: bottom 0.4s; z-index: 900; padding: 10px;
         }
         #battle-dock.active { bottom: 0; }
-        .team-section { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 20px; }
-        .fighter-slot { width: 60px; height: 60px; border: 2px dashed #555; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; background: #222; position: relative; }
+        
+        .fighter-slot { width: 80px; height: 80px; border: 2px dashed #555; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; background: #222; position: relative; transition: 0.3s; }
         .fighter-slot.filled { border-color: #ffcb05; box-shadow: 0 0 10px #ffcb05; }
         .fighter-slot img { width: 100%; height: 100%; object-fit: cover; }
         .vs-text { font-size: 2.5rem; font-weight: 900; color: #ffcb05; font-style: italic; }
-        #start-battle-btn { padding: 12px 30px; background: #ffcb05; color: black; font-weight: 900; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; }
+        #start-battle-btn { padding: 12px 30px; background: #ffcb05; color: black; font-weight: 900; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; white-space: nowrap; }
         #start-battle-btn:disabled { background: #555; cursor: not-allowed; }
 
-        /* --- Arena Modal --- */
+        /* --- Battle Modal --- */
         #battle-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; }
         #battle-modal.active { display: flex; animation: fadeIn 0.5s; }
-        .arena { width: 95%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; height: 50vh; }
-        .team-display { display: flex; flex-direction: column; gap: 20px; width: 40%; }
-        
-        .battler { position: relative; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; transition: 0.3s; }
-        body[dir="rtl"] .battler { flex-direction: row-reverse; }
-        .battler.fainted { filter: grayscale(1) brightness(0.5); opacity: 0.6; transform: scale(0.9); }
-        .battler-img-box { width: 80px; height: 80px; position: relative; }
-        .battler img { width: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); transition: 0.2s; }
-        
+        .arena { width: 95%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: relative; height: 40vh; }
+        .battler { position: relative; text-align: center; width: 200px; }
+        .battler img { width: 180px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); transition: 0.2s; }
         .battler.attack img { animation: lunge 0.3s; }
-        @keyframes lunge { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        @keyframes lunge { 0% { transform: scale(1); } 50% { transform: scale(1.4) translateY(-20px); } 100% { transform: scale(1); } }
         .battler.hit img { animation: shakeRed 0.4s; filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); }
-        @keyframes shakeRed { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes shakeRed { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .battler.fainted img { filter: grayscale(1); opacity: 0.3; }
 
-        /* Damage Text Styles */
-        .damage-text {
-            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-            font-weight: 900; font-size: 1.5rem; text-shadow: 0 0 5px black;
-            animation: floatUp 1.2s forwards; pointer-events: none; z-index: 10; white-space: nowrap;
-        }
-        .dmg-super { color: #4caf50; font-size: 1.8rem; } /* Green */
-        .dmg-weak { color: #9e9e9e; font-size: 1.2rem; } /* Grey */
-        .dmg-normal { color: #ff3333; } /* Red */
-        .dmg-crit { color: #ffcb05; font-size: 2rem; } /* Yellow */
-        
+        .damage-text { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-weight: 900; font-size: 2rem; text-shadow: 0 0 5px black; animation: floatUp 1.2s forwards; pointer-events: none; z-index: 10; white-space: nowrap; }
+        .dmg-super { color: #4caf50; } .dmg-weak { color: #aaa; } .dmg-normal { color: #ff3333; } .dmg-crit { color: #ffcb05; font-size: 2.5rem; }
         @keyframes floatUp { 0% { opacity: 1; top: -20px; } 100% { opacity: 0; top: -60px; } }
 
-        .hp-bar-container { width: 100%; height: 10px; background: #444; border-radius: 5px; margin-top: 5px; overflow: hidden; }
-        .hp-bar-fill { height: 100%; background: #4caf50; width: 100%; transition: width 0.5s ease-out, background 0.3s; }
-
-        .battle-log { width: 90%; max-width: 800px; height: 150px; background: rgba(0,0,0,0.5); border-radius: 10px; padding: 15px; overflow-y: auto; color: #fff; font-family: monospace; border: 1px solid #555; font-size: 0.9rem; }
+        .battle-log { width: 90%; max-width: 600px; height: 150px; background: rgba(0,0,0,0.5); border-radius: 10px; padding: 15px; overflow-y: auto; color: #fff; font-family: monospace; border: 1px solid #555; }
         .log-entry { margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px; }
-        
-        /* Log Colors */
-        .log-crit { color: #ffcb05; font-weight: bold; }
-        .log-super { color: #4caf50; }
-        .log-weak { color: #aaa; }
+        .log-crit { color: #ffcb05; } .log-super { color: #4caf50; } .log-weak { color: #aaa; }
 
         .winner-modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #ffcb05, #f57f17); padding: 40px; border-radius: 20px; text-align: center; color: black; box-shadow: 0 0 50px rgba(255,203,5,0.8); display: none; z-index: 3000; width: 300px; }
         .close-battle { padding: 10px 30px; background: black; color: white; border: none; cursor: pointer; border-radius: 20px; font-weight: bold; margin-top: 20px; }
@@ -160,29 +162,36 @@
     <div class="pokedex-grid" id="grid"></div>
     <div class="btn-container"><button id="load-more">Load More ✨</button></div>
 
+    <!-- Battle Dock (1vs1) -->
     <div id="battle-dock">
-        <div class="team-section">
-            <div class="fighter-slot" id="slot-0"></div><div class="fighter-slot" id="slot-1"></div>
-        </div>
+        <div class="fighter-slot" id="slot-0"></div>
         <div class="vs-text">VS</div>
-        <div class="team-section">
-            <div class="fighter-slot" id="slot-2"></div><div class="fighter-slot" id="slot-3"></div>
-        </div>
+        <div class="fighter-slot" id="slot-1"></div>
         <button id="start-battle-btn" disabled>FIGHT!</button>
     </div>
 
+    <!-- Info Modal -->
+    <div id="info-modal">
+        <div class="info-content" id="info-content"></div>
+    </div>
+
+    <!-- Battle Modal -->
     <div id="battle-modal">
         <div class="arena">
-            <div class="team-display">
-                <div class="battler" id="battler-0"><div class="battler-img-box"><img id="img-0" src=""></div><div class="battler-info"><h4 id="name-0"></h4><div class="hp-bar-container"><div class="hp-bar-fill" id="hp-0"></div></div></div></div>
-                <div class="battler" id="battler-1"><div class="battler-img-box"><img id="img-1" src=""></div><div class="battler-info"><h4 id="name-1"></h4><div class="hp-bar-container"><div class="hp-bar-fill" id="hp-1"></div></div></div></div>
+            <div class="battler" id="battler-0">
+                <div class="hp-bar-container"><div class="hp-bar-fill" id="hp-0"></div></div>
+                <h3 id="name-0"></h3>
+                <img id="img-0" src="">
             </div>
-            <div class="team-display">
-                <div class="battler" id="battler-2"><div class="battler-img-box"><img id="img-2" src=""></div><div class="battler-info"><h4 id="name-2"></h4><div class="hp-bar-container"><div class="hp-bar-fill" id="hp-2"></div></div></div></div>
-                <div class="battler" id="battler-3"><div class="battler-img-box"><img id="img-3" src=""></div><div class="battler-info"><h4 id="name-3"></h4><div class="hp-bar-container"><div class="hp-bar-fill" id="hp-3"></div></div></div></div>
+            
+            <div class="battler" id="battler-1">
+                <div class="hp-bar-container"><div class="hp-bar-fill" id="hp-1"></div></div>
+                <h3 id="name-1"></h3>
+                <img id="img-1" src="">
             </div>
+
             <div class="winner-modal" id="winner-popup">
-                <h2>WINNER!</h2><h3 id="winner-team-name">TEAM A</h3><button class="close-battle" onclick="closeBattle()">Close</button>
+                <h2>WINNER!</h2><h3 id="winner-name"></h3><button class="close-battle" onclick="closeBattle()">Close</button>
             </div>
         </div>
         <div class="battle-log" id="battle-log"></div>
@@ -191,7 +200,6 @@
 
     <script>
         // --- DATA: Type Chart (Gen 6+) ---
-        // 2 = Super Effective, 0.5 = Not Very, 0 = Immune
         const typeChart = {
             normal: { rock: 0.5, ghost: 0, steel: 0.5 },
             fire: { fire: 0.5, water: 0.5, grass: 2, ice: 2, bug: 2, rock: 0.5, dragon: 0.5, steel: 2 },
@@ -219,20 +227,22 @@
         const limit = 20;
         let allPokemons = [];
         let battleMode = false;
-        let selectedFighters = []; 
+        let selectedFighters = []; // Max 2
 
         const translations = {
             he: { 
                 title: "POKÉDEX PRO", placeholder: "חפש...", loadMore: "טען עוד", 
-                battleMode: "קרב (2X2)", fight: "הילחם!", teamA: "צוות א'", teamB: "צוות ב'", wins: "ניצח!", fainted: "התעלף!",
+                battleMode: "קרב (1X1)", fight: "הילחם!", wins: "ניצח!", fainted: "התעלף!",
                 super: "סופר אפקטיבי!", weak: "לא מאוד אפקטיבי...", immune: "לא משפיע!", crit: "מכה קריטית!",
-                used: "השתמש ב"
+                used: "השתמש ב", height: "גובה", weight: "משקל",
+                stats: { hp: "חיים", attack: "התקפה", defense: "הגנה", "special-attack": "התקפה מיוחדת", "special-defense": "הגנה מיוחדת", speed: "מהירות" }
             },
             en: { 
                 title: "POKÉDEX PRO", placeholder: "Search...", loadMore: "Load More", 
-                battleMode: "2vs2 Battle", fight: "FIGHT!", teamA: "TEAM A", teamB: "TEAM B", wins: "WINS!", fainted: "fainted!",
+                battleMode: "1vs1 Battle", fight: "FIGHT!", wins: "WINS!", fainted: "fainted!",
                 super: "It's super effective!", weak: "It's not very effective...", immune: "It had no effect!", crit: "Critical Hit!",
-                used: "used"
+                used: "used", height: "Height", weight: "Weight",
+                stats: { hp: "HP", attack: "Attack", defense: "Defense", "special-attack": "Sp. Atk", "special-defense": "Sp. Def", speed: "Speed" }
             }
         };
 
@@ -243,6 +253,8 @@
         const battleToggle = document.getElementById('battle-toggle');
         const battleDock = document.getElementById('battle-dock');
         const startBattleBtn = document.getElementById('start-battle-btn');
+        const infoModal = document.getElementById('info-modal');
+        const infoContent = document.getElementById('info-content');
 
         // --- API & UI ---
         async function fetchPokemons() {
@@ -276,11 +288,71 @@
                 <h3 class="card-name">${pokemon.name}</h3>
                 <div class="types">${pokemon.types.map(t=>`<span class="type-badge">${t.type.name}</span>`).join('')}</div>
             `;
+            
+            // CLICK HANDLER: Battle selection OR Info Modal
             card.addEventListener('click', () => handleCardClick(pokemon, card));
             return card;
         }
 
-        // --- Battle Logic Setup ---
+        function handleCardClick(pokemon, cardElement) {
+            if (battleMode) {
+                // Battle Selection Logic
+                const index = selectedFighters.findIndex(p => p.id === pokemon.id);
+                if (index > -1) {
+                    selectedFighters.splice(index, 1);
+                    cardElement.classList.remove('selected');
+                } else {
+                    if (selectedFighters.length < 2) {
+                        selectedFighters.push(pokemon);
+                        cardElement.classList.add('selected');
+                    }
+                }
+                updateDock();
+            } else {
+                // Info Modal Logic
+                openInfoModal(pokemon);
+            }
+        }
+
+        // --- INFO MODAL LOGIC ---
+        function openInfoModal(pokemon) {
+            const mainType = pokemon.types[0].type.name;
+            const colorMap = { fire: '#f08030', water: '#6890f0', grass: '#78c850', electric: '#f8d030', psychic: '#f85888', ghost: '#705898', default: '#a8a878' };
+            const barColor = colorMap[mainType] || colorMap['default'];
+            const t = translations[currentLang];
+            const img = pokemon.sprites.other['official-artwork'].front_default;
+
+            const statsHtml = pokemon.stats.map(stat => {
+                const val = stat.base_stat;
+                const percent = Math.min((val / 200) * 100, 100);
+                const statLabel = t.stats[stat.stat.name] || stat.stat.name;
+                return `
+                <div class="stat-row">
+                    <div class="stat-label">${statLabel}</div>
+                    <div class="stat-num">${val}</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percent}%; background: ${barColor}; box-shadow: 0 0 10px ${barColor}"></div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            infoContent.innerHTML = `
+                <span class="close-modal" onclick="document.getElementById('info-modal').classList.remove('active')">&times;</span>
+                <div class="info-img-container" style="border-color: ${barColor}; box-shadow: 0 0 20px ${barColor}">
+                    <img src="${img}" class="info-img">
+                </div>
+                <h2 style="text-transform:capitalize; font-size:2.5rem; margin-bottom:5px;">${pokemon.name}</h2>
+                <div style="margin-bottom:30px; opacity:0.8;">
+                   ${t.height}: ${pokemon.height / 10}m  &bull;  ${t.weight}: ${pokemon.weight / 10}kg
+                </div>
+                <div style="text-align:start; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px;">
+                    ${statsHtml}
+                </div>
+            `;
+            infoModal.classList.add('active');
+        }
+
+        // --- BATTLE LOGIC ---
         battleToggle.addEventListener('click', () => {
             battleMode = !battleMode;
             battleToggle.classList.toggle('active');
@@ -290,23 +362,8 @@
             document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
         });
 
-        function handleCardClick(pokemon, cardElement) {
-            if (!battleMode) return;
-            const index = selectedFighters.findIndex(p => p.id === pokemon.id);
-            if (index > -1) {
-                selectedFighters.splice(index, 1);
-                cardElement.classList.remove('selected');
-            } else {
-                if (selectedFighters.length < 4) {
-                    selectedFighters.push(pokemon);
-                    cardElement.classList.add('selected');
-                }
-            }
-            updateDock();
-        }
-
         function updateDock() {
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 2; i++) {
                 const slot = document.getElementById(`slot-${i}`);
                 if (selectedFighters[i]) {
                     slot.innerHTML = `<img src="${selectedFighters[i].sprites.front_default}">`;
@@ -316,10 +373,9 @@
                     slot.classList.remove('filled');
                 }
             }
-            startBattleBtn.disabled = selectedFighters.length !== 4;
+            startBattleBtn.disabled = selectedFighters.length !== 2;
         }
 
-        // --- THE BATTLE ENGINE ---
         startBattleBtn.addEventListener('click', startBattle);
 
         function startBattle() {
@@ -328,34 +384,25 @@
             document.getElementById('winner-popup').style.display = 'none';
             document.getElementById('battle-log').innerHTML = '';
 
-            // Setup Combatants with Stats
-            const combatants = selectedFighters.map((p, idx) => {
-                const hpStat = p.stats.find(s=>s.stat.name === 'hp').base_stat;
-                const atkStat = p.stats.find(s=>s.stat.name === 'attack').base_stat;
-                const defStat = p.stats.find(s=>s.stat.name === 'defense').base_stat;
-                const spdStat = p.stats.find(s=>s.stat.name === 'speed').base_stat;
-                
-                return {
-                    id: idx,
-                    name: p.name,
-                    img: p.sprites.other['official-artwork'].front_default,
-                    types: p.types.map(t => t.type.name),
-                    maxHp: Math.floor((2 * hpStat * 50 / 100) + 50 + 10) * 3, // HP Formula @ Lvl 50 (x3 for duration)
-                    currentHp: Math.floor((2 * hpStat * 50 / 100) + 50 + 10) * 3,
-                    attack: atkStat,
-                    defense: defStat,
-                    speed: spdStat,
-                    team: idx < 2 ? 'A' : 'B'
-                };
-            });
+            // Initialize combatants
+            const fighters = selectedFighters.map((p, idx) => ({
+                id: idx,
+                name: p.name,
+                img: p.sprites.other['official-artwork'].front_default,
+                types: p.types.map(t => t.type.name),
+                maxHp: Math.floor((2 * p.stats[0].base_stat * 50 / 100) + 60) * 3, // Approx Lvl 50 HP * 3 for longer battle
+                currentHp: Math.floor((2 * p.stats[0].base_stat * 50 / 100) + 60) * 3,
+                attack: p.stats[1].base_stat,
+                defense: p.stats[2].base_stat,
+                speed: p.stats[5].base_stat
+            }));
 
-            // UI Init
-            combatants.forEach((c, i) => {
-                document.getElementById(`name-${i}`).innerText = c.name;
-                document.getElementById(`img-${i}`).src = c.img;
-                updateHpUI(i, c.currentHp, c.maxHp);
-                document.getElementById(`battler-${i}`).classList.remove('fainted');
-            });
+            const p1 = fighters[0];
+            const p2 = fighters[1];
+
+            // Setup UI
+            setupBattler(0, p1);
+            setupBattler(1, p2);
 
             logAdd(translations[currentLang].logStart);
 
@@ -363,129 +410,122 @@
 
             async function battleLoop() {
                 while(active) {
-                    // Turn Order based on Speed
-                    const queue = combatants.filter(c => c.currentHp > 0).sort((a, b) => b.speed - a.speed);
-                    
-                    if (queue.length === 0) break;
+                    // Determine order
+                    let first = p1.speed >= p2.speed ? p1 : p2;
+                    let second = p1.speed >= p2.speed ? p2 : p1;
+                    if (Math.random() > 0.5 && p1.speed === p2.speed) { first = p2; second = p1; }
 
-                    for (const attacker of queue) {
-                        if (!active) break;
-                        if (attacker.currentHp <= 0) continue;
+                    // First attacks Second
+                    await attackTurn(first, second);
+                    if (second.currentHp <= 0) {
+                        handleFaint(second);
+                        endBattle(first);
+                        active = false;
+                        break;
+                    }
 
-                        // Identify Enemies
-                        const enemyTeam = attacker.team === 'A' ? ['B'] : ['A'];
-                        const targets = combatants.filter(c => enemyTeam.includes(c.team) && c.currentHp > 0);
-                        
-                        if (targets.length === 0) {
-                            endBattle(attacker.team);
-                            active = false;
-                            break;
-                        }
-
-                        const target = targets[Math.floor(Math.random() * targets.length)];
-
-                        // --- MOVE LOGIC ---
-                        // Pick a "Move Type" from attacker's types (Simulating STAB move)
-                        const moveType = attacker.types[Math.floor(Math.random() * attacker.types.length)];
-                        
-                        // Calculate Effectiveness
-                        let effectiveness = 1;
-                        target.types.forEach(defType => {
-                            if (typeChart[moveType] && typeChart[moveType][defType] !== undefined) {
-                                effectiveness *= typeChart[moveType][defType];
-                            }
-                        });
-
-                        // Critical Hit (6.25%)
-                        const isCrit = Math.random() < 0.0625;
-                        const critMult = isCrit ? 1.5 : 1;
-
-                        // STAB (Always yes in this simulation)
-                        const stab = 1.5;
-
-                        // Random Variance (0.85 - 1.00)
-                        const random = (Math.floor(Math.random() * 16) + 85) / 100;
-
-                        // Damage Formula (Simplified Gen 5)
-                        // Damage = (((2 * Level / 5 + 2) * Power * A / D) / 50 + 2) * Modifier
-                        const level = 50;
-                        const power = 70; // Avg move power
-                        const a = attacker.attack;
-                        const d = target.defense;
-                        
-                        let damage = Math.floor((((2 * level / 5 + 2) * power * (a / d)) / 50 + 2) * stab * effectiveness * critMult * random);
-                        if (damage < 1) damage = 1; // Minimum 1
-                        if (effectiveness === 0) damage = 0; // Immune
-
-                        // --- ANIMATIONS & LOGS ---
-                        const atkEl = document.getElementById(`battler-${attacker.id}`);
-                        atkEl.classList.add('attack');
-                        setTimeout(() => atkEl.classList.remove('attack'), 300);
-
-                        await new Promise(r => setTimeout(r, 600));
-
-                        target.currentHp = Math.max(0, target.currentHp - damage);
-                        const defEl = document.getElementById(`battler-${target.id}`);
-                        
-                        // Hit Effect
-                        if (damage > 0) {
-                            defEl.classList.add('hit');
-                            
-                            // Color code damage text
-                            let dmgClass = 'dmg-normal';
-                            if (isCrit) dmgClass = 'dmg-crit';
-                            else if (effectiveness > 1) dmgClass = 'dmg-super';
-                            else if (effectiveness < 1) dmgClass = 'dmg-weak';
-
-                            showFloatingText(defEl, isCrit ? `Crit! -${damage}` : `-${damage}`, dmgClass);
-                            setTimeout(() => defEl.classList.remove('hit'), 400);
-                        } else {
-                            showFloatingText(defEl, "Immune", 'dmg-weak');
-                        }
-
-                        updateHpUI(target.id, target.currentHp, target.maxHp);
-                        
-                        // Detailed Log
-                        const t = translations[currentLang];
-                        let msg = `${attacker.name} ${t.used} ${moveType} move!`;
-                        logAdd(msg);
-                        
-                        if (isCrit) logAdd(`<span class="log-crit">${t.crit}</span>`);
-                        if (effectiveness > 1) logAdd(`<span class="log-super">${t.super}</span>`);
-                        if (effectiveness > 0 && effectiveness < 1) logAdd(`<span class="log-weak">${t.weak}</span>`);
-                        if (effectiveness === 0) logAdd(`<span class="log-weak">${t.immune}</span>`);
-
-                        if (target.currentHp <= 0) {
-                            logAdd(`💀 ${target.name} ${t.fainted}`);
-                            defEl.classList.add('fainted');
-                            
-                            const enemiesAlive = combatants.filter(c => c.team !== attacker.team && c.currentHp > 0).length;
-                            if (enemiesAlive === 0) {
-                                endBattle(attacker.team);
-                                active = false;
-                                break;
-                            }
-                        }
-                        await new Promise(r => setTimeout(r, 1200));
+                    // Second attacks First
+                    await attackTurn(second, first);
+                    if (first.currentHp <= 0) {
+                        handleFaint(first);
+                        endBattle(second);
+                        active = false;
+                        break;
                     }
                 }
             }
-            battleLoop();
+            
+            setTimeout(battleLoop, 1000);
         }
 
-        function updateHpUI(id, current, max) {
+        async function attackTurn(attacker, defender) {
+            const t = translations[currentLang];
+            // Move type logic (STAB)
+            const moveType = attacker.types[Math.floor(Math.random() * attacker.types.length)];
+            
+            // Effectiveness
+            let eff = 1;
+            defender.types.forEach(dt => {
+                if (typeChart[moveType] && typeChart[moveType][dt] !== undefined) eff *= typeChart[moveType][dt];
+            });
+
+            // Crit
+            const isCrit = Math.random() < 0.0625;
+            const critMult = isCrit ? 1.5 : 1;
+            const stab = 1.5;
+            const rand = (Math.floor(Math.random() * 16) + 85) / 100;
+
+            // Damage Formula
+            let dmg = Math.floor((((2 * 50 / 5 + 2) * 70 * (attacker.attack / defender.defense)) / 50 + 2) * stab * eff * critMult * rand);
+            if (dmg < 1) dmg = 1;
+            if (eff === 0) dmg = 0;
+
+            // Animation
+            const atkEl = document.getElementById(`battler-${attacker.id}`);
+            const defEl = document.getElementById(`battler-${defender.id}`);
+            
+            atkEl.classList.add('attack');
+            setTimeout(() => atkEl.classList.remove('attack'), 300);
+            await new Promise(r => setTimeout(r, 600));
+
+            defender.currentHp = Math.max(0, defender.currentHp - dmg);
+            
+            if (dmg > 0) {
+                defEl.classList.add('hit');
+                let colorClass = 'dmg-normal';
+                if (isCrit) colorClass = 'dmg-crit';
+                else if (eff > 1) colorClass = 'dmg-super';
+                else if (eff < 1) colorClass = 'dmg-weak';
+                
+                showFloatingText(defEl, isCrit ? `Crit! -${dmg}` : `-${dmg}`, colorClass);
+                setTimeout(() => defEl.classList.remove('hit'), 400);
+            } else {
+                showFloatingText(defEl, "Immune", 'dmg-weak');
+            }
+            
+            updateHpUI(defender.id, defender.currentHp, defender.maxHp);
+
+            // Logs
+            logAdd(`${attacker.name} ${t.used} ${moveType}!`);
+            if (isCrit) logAdd(`<span class="log-crit">${t.crit}</span>`);
+            if (eff > 1) logAdd(`<span class="log-super">${t.super}</span>`);
+            if (eff > 0 && eff < 1) logAdd(`<span class="log-weak">${t.weak}</span>`);
+            if (eff === 0) logAdd(`<span class="log-weak">${t.immune}</span>`);
+
+            await new Promise(r => setTimeout(r, 1500));
+        }
+
+        function handleFaint(loser) {
+            document.getElementById(`battler-${loser.id}`).classList.add('fainted');
+            logAdd(`💀 ${loser.name} ${translations[currentLang].fainted}`);
+        }
+
+        function endBattle(winner) {
+            document.getElementById('winner-name').innerText = winner.name.toUpperCase();
+            document.getElementById('winner-popup').style.display = 'block';
+            logAdd(`🏆 ${winner.name} ${translations[currentLang].wins}`);
+        }
+
+        function setupBattler(id, p) {
+            document.getElementById(`name-${id}`).innerText = p.name;
+            document.getElementById(`img-${id}`).src = p.img;
+            document.getElementById(`battler-${id}`).classList.remove('fainted');
+            updateHpUI(id, p.currentHp, p.maxHp);
+        }
+
+        function updateHpUI(id, cur, max) {
             const bar = document.getElementById(`hp-${id}`);
-            const pct = (current / max) * 100;
+            const pct = (cur / max) * 100;
             bar.style.width = pct + '%';
             bar.style.background = pct < 20 ? '#ff3333' : pct < 50 ? '#ffcc00' : '#4caf50';
         }
 
-        function showFloatingText(el, text, className) {
-            const float = document.createElement('div');
-            float.className = `damage-text ${className}`;
-            float.innerText = text;
-            el.querySelector('.battler-img-box').appendChild(float);
-            setTimeout(() => float.remove(), 1200);
+        function showFloatingText(el, txt, cls) {
+            const d = document.createElement('div');
+            d.className = `damage-text ${cls}`;
+            d.innerText = txt;
+            el.appendChild(d);
+            setTimeout(() => d.remove(), 1200);
         }
 
         function logAdd(html) {
@@ -495,15 +535,10 @@
             log.prepend(d);
         }
 
-        function endBattle(team) {
-            const popup = document.getElementById('winner-popup');
-            const t = translations[currentLang];
-            document.getElementById('winner-team-name').innerText = team === 'A' ? t.teamA : t.teamB;
-            popup.style.display = 'block';
-        }
-
         window.closeBattle = () => document.getElementById('battle-modal').classList.remove('active');
+        document.getElementById('info-modal').addEventListener('click', (e) => { if(e.target.id === 'info-modal') infoModal.classList.remove('active'); });
 
+        // --- Utils ---
         document.getElementById('lang-toggle').addEventListener('click', () => {
             currentLang = currentLang === 'en' ? 'he' : 'en';
             document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
