@@ -3,368 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apipheny Collection Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Ultimate API Dashboard (20 Free APIs)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-body: #0f172a;
+            --bg-sidebar: #1e293b;
+            --bg-card: #334155;
             --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --success: #10b981;
-            --border: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #475569;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Rubik', sans-serif;
-            background-color: var(--bg);
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--bg-body);
             color: var(--text-main);
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p.subtitle { color: var(--text-muted); }
-
-        /* Grid Layout */
-        .api-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Card Styles */
-        .api-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
             display: flex;
-            flex-direction: column;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .api-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            border-color: var(--accent);
+        /* --- Sidebar Navigation --- */
+        aside {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
         }
 
-        .card-header {
+        .brand {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        nav ul { list-style: none; padding: 10px; }
+        nav li { margin-bottom: 5px; }
+
+        nav button {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 15px;
+            text-align: right;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
         }
 
-        .badge {
+        nav button:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text-main);
+        }
+
+        nav button.active {
+            background-color: var(--accent);
+            color: white;
+            font-weight: 600;
+        }
+
+        .cat-label {
             font-size: 0.75rem;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background-color: rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
-            text-transform: uppercase;
+            color: #64748b;
+            padding: 15px 15px 5px 0;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .card-title { font-size: 1.25rem; font-weight: 600; }
-        
-        .card-content {
+        /* --- Main Content Area --- */
+        main {
             flex-grow: 1;
-            margin-bottom: 20px;
-            min-height: 80px;
-            font-size: 0.95rem;
-            color: #cbd5e1;
-            word-break: break-word;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--bg-sidebar);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { margin-bottom: 10px; font-size: 2rem; color: var(--accent); }
+        .desc { color: var(--text-muted); margin-bottom: 30px; }
+
+        .result-box {
+            background-color: var(--bg-body);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px dashed var(--border);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            position: relative;
         }
 
         /* Content Types */
-        .content-image img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
-        .content-json { font-family: monospace; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; font-size: 0.8rem; }
-        .data-label { color: var(--text-muted); font-size: 0.8rem; display: block; margin-bottom: 4px; }
-        .data-value { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; }
-
-        /* Controls */
-        .card-footer {
-            margin-top: auto;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
+        .res-img { max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .res-text { font-size: 1.4rem; line-height: 1.6; }
+        .res-sub { font-size: 1rem; color: var(--text-muted); margin-top: 10px; }
+        .res-list { text-align: right; width: 100%; }
+        .res-list li { padding: 10px; border-bottom: 1px solid var(--border); list-style: none; }
+        
+        .action-btn {
             background-color: var(--accent);
             color: white;
             border: none;
-            border-radius: 6px;
+            padding: 15px 40px;
+            font-size: 1rem;
+            border-radius: 50px;
             cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.2s;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        button:hover { background-color: var(--accent-hover); }
-        button:disabled { background-color: var(--border); cursor: not-allowed; opacity: 0.6; }
+        .action-btn:hover { background-color: #2563eb; transform: scale(1.05); }
+        .action-btn:disabled { background-color: var(--border); cursor: wait; opacity: 0.7; }
 
         /* Loader */
         .loader {
-            width: 16px; height: 16px;
-            border: 2px solid #fff;
+            width: 20px; height: 20px;
+            border: 3px solid #fff;
             border-bottom-color: transparent;
             border-radius: 50%;
             display: inline-block;
-            box-sizing: border-box;
             animation: rotation 1s linear infinite;
         }
-
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .error-msg { color: #ef4444; font-size: 0.9rem; }
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            aside { width: 100%; height: 60px; flex-direction: row; align-items: center; overflow-x: auto; overflow-y: hidden; border-bottom: 1px solid var(--border); border-left: none; }
+            .brand { border: none; padding: 0 15px; font-size: 1rem; white-space: nowrap; }
+            nav ul { display: flex; padding: 0; }
+            nav li { margin: 0 5px; }
+            nav button { white-space: nowrap; padding: 10px; }
+            .cat-label { display: none; }
+            main { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Apipheny.io Free APIs Explorer</h1>
-        <p class="subtitle">מציג נתונים חיים ממגוון ממשקים ציבוריים (ללא צורך במפתח)</p>
-    </header>
+    <aside>
+        <div class="brand">20 API Dashboard</div>
+        <nav id="nav-menu">
+            <!-- Menu items injected via JS -->
+        </nav>
+    </aside>
 
-    <div class="api-grid" id="gridContainer">
-        <!-- Cards will be injected here via JS -->
-    </div>
+    <main>
+        <div id="app-container" class="dashboard-container">
+            <!-- Dynamic Content -->
+        </div>
+    </main>
 
     <script>
-        /**
-         * קונפיגורציה של הממשקים.
-         * כדי להוסיף עוד API מהרשימה, פשוט משכפלים אובייקט במערך הזה.
-         */
-        const apis = [
-            {
-                id: 'catfact',
-                name: 'Cat Fact',
-                category: 'Animals',
-                url: 'https://catfact.ninja/fact',
-                type: 'text',
-                extractor: (data) => data.fact
-            },
-            {
-                id: 'dogimage',
-                name: 'Random Dog',
-                category: 'Animals',
-                url: 'https://dog.ceo/api/breeds/image/random',
-                type: 'image',
-                extractor: (data) => data.message
-            },
-            {
-                id: 'bored',
-                name: 'Activity Idea',
-                category: 'Utility',
-                url: 'https://bored.api.lewagon.com/api/activity',
-                type: 'key-value',
-                extractor: (data) => ({
-                    "פעילות": data.activity,
-                    "סוג": data.type,
-                    "משתתפים": data.participants
-                })
-            },
-            {
-                id: 'ipify',
-                name: 'My IP Address',
-                category: 'Tech',
-                url: 'https://api.ipify.org?format=json',
-                type: 'text',
-                extractor: (data) => data.ip
-            },
-            {
-                id: 'jokes',
-                name: 'Official Joke',
-                category: 'Fun',
-                url: 'https://official-joke-api.appspot.com/random_joke',
-                type: 'text',
-                extractor: (data) => `${data.setup}\n\n😂 ${data.punchline}`
-            },
-            {
-                id: 'user',
-                name: 'Random User',
-                category: 'Identity',
-                url: 'https://randomuser.me/api/',
-                type: 'profile',
-                extractor: (data) => {
-                    const u = data.results[0];
-                    return {
-                        image: u.picture.large,
-                        name: `${u.name.first} ${u.name.last}`,
-                        country: u.location.country,
-                        email: u.email
-                    };
-                }
-            },
-            {
-                id: 'bitcoin',
-                name: 'Bitcoin Price',
-                category: 'Finance',
-                url: 'https://api.coindesk.com/v1/bpi/currentprice.json',
-                type: 'key-value',
-                extractor: (data) => ({
-                    "USD": "$" + data.bpi.USD.rate,
-                    "EUR": "€" + data.bpi.EUR.rate,
-                    "זמן עדכון": data.time.updated
-                })
-            },
-            {
-                id: 'agify',
-                name: 'Age Prediction',
-                category: 'Data',
-                url: 'https://api.agify.io?name=david',
-                type: 'text',
-                extractor: (data) => `הגיל המשוער לשם "David" הוא: ${data.age}`
-            },
-            {
-                id: 'univ',
-                name: 'Universities (Israel)',
-                category: 'Education',
-                url: 'http://universities.hipolabs.com/search?country=Israel',
-                type: 'list',
-                extractor: (data) => data.slice(0, 3).map(u => u.name) // לוקח רק 3 ראשונים
-            },
-            {
-                id: 'zippopotam',
-                name: 'Zip Info (US)',
-                category: 'Location',
-                url: 'https://api.zippopotam.us/us/90210',
-                type: 'text',
-                extractor: (data) => `Beverly Hills 90210: ${data.places[0]['place name']}, ${data.places[0]['state']}`
-            }
+        // --- 1. הגדרת 20 ה-APIs ---
+        const apiList = [
+            // --- Animals ---
+            { id: 1, category: 'Animals', name: 'Cat Fact', url: 'https://catfact.ninja/fact', type: 'text', extract: d => d.fact, desc: 'עובדות רנדומליות על חתולים' },
+            { id: 2, category: 'Animals', name: 'Dog Image', url: 'https://dog.ceo/api/breeds/image/random', type: 'image', extract: d => d.message, desc: 'תמונות כלבים מתוקים' },
+            { id: 3, category: 'Animals', name: 'Fox Image', url: 'https://randomfox.ca/floof/', type: 'image', extract: d => d.image, desc: 'שועלים חמודים' },
+            { id: 4, category: 'Animals', name: 'Dog Facts', url: 'https://dog-api.kinduff.com/api/facts', type: 'text', extract: d => d.facts[0], desc: 'עובדות מעניינות על כלבים' },
+            
+            // --- Identity & Data ---
+            { id: 5, category: 'Data', name: 'Random User', url: 'https://randomuser.me/api/', type: 'profile', extract: d => d.results[0], desc: 'מחולל זהויות פיקטיביות' },
+            { id: 6, category: 'Data', name: 'Agify (Age)', url: 'https://api.agify.io?name=david', type: 'text', extract: d => `הגיל המשוער לשם דוד הוא: ${d.age}`, desc: 'ניחוש גיל לפי שם' },
+            { id: 7, category: 'Data', name: 'Genderify', url: 'https://api.genderize.io?name=shir', type: 'text', extract: d => `השם שיר הוא כנראה: ${d.gender === 'female' ? 'נקבה' : 'זכר'} (${d.probability * 100}%)`, desc: 'ניחוש מגדר לפי שם' },
+            { id: 8, category: 'Data', name: 'Nationalize', url: 'https://api.nationalize.io?name=nathan', type: 'text', extract: d => `המדינה הסבירה ביותר לנתן: ${d.country[0]?.country_id || 'לא ידוע'}`, desc: 'ניחוש לאום לפי שם' },
+
+            // --- Fun & Content ---
+            { id: 9, category: 'Fun', name: 'Bored API', url: 'https://bored.api.lewagon.com/api/activity', type: 'text', extract: d => d.activity, desc: 'רעיונות לפעילות כשמשעמם' },
+            { id: 10, category: 'Fun', name: 'Official Joke', url: 'https://official-joke-api.appspot.com/random_joke', type: 'joke', extract: d => d, desc: 'בדיחות באנגלית' },
+            { id: 11, category: 'Fun', name: 'Advice Slip', url: 'https://api.adviceslip.com/advice', type: 'text', extract: d => d.slip.advice, desc: 'עצות לחיים' },
+            { id: 12, category: 'Fun', name: 'Yes/No', url: 'https://yesno.wtf/api', type: 'yesno', extract: d => d, desc: 'קבלת החלטות עם GIF' },
+            { id: 13, category: 'Fun', name: 'Useless Facts', url: 'https://uselessfacts.jsph.pl/api/v2/facts/random', type: 'text', extract: d => d.text, desc: 'עובדות חסרות תועלת לחלוטין' },
+            { id: 14, category: 'Fun', name: 'Quotable', url: 'https://api.quotable.io/random', type: 'quote', extract: d => d, desc: 'ציטוטים מעוררי השראה' },
+
+            // --- Tech & Info ---
+            { id: 15, category: 'Tech', name: 'IP Address', url: 'https://api.ipify.org?format=json', type: 'text', extract: d => d.ip, desc: 'מה כתובת ה-IP שלי?' },
+            { id: 16, category: 'Tech', name: 'CoinCap (BTC)', url: 'https://api.coincap.io/v2/assets/bitcoin', type: 'price', extract: d => d.data, desc: 'שער הביטקוין בזמן אמת' },
+            { id: 17, category: 'Info', name: 'Universities', url: 'http://universities.hipolabs.com/search?country=Israel', type: 'list', extract: d => d.slice(0, 5), desc: 'רשימת אוניברסיטאות בישראל' },
+            { id: 18, category: 'Info', name: 'Weather (TLV)', url: 'https://api.open-meteo.com/v1/forecast?latitude=32.08&longitude=34.78&current_weather=true', type: 'weather', extract: d => d.current_weather, desc: 'מזג אוויר בתל אביב' },
+            { id: 19, category: 'Info', name: 'Zippopotam', url: 'https://api.zippopotam.us/us/90210', type: 'text', extract: d => `בוורלי הילס 90210 נמצאת ב: ${d.places[0]['state']}`, desc: 'מידע על מיקוד (ארה"ב)' },
+            { id: 20, category: 'Info', name: 'Numbers API', url: 'http://numbersapi.com/42?json', type: 'text', extract: d => d.text, desc: 'עובדות על מספרים' }
         ];
 
-        const grid = document.getElementById('gridContainer');
+        // --- 2. בניית התפריט (Navigation) ---
+        const navMenu = document.getElementById('nav-menu');
+        const appContainer = document.getElementById('app-container');
+        let currentApiId = 1; // Default
 
-        // פונקציה ראשית ליצירת הכרטיסים
-        function initDashboard() {
-            apis.forEach(api => {
-                const card = createCard(api);
-                grid.appendChild(card);
-                // טעינה ראשונית אוטומטית
-                fetchData(api.id);
-            });
-        }
-
-        function createCard(api) {
-            const div = document.createElement('div');
-            div.className = 'api-card';
-            div.id = `card-${api.id}`;
-            div.innerHTML = `
-                <div class="card-header">
-                    <span class="card-title">${api.name}</span>
-                    <span class="badge">${api.category}</span>
-                </div>
-                <div class="card-content" id="content-${api.id}">
-                    <span style="opacity:0.5;">לחץ על רענון לטעינת נתונים...</span>
-                </div>
-                <div class="card-footer">
-                    <button onclick="fetchData('${api.id}')" id="btn-${api.id}">
-                        <span>🔄 רענן נתונים</span>
-                    </button>
-                </div>
-            `;
-            return div;
-        }
-
-        // פונקציית Fetch גנרית שמטפלת בכל ה-APIs
-        async function fetchData(apiId) {
-            const api = apis.find(a => a.id === apiId);
-            if (!api) return;
-
-            const contentDiv = document.getElementById(`content-${api.id}`);
-            const btn = document.getElementById(`btn-${api.id}`);
+        function renderMenu() {
+            const categories = {};
             
-            // UI Loading State
+            // קיבוץ לפי קטגוריות
+            apiList.forEach(api => {
+                if (!categories[api.category]) categories[api.category] = [];
+                categories[api.category].push(api);
+            });
+
+            // יצירת ה-HTML
+            for (const [catName, apis] of Object.entries(categories)) {
+                const catLabel = document.createElement('div');
+                catLabel.className = 'cat-label';
+                catLabel.innerText = catName;
+                navMenu.appendChild(catLabel);
+
+                const ul = document.createElement('ul');
+                apis.forEach(api => {
+                    const li = document.createElement('li');
+                    const btn = document.createElement('button');
+                    btn.innerHTML = `<span>${api.name}</span> <span>➜</span>`;
+                    btn.onclick = () => loadDashboard(api.id);
+                    if (api.id === currentApiId) btn.classList.add('active');
+                    btn.dataset.id = api.id;
+                    li.appendChild(btn);
+                    ul.appendChild(li);
+                });
+                navMenu.appendChild(ul);
+            }
+        }
+
+        // --- 3. לוגיקת טעינת דאשבורד ---
+        function loadDashboard(id) {
+            currentApiId = id;
+            
+            // עדכון תפריט (Active Class)
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.querySelector(`button[data-id="${id}"]`).classList.add('active');
+
+            const api = apiList.find(a => a.id === id);
+            
+            // בניית ה-UI
+            appContainer.innerHTML = `
+                <h1>${api.name}</h1>
+                <p class="desc">${api.desc}</p>
+                
+                <div class="result-box" id="result-area">
+                    <span style="opacity:0.6">לחץ על הכפתור לקבלת נתונים...</span>
+                </div>
+
+                <button class="action-btn" onclick="fetchData(${api.id})">
+                    קבל נתונים חדשים 🚀
+                </button>
+            `;
+
+            // ביצוע קריאה ראשונה אוטומטית
+            fetchData(id);
+        }
+
+        // --- 4. לוגיקת שליפת נתונים (Fetch) ---
+        async function fetchData(id) {
+            const api = apiList.find(a => a.id === id);
+            const resBox = document.getElementById('result-area');
+            const btn = document.querySelector('.action-btn');
+
+            // מצב טעינה
+            resBox.style.opacity = '0.5';
             btn.disabled = true;
-            btn.innerHTML = '<span class="loader"></span> טוען...';
-            contentDiv.style.opacity = '0.5';
+            btn.innerHTML = '<div class="loader"></div> טוען...';
 
             try {
-                // ביצוע הבקשה
                 const response = await fetch(api.url);
-                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                if (!response.ok) throw new Error('API Error');
                 
                 const rawData = await response.json();
-                
-                // עיבוד המידע לפי ה-Extractor שהוגדר לכל API
-                const processedData = api.extractor(rawData);
-                
-                // ציור המידע לפי הסוג (תמונה, טקסט, וכו')
-                renderContent(contentDiv, api.type, processedData);
-                
+                const data = api.extract(rawData);
+
+                renderData(resBox, api.type, data);
+
             } catch (error) {
                 console.error(error);
-                contentDiv.innerHTML = `<span class="error-msg">⚠️ שגיאה: לא ניתן למשוך נתונים.<br><small>${error.message}</small></span>`;
+                resBox.innerHTML = `<span style="color:#ef4444">שגיאה בקבלת נתונים 😞<br>נסה שוב מאוחר יותר</span>`;
             } finally {
-                // Reset UI
+                resBox.style.opacity = '1';
                 btn.disabled = false;
-                btn.innerHTML = '<span>🔄 רענן נתונים</span>';
-                contentDiv.style.opacity = '1';
+                btn.innerHTML = 'קבל נתונים חדשים 🚀';
             }
         }
 
-        // פונקציה שמחליטה איך להציג את המידע בדפדפן
-        function renderContent(element, type, data) {
-            element.innerHTML = ''; // ניקוי
+        // --- 5. הצגת הנתונים לפי סוג ---
+        function renderData(container, type, data) {
+            container.innerHTML = ''; // ניקוי
 
-            if (type === 'text') {
-                element.innerText = data;
-            } 
-            else if (type === 'image') {
-                element.className = 'card-content content-image';
-                element.innerHTML = `<img src="${data}" alt="API Image" loading="lazy">`;
-            } 
-            else if (type === 'key-value') {
-                let html = '';
-                for (const [key, value] of Object.entries(data)) {
-                    html += `
-                        <div>
-                            <span class="data-label">${key}</span>
-                            <div class="data-value">${value}</div>
-                        </div>`;
-                }
-                element.innerHTML = html;
-            }
-            else if (type === 'profile') {
-                element.innerHTML = `
-                    <div style="text-align:center;">
-                        <img src="${data.image}" style="width:80px;height:80px;border-radius:50%;margin-bottom:10px;">
-                        <div class="data-value">${data.name}</div>
-                        <div class="data-label">${data.country}</div>
-                        <div class="data-label">${data.email}</div>
-                    </div>
-                `;
-            }
-            else if (type === 'list') {
-                let html = '<ul style="padding-right:20px;">';
-                data.forEach(item => html += `<li>${item}</li>`);
-                html += '</ul>';
-                element.innerHTML = html;
+            switch (type) {
+                case 'text':
+                    container.innerHTML = `<div class="res-text">${data}</div>`;
+                    break;
+                case 'image':
+                    container.innerHTML = `<img src="${data}" class="res-img" alt="Result Image">`;
+                    break;
+                case 'profile':
+                    container.innerHTML = `
+                        <img src="${data.picture.large}" style="border-radius:50%; margin-bottom:15px; border: 3px solid var(--accent);">
+                        <div class="res-text">${data.name.first} ${data.name.last}</div>
+                        <div class="res-sub">${data.location.country} | ${data.email}</div>
+                    `;
+                    break;
+                case 'joke':
+                    container.innerHTML = `
+                        <div class="res-text" style="font-weight:bold">${data.setup}</div>
+                        <br>
+                        <div class="res-text" style="color:var(--accent)">${data.punchline} 😂</div>
+                    `;
+                    break;
+                case 'price': // Crypto
+                    const price = parseFloat(data.priceUsd).toFixed(2);
+                    const change = parseFloat(data.changePercent24Hr).toFixed(2);
+                    const color = change >= 0 ? '#10b981' : '#ef4444';
+                    container.innerHTML = `
+                        <div style="font-size:3rem; font-weight:bold">$${price}</div>
+                        <div style="color:${color}; font-size:1.5rem; direction:ltr;">${change}% (24h)</div>
+                    `;
+                    break;
+                case 'weather':
+                    container.innerHTML = `
+                        <div style="font-size:4rem;">${data.temperature}°C</div>
+                        <div class="res-sub">רוח: ${data.windspeed} קמ"ש</div>
+                    `;
+                    break;
+                case 'yesno':
+                    container.innerHTML = `
+                        <div style="font-size:3rem; font-weight:bold; text-transform:uppercase; margin-bottom:10px;">${data.answer}</div>
+                        <img src="${data.image}" class="res-img">
+                    `;
+                    break;
+                case 'quote':
+                    container.innerHTML = `
+                        <div class="res-text">"${data.content}"</div>
+                        <div class="res-sub">- ${data.author}</div>
+                    `;
+                    break;
+                case 'list':
+                    let html = '<ul class="res-list">';
+                    data.forEach(item => html += `<li>🏛️ ${item.name}</li>`);
+                    html += '</ul>';
+                    container.innerHTML = html;
+                    break;
+                default:
+                    container.innerText = JSON.stringify(data);
             }
         }
 
-        // הפעלת הדאשבורד
-        initDashboard();
+        // הפעלה ראשונית
+        renderMenu();
+        loadDashboard(1); // טען את ה-API הראשון כברירת מחדל
 
     </script>
 </body>
