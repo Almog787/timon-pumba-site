@@ -3,593 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AvinTattoo - סטודיו לקעקועים ופירסינג</title>
-    
-    <!-- גופנים -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
-
+    <title>Apipheny Collection Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* --- משתנים ועיצוב בסיס --- */
         :root {
-            --bg-dark: #2d0b0b;
-            --bg-darker: #1a0606;
-            --accent-green: #25d366;
-            --accent-red: #a12626;
-            --border-color: #471717;
-            --text-color: #ffffff;
-            --transition-speed: 0.6s;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #10b981;
+            --border: #334155;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Heebo', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-color);
-            direction: rtl;
-            line-height: 1.6;
-            overflow-x: hidden; /* למניעת גלילה אופקית */
+            font-family: 'Rubik', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 20px;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-        }
-
-        /* --- אנימציות גלילה (JS Classes) --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* דיליי לאלמנטים שנכנסים אחד אחרי השני */
-        .delay-100 { transition-delay: 0.1s; }
-        .delay-200 { transition-delay: 0.2s; }
-        .delay-300 { transition-delay: 0.3s; }
-
-        /* --- וידאו ו-Hero --- */
-        .hero-section {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .hero-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            opacity: 0; /* JS will fade it in */
-            transition: opacity 1s ease-in;
-        }
-
-        .hero-video.loaded {
-            opacity: 1;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1), var(--bg-dark));
-            pointer-events: none;
-        }
-
-        .hero-desktop { height: 755px; display: block; }
-        .hero-mobile { height: 100vh; display: none; }
-
-        /* --- כותרות וקונטיינרים --- */
-        .section-container {
-            padding: 4rem 1.5rem;
+        header {
             text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .dark-bg { background-color: var(--bg-dark); }
-        .darker-bg { background-color: var(--bg-darker); }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p.subtitle { color: var(--text-muted); }
 
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-
-        /* --- כפתורים --- */
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .button-group.wrap { flex-wrap: wrap; }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 500;
-            font-size: 1.1rem;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        /* אפקט מילוי במעבר עכבר לכפתורי Outline */
-        .btn-outline {
-            border: 2px solid white;
-            color: white;
-            background: transparent;
-        }
-
-        .btn-outline::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 0%; height: 100%;
-            background: white;
-            z-index: -1;
-            transition: width 0.3s ease;
-        }
-
-        .btn-outline:hover::before { width: 100%; }
-        .btn-outline:hover { color: var(--bg-dark); border-color: white; }
-
-        .btn-fill {
-            color: white;
-            border: none;
-            font-size: 1.3rem;
-            padding: 15px 35px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transform: scale(1);
-            transition: transform 0.2s;
-        }
-
-        .btn-fill:hover { transform: scale(1.05); }
-
-        .whatsapp-bg { background-color: var(--accent-green); }
-        .red-bg { background-color: var(--accent-red); }
-
-        /* --- חנות ומוצרים --- */
-        .product-grid {
+        /* Grid Layout */
+        .api-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .product-card {
-            border: 1px solid var(--border-color);
+        /* Card Styles */
+        .api-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px;
-            text-align: center;
-            background: rgba(255,255,255,0.03);
-            backdrop-filter: blur(5px);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border-color: #6e2b2b;
-        }
-
-        .product-card img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            cursor: zoom-in;
-            transition: opacity 0.3s;
-        }
-
-        .product-card img:hover { opacity: 0.9; }
-
-        .product-card h5 {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .btn-small {
-            padding: 8px 25px;
-            font-size: 0.95rem;
-            border-radius: 6px;
-            background-color: var(--accent-green);
-            color: white;
-            display: inline-block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        /* --- טופס יצירת קשר --- */
-        .contact-layout {
             display: flex;
             flex-direction: column;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
-            gap: 4rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .contact-text ul {
-            list-style: none;
-            font-size: 1.2rem;
-            margin-top: 20px;
-            padding: 0;
-        }
-        
-        .contact-text li { 
-            margin-bottom: 15px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
+        .api-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-color: var(--accent);
         }
 
-        .contact-form-wrapper {
-            background: linear-gradient(145deg, #000000, #1a0505);
-            padding: 2.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .custom-form label {
-            display: block;
-            margin-bottom: 8px;
-            text-align: right;
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-
-        .custom-form input, 
-        .custom-form textarea {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 20px;
-            background-color: #2c0e0e;
-            border: 1px solid #5c1e1e;
-            color: white;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .custom-form input:focus,
-        .custom-form textarea:focus {
-            outline: none;
-            border-color: var(--accent-red);
-            box-shadow: 0 0 8px rgba(161, 38, 38, 0.4);
-        }
-
-        .custom-form button {
-            width: 100%;
-            background-color: var(--border-color);
-            color: white;
-            padding: 16px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .custom-form button:hover {
-            background-color: var(--accent-red);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(161, 38, 38, 0.4);
-        }
-
-        /* --- מפה וסטיקי --- */
-        .map-container {
-            width: 100%;
-            margin-bottom: 60px;
-            line-height: 0;
-            filter: grayscale(100%) contrast(1.2); /* עיצוב שחור לבן למפה */
-            transition: filter 0.5s;
-        }
-
-        .map-container:hover { filter: grayscale(0%); }
-        
-        .map-iframe { width: 100%; height: 450px; border: 0; }
-
-        .sticky-cta {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            background-color: var(--accent-green);
-            text-align: center;
-            z-index: 1000;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
-        }
-
-        .sticky-cta a {
-            display: block;
-            padding: 18px;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        /* --- LIGHTBOX (חלון צף לתמונות) --- */
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .lightbox.active {
+        .card-header {
             display: flex;
-            opacity: 1;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-        .lightbox img {
-            max-width: 90%;
-            max-height: 80%;
-            border-radius: 10px;
-            box-shadow: 0 0 50px rgba(255,255,255,0.1);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
+        .badge {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background-color: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            text-transform: uppercase;
+            font-weight: bold;
         }
 
-        .lightbox.active img { transform: scale(1); }
+        .card-title { font-size: 1.25rem; font-weight: 600; }
+        
+        .card-content {
+            flex-grow: 1;
+            margin-bottom: 20px;
+            min-height: 80px;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            word-break: break-word;
+        }
 
-        .lightbox-close {
-            position: absolute;
-            top: 30px;
-            right: 30px;
+        /* Content Types */
+        .content-image img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
+        .content-json { font-family: monospace; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; font-size: 0.8rem; }
+        .data-label { color: var(--text-muted); font-size: 0.8rem; display: block; margin-bottom: 4px; }
+        .data-value { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; }
+
+        /* Controls */
+        .card-footer {
+            margin-top: auto;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--accent);
             color: white;
-            font-size: 40px;
+            border: none;
+            border-radius: 6px;
             cursor: pointer;
-            z-index: 10000;
+            font-weight: 600;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        /* --- רספונסיביות --- */
-        @media (min-width: 768px) {
-            .contact-layout {
-                flex-direction: row;
-                align-items: center;
-            }
-            .contact-text, .contact-form-wrapper { flex: 1; }
-            .contact-text { text-align: right; }
-            .hero-desktop { display: block; }
-            .hero-mobile { display: none; }
+        button:hover { background-color: var(--accent-hover); }
+        button:disabled { background-color: var(--border); cursor: not-allowed; opacity: 0.6; }
+
+        /* Loader */
+        .loader {
+            width: 16px; height: 16px;
+            border: 2px solid #fff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
         }
 
-        @media (max-width: 767px) {
-            .hero-desktop { display: none; }
-            .hero-mobile { display: block; }
-            .contact-text { text-align: center; }
-            .contact-text li { justify-content: center; }
-            .button-group.horizontal-actions { flex-direction: column; }
-            h2 { font-size: 2rem; }
-        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .error-msg { color: #ef4444; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <!-- LIGHTBOX CONTAINER -->
-    <div class="lightbox" id="lightbox">
-        <span class="lightbox-close">&times;</span>
-        <img src="" alt="Full size" id="lightbox-img">
+    <header>
+        <h1>Apipheny.io Free APIs Explorer</h1>
+        <p class="subtitle">מציג נתונים חיים ממגוון ממשקים ציבוריים (ללא צורך במפתח)</p>
+    </header>
+
+    <div class="api-grid" id="gridContainer">
+        <!-- Cards will be injected here via JS -->
     </div>
 
-    <!-- HERO SECTION -->
-    <div class="hero-section hero-desktop">
-        <video autoplay muted loop playsinline class="hero-video">
-            <source src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/vid-20251208-wa0052.mp4" type="video/mp4">
-        </video>
-        <div class="hero-overlay"></div>
-    </div>
-
-    <div class="hero-section hero-mobile">
-        <video autoplay muted loop playsinline class="hero-video">
-            <source src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/vid-20251208-wa0039.mp4" type="video/mp4">
-        </video>
-        <div class="hero-overlay"></div>
-    </div>
-
-    <!-- NAVIGATION -->
-    <div class="section-container dark-bg">
-        <h2 class="reveal">לאן תרצו להמשיך?</h2>
-        
-        <div class="button-group reveal delay-100">
-            <a href="https://avintattoo.com/avintattoo-store/" class="btn btn-outline">SHOP</a>
-        </div>
-
-        <div class="button-group wrap reveal delay-200">
-            <a href="https://avintattoo.com/63-2/#piercings-gallery" class="btn btn-outline">גלריית פירסינג</a>
-            <a href="https://avintattoo.com/63-2/" class="btn btn-outline">לאתר המלא</a>
-            <a href="https://avintattoo.com/63-2/#tattoos-gallery" class="btn btn-outline">גלריית קעקועים</a>
-            <a href="https://avintattoo.com/tattoo-pots/" class="btn btn-outline">מידע קעקועים</a>
-            <a href="https://avintattoo.com/63-2/piercing-pots/" class="btn btn-outline">מידע פירסינג</a>
-        </div>
-
-        <div class="button-group horizontal-actions reveal delay-300">
-            <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הי,%20קיבלתי%20את%20הפרטים%20ליצירת%20קשר%20איתך%20ב-WhatsApp%20מאתר%20האינטרנט%20שלך" class="btn btn-fill whatsapp-bg">WhatsApp</a>
-            <a href="#lead-form" class="btn btn-fill red-bg smooth-scroll">תיאום ייעוץ</a>
-        </div>
-    </div>
-
-    <!-- SHOP GRID -->
-    <div class="section-container darker-bg" id="shop-gallery">
-        <h2 class="section-title reveal">בוטיק פירסינג בסטודיו</h2>
-        <p class="subtitle reveal delay-100" style="margin-bottom:30px; color:#aaa;">מבחר תכשיטים בסטנדרט רפואי | לפרטים והזמנה לחצו על הפריט</p>
-
-        <div class="product-grid">
-            <!-- Products with Reveal Animation -->
-            <div class="product-card reveal">
-                <img src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/d79ed7a7d798-1052-d79cd795d798d795d7a1-d7a7d798d79f-d7a2d79d-d7a9d7a8d7a9d7a8d7aa-d7a6d791d7a2-d7a6d799d7a4d795d799-d796d794d791.jpg" alt="לוטוס אבן">
-                <h5>לוטוס אבן עם שרשרת</h5>
-                <p class="material" style="color:#e0c970;">🟡 ציפוי זהב</p>
-                <p class="sku" style="font-size:0.8rem; color:#888;">מק"ט: 1052</p>
-                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הזמנה: לוטוס אבן (1052)" class="btn-small">הזמנה</a>
-            </div>
-
-            <div class="product-card reveal delay-100">
-                <img src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/d79ed7a7d798-1023-d79cd791d7a8d798-d796d7a8d799d7a7d795d79f-d7a7d798d79f-d798d799d798d7a0d799d795d79d.jpg?w=1024" alt="לאברט זירקון">
-                <h5>לאברט זירקון</h5>
-                <p class="material" style="color:#silver;">⚪️ טיטניום</p>
-                <p class="sku" style="font-size:0.8rem; color:#888;">מק"ט: 1023</p>
-                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הזמנה: לאברט זירקון (1023)" class="btn-small">הזמנה</a>
-            </div>
-
-            <div class="product-card reveal delay-200">
-                <img src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/d79ed7a7d798-1071-d7a4d7a8d797-d791d7a8d7a7d799d796d795d7aa-d7a6d799d7a4d795d799-d796d794d791.jpg" alt="פרח מרקיזות">
-                <h5>פרח מרקיזות</h5>
-                <p class="material" style="color:#e0c970;">🟡 ציפוי זהב</p>
-                <p class="sku" style="font-size:0.8rem; color:#888;">מק"ט: 1071</p>
-                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הזמנה: פרח מרקיזות (1071)" class="btn-small">הזמנה</a>
-            </div>
-
-            <div class="product-card reveal delay-300">
-                <img src="https://avitattoos.wordpress.com/wp-content/uploads/2025/12/d79ed7a7d798-1054-d798d799d7a4d794-d7a0d795d7a4d79cd7aa-4d79ed79e-d7a6d799d7a4d795d799-d796d794d791.jpg" alt="טיפה נופלת">
-                <h5>טיפה נופלת 4מ"מ</h5>
-                <p class="material" style="color:#e0c970;">🟡 ציפוי זהב</p>
-                <p class="sku" style="font-size:0.8rem; color:#888;">מק"ט: 1054</p>
-                <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הזמנה: טיפה נופלת (1054)" class="btn-small">הזמנה</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- CONTACT SECTION -->
-    <div class="section-container dark-bg contact-layout" id="lead-form">
-        <div class="contact-text reveal">
-            <h2>בואו נדבר תכל'ס על הקעקוע שלך.</h2>
-            <p>משאירים פרטים כאן, ומקבלים שיחת ייעוץ ראשונית ללא עלות.</p>
-            <ul>
-                <li>✅ הערכת מחיר ראשונית</li>
-                <li>✅ בדיקת התאמה לרעיון שלך</li>
-                <li>✅ תיאום תור מהיר בסטודיו</li>
-            </ul>
-        </div>
-        
-        <div class="contact-form-wrapper reveal delay-200">
-            <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="custom-form">
-                <label>שם מלא</label>
-                <input type="text" name="name" required placeholder="השם שלך...">
-                
-                <label>טלפון לחזרה</label>
-                <input type="tel" name="phone" required placeholder="050-0000000">
-                
-                <label>מה הרעיון שלך לקעקוע?</label>
-                <textarea name="idea" rows="4" placeholder="ספר לי קצת על הרעיון, מיקום בגוף וגודל משוער..."></textarea>
-                
-                <button type="submit">אני רוצה לקבוע ייעוץ &larr;</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MAP -->
-    <div class="map-container reveal">
-        <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3380.5!2d35.168467!3d32.102309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzLCsDA2JzA4LjMiTiAzNcKwMTAnMDYuNSJF!5e0!3m2!1she!2sil!4v1600000000000!5m2!1she!2sil" allowfullscreen="" loading="lazy"></iframe>
-    </div>
-
-    <!-- STICKY BUTTON -->
-    <div class="sticky-cta">
-        <a href="https://api.whatsapp.com/send?phone=9720537239660&text=הי,%20קיבלתי%20את%20הפרטים%20ליצירת%20קשר%20איתך%20ב-WhatsApp%20מאתר%20האינטרנט%20שלך">דברו איתי ב-WhatsApp 💬</a>
-    </div>
-
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // 1. Video Loading Fade-in
-        document.addEventListener("DOMContentLoaded", function() {
-            const videos = document.querySelectorAll('.hero-video');
-            videos.forEach(video => {
-                video.addEventListener('canplay', () => {
-                    video.classList.add('loaded');
-                });
-            });
-        });
-
-        // 2. Scroll Reveal Animation (Intersection Observer)
-        const observerOptions = {
-            threshold: 0.1, // Trigger when 10% of the element is visible
-            rootMargin: "0px 0px -50px 0px"
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Run once
+        /**
+         * קונפיגורציה של הממשקים.
+         * כדי להוסיף עוד API מהרשימה, פשוט משכפלים אובייקט במערך הזה.
+         */
+        const apis = [
+            {
+                id: 'catfact',
+                name: 'Cat Fact',
+                category: 'Animals',
+                url: 'https://catfact.ninja/fact',
+                type: 'text',
+                extractor: (data) => data.fact
+            },
+            {
+                id: 'dogimage',
+                name: 'Random Dog',
+                category: 'Animals',
+                url: 'https://dog.ceo/api/breeds/image/random',
+                type: 'image',
+                extractor: (data) => data.message
+            },
+            {
+                id: 'bored',
+                name: 'Activity Idea',
+                category: 'Utility',
+                url: 'https://bored.api.lewagon.com/api/activity',
+                type: 'key-value',
+                extractor: (data) => ({
+                    "פעילות": data.activity,
+                    "סוג": data.type,
+                    "משתתפים": data.participants
+                })
+            },
+            {
+                id: 'ipify',
+                name: 'My IP Address',
+                category: 'Tech',
+                url: 'https://api.ipify.org?format=json',
+                type: 'text',
+                extractor: (data) => data.ip
+            },
+            {
+                id: 'jokes',
+                name: 'Official Joke',
+                category: 'Fun',
+                url: 'https://official-joke-api.appspot.com/random_joke',
+                type: 'text',
+                extractor: (data) => `${data.setup}\n\n😂 ${data.punchline}`
+            },
+            {
+                id: 'user',
+                name: 'Random User',
+                category: 'Identity',
+                url: 'https://randomuser.me/api/',
+                type: 'profile',
+                extractor: (data) => {
+                    const u = data.results[0];
+                    return {
+                        image: u.picture.large,
+                        name: `${u.name.first} ${u.name.last}`,
+                        country: u.location.country,
+                        email: u.email
+                    };
                 }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.reveal').forEach(el => {
-            observer.observe(el);
-        });
-
-        // 3. Lightbox Functionality
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const closeBtn = document.querySelector('.lightbox-close');
-        const productImages = document.querySelectorAll('.product-card img');
-
-        productImages.forEach(img => {
-            img.addEventListener('click', (e) => {
-                lightboxImg.src = e.target.src;
-                lightbox.style.display = 'flex';
-                // Small timeout to allow display:flex to apply before adding opacity class
-                setTimeout(() => {
-                    lightbox.classList.add('active');
-                }, 10);
-            });
-        });
-
-        const closeLightbox = () => {
-            lightbox.classList.remove('active');
-            setTimeout(() => {
-                lightbox.style.display = 'none';
-            }, 300); // Wait for transition
-        };
-
-        closeBtn.addEventListener('click', closeLightbox);
-        lightbox.addEventListener('click', (e) => {
-            if (e.target !== lightboxImg) {
-                closeLightbox();
+            },
+            {
+                id: 'bitcoin',
+                name: 'Bitcoin Price',
+                category: 'Finance',
+                url: 'https://api.coindesk.com/v1/bpi/currentprice.json',
+                type: 'key-value',
+                extractor: (data) => ({
+                    "USD": "$" + data.bpi.USD.rate,
+                    "EUR": "€" + data.bpi.EUR.rate,
+                    "זמן עדכון": data.time.updated
+                })
+            },
+            {
+                id: 'agify',
+                name: 'Age Prediction',
+                category: 'Data',
+                url: 'https://api.agify.io?name=david',
+                type: 'text',
+                extractor: (data) => `הגיל המשוער לשם "David" הוא: ${data.age}`
+            },
+            {
+                id: 'univ',
+                name: 'Universities (Israel)',
+                category: 'Education',
+                url: 'http://universities.hipolabs.com/search?country=Israel',
+                type: 'list',
+                extractor: (data) => data.slice(0, 3).map(u => u.name) // לוקח רק 3 ראשונים
+            },
+            {
+                id: 'zippopotam',
+                name: 'Zip Info (US)',
+                category: 'Location',
+                url: 'https://api.zippopotam.us/us/90210',
+                type: 'text',
+                extractor: (data) => `Beverly Hills 90210: ${data.places[0]['place name']}, ${data.places[0]['state']}`
             }
-        });
+        ];
 
-        // 4. Smooth Scroll for Anchor Links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
+        const grid = document.getElementById('gridContainer');
+
+        // פונקציה ראשית ליצירת הכרטיסים
+        function initDashboard() {
+            apis.forEach(api => {
+                const card = createCard(api);
+                grid.appendChild(card);
+                // טעינה ראשונית אוטומטית
+                fetchData(api.id);
             });
-        });
+        }
+
+        function createCard(api) {
+            const div = document.createElement('div');
+            div.className = 'api-card';
+            div.id = `card-${api.id}`;
+            div.innerHTML = `
+                <div class="card-header">
+                    <span class="card-title">${api.name}</span>
+                    <span class="badge">${api.category}</span>
+                </div>
+                <div class="card-content" id="content-${api.id}">
+                    <span style="opacity:0.5;">לחץ על רענון לטעינת נתונים...</span>
+                </div>
+                <div class="card-footer">
+                    <button onclick="fetchData('${api.id}')" id="btn-${api.id}">
+                        <span>🔄 רענן נתונים</span>
+                    </button>
+                </div>
+            `;
+            return div;
+        }
+
+        // פונקציית Fetch גנרית שמטפלת בכל ה-APIs
+        async function fetchData(apiId) {
+            const api = apis.find(a => a.id === apiId);
+            if (!api) return;
+
+            const contentDiv = document.getElementById(`content-${api.id}`);
+            const btn = document.getElementById(`btn-${api.id}`);
+            
+            // UI Loading State
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span> טוען...';
+            contentDiv.style.opacity = '0.5';
+
+            try {
+                // ביצוע הבקשה
+                const response = await fetch(api.url);
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                
+                const rawData = await response.json();
+                
+                // עיבוד המידע לפי ה-Extractor שהוגדר לכל API
+                const processedData = api.extractor(rawData);
+                
+                // ציור המידע לפי הסוג (תמונה, טקסט, וכו')
+                renderContent(contentDiv, api.type, processedData);
+                
+            } catch (error) {
+                console.error(error);
+                contentDiv.innerHTML = `<span class="error-msg">⚠️ שגיאה: לא ניתן למשוך נתונים.<br><small>${error.message}</small></span>`;
+            } finally {
+                // Reset UI
+                btn.disabled = false;
+                btn.innerHTML = '<span>🔄 רענן נתונים</span>';
+                contentDiv.style.opacity = '1';
+            }
+        }
+
+        // פונקציה שמחליטה איך להציג את המידע בדפדפן
+        function renderContent(element, type, data) {
+            element.innerHTML = ''; // ניקוי
+
+            if (type === 'text') {
+                element.innerText = data;
+            } 
+            else if (type === 'image') {
+                element.className = 'card-content content-image';
+                element.innerHTML = `<img src="${data}" alt="API Image" loading="lazy">`;
+            } 
+            else if (type === 'key-value') {
+                let html = '';
+                for (const [key, value] of Object.entries(data)) {
+                    html += `
+                        <div>
+                            <span class="data-label">${key}</span>
+                            <div class="data-value">${value}</div>
+                        </div>`;
+                }
+                element.innerHTML = html;
+            }
+            else if (type === 'profile') {
+                element.innerHTML = `
+                    <div style="text-align:center;">
+                        <img src="${data.image}" style="width:80px;height:80px;border-radius:50%;margin-bottom:10px;">
+                        <div class="data-value">${data.name}</div>
+                        <div class="data-label">${data.country}</div>
+                        <div class="data-label">${data.email}</div>
+                    </div>
+                `;
+            }
+            else if (type === 'list') {
+                let html = '<ul style="padding-right:20px;">';
+                data.forEach(item => html += `<li>${item}</li>`);
+                html += '</ul>';
+                element.innerHTML = html;
+            }
+        }
+
+        // הפעלת הדאשבורד
+        initDashboard();
+
     </script>
 </body>
 </html>
