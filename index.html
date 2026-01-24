@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokéDex Ultimate - Visual Upgrade</title>
+    <title>PokéDex Ultimate - Multi Language</title>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,7 +11,7 @@
             --text-color: #fff;
         }
 
-        /* --- הגדרות סוגים מתקדמות (Gradients) --- */
+        /* --- הגדרות סוגים (Gradients) --- */
         .bg-normal { background: linear-gradient(135deg, #a8a77a, #c6c6a7); }
         .bg-fire { background: linear-gradient(135deg, #f08030, #ff5252); box-shadow: 0 0 20px rgba(240, 128, 48, 0.4); }
         .bg-water { background: linear-gradient(135deg, #6890f0, #4facfe); box-shadow: 0 0 20px rgba(104, 144, 240, 0.4); }
@@ -38,23 +38,35 @@
             color: var(--text-color);
             padding-bottom: 50px;
             overflow-x: hidden;
+            transition: direction 0.3s;
         }
 
         /* Header */
         header {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            padding: 30px 20px;
-            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
+        .header-top {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin-bottom: 15px;
+        }
+
         h1 { 
-            font-size: 3rem; 
-            margin-bottom: 20px; 
+            font-size: 2.5rem; 
+            margin: 0;
             background: linear-gradient(to right, #ffcb05, #3d7dca); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
@@ -62,12 +74,28 @@
             letter-spacing: 2px;
         }
 
+        /* Language Toggle Button */
+        .lang-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.2); }
+
         /* Search Input */
-        .search-wrapper { position: relative; max-width: 500px; margin: 0 auto; }
+        .search-wrapper { position: relative; width: 100%; max-width: 500px; }
         
         input#search {
             width: 100%;
-            padding: 15px 50px 15px 25px;
+            padding: 15px 25px;
             border-radius: 50px;
             border: 2px solid rgba(255,255,255,0.1);
             background: rgba(0,0,0,0.3);
@@ -93,14 +121,14 @@
             padding: 0 20px;
         }
 
-        /* --- עיצוב כרטיס מתקדם --- */
+        /* Card Design */
         .card {
             border-radius: 20px;
             padding: 20px;
             position: relative;
             cursor: pointer;
             overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27), box-shadow 0.4s;
+            transition: transform 0.4s, box-shadow 0.4s;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -108,32 +136,29 @@
             color: white;
         }
 
-        .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            z-index: 10;
-        }
+        .card:hover { transform: translateY(-10px) scale(1.02); z-index: 10; }
 
-        /* רקע דקורטיבי (פוקדור) */
+        /* Decorative Pokeball Background */
         .card::before {
             content: '';
             position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 150px;
-            height: 150px;
+            top: -20px; right: -20px;
+            width: 150px; height: 150px;
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50m-45 0a45 45 0 1 0 90 0a45 45 0 1 0 -90 0' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='10'/%3E%3Cpath d='M5 50h90M50 50m-15 0a15 15 0 1 0 30 0a15 15 0 1 0 -30 0' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='10'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-size: contain;
             opacity: 0.3;
             transition: transform 1s;
         }
-
         .card:hover::before { transform: rotate(180deg); }
+
+        /* RTL/LTR specific positioning for card ID */
+        body[dir="rtl"] .card-id { left: 20px; right: auto; }
+        body[dir="ltr"] .card-id { right: 20px; left: auto; }
 
         .card-id {
             position: absolute;
             top: 20px;
-            left: 20px;
             background: rgba(0,0,0,0.2);
             padding: 5px 10px;
             border-radius: 20px;
@@ -142,13 +167,10 @@
         }
 
         .card-img {
-            width: 160px;
-            height: 160px;
-            z-index: 2;
+            width: 160px; height: 160px; z-index: 2;
             filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
             transition: transform 0.3s;
         }
-
         .card:hover .card-img { transform: scale(1.1); }
 
         .card-name {
@@ -162,7 +184,6 @@
         }
 
         .types { display: flex; gap: 8px; z-index: 2; margin-bottom: 10px; }
-
         .type-badge {
             padding: 5px 15px;
             border-radius: 20px;
@@ -174,26 +195,19 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        /* --- אנימציות ספציפיות לפי סוג --- */
-        
-        /* 1. Ghost Animation (Float & Fade) */
+        /* Animations */
         .card.type-ghost .card-img { animation: ghostFloat 3s ease-in-out infinite; }
         @keyframes ghostFloat { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(-15px); opacity: 0.7; } }
 
-        /* 2. Electric Animation (Shake) */
         .card.type-electric:hover .card-img { animation: electricShake 0.5s linear infinite; }
         @keyframes electricShake { 0% { transform: translate(1px, 1px) rotate(0deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
 
-        /* 3. Fire Animation (Glow Pulse) */
         .card.type-fire:hover .card-img { filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.8)); transform: scale(1.15); transition: 0.3s; }
-        
-        /* 4. Water Animation (Sway) */
         .card.type-water .card-img { animation: waterSway 3s ease-in-out infinite; transform-origin: bottom center; }
         @keyframes waterSway { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
 
-        /* --- כפתור טעינה --- */
+        /* Button */
         .btn-container { text-align: center; margin: 50px 0; }
-        
         button#load-more {
             padding: 15px 50px;
             background: linear-gradient(45deg, #ffcb05, #3d7dca);
@@ -208,7 +222,7 @@
         }
         button#load-more:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 203, 5, 0.6); }
 
-        /* --- Modal (Popup) Glassmorphism --- */
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -219,7 +233,6 @@
             z-index: 1000;
             backdrop-filter: blur(8px);
         }
-
         .modal-overlay.active { display: flex; animation: modalFadeIn 0.3s; }
         @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
@@ -236,23 +249,13 @@
             color: white;
         }
 
-        .modal-img-container {
-            width: 180px;
-            height: 180px;
-            margin: -90px auto 20px; /* תמונה צפה למעלה */
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-img { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+        /* Modal Close Button Logic for LTR/RTL */
+        body[dir="rtl"] .modal-close { left: 25px; right: auto; }
+        body[dir="ltr"] .modal-close { right: 25px; left: auto; }
 
         .modal-close {
             position: absolute;
             top: 20px;
-            right: 25px;
             font-size: 2rem;
             cursor: pointer;
             color: #fff;
@@ -261,19 +264,19 @@
         }
         .modal-close:hover { opacity: 1; transform: rotate(90deg); }
 
-        .stat-row {
-            display: flex;
-            align-items: center;
-            margin: 12px 0;
-            font-size: 0.9rem;
+        .modal-img-container {
+            width: 180px; height: 180px; margin: -90px auto 20px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
         }
-        
-        .stat-label { width: 60px; text-align: left; font-weight: bold; color: #aaa; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
-        .stat-num { width: 40px; text-align: right; font-weight: bold; margin-right: 15px; }
-        
+        .modal-img { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+
+        .stat-row { display: flex; align-items: center; margin: 12px 0; font-size: 0.9rem; }
+        .stat-label { width: 80px; text-align: start; font-weight: bold; color: #aaa; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+        .stat-num { width: 40px; text-align: end; font-weight: bold; margin: 0 15px; }
         .progress-bar { flex-grow: 1; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
         .progress-fill { height: 100%; border-radius: 10px; animation: slideRight 1s ease-out; }
-        
         @keyframes slideRight { from { width: 0%; } }
 
     </style>
@@ -281,7 +284,12 @@
 <body>
 
     <header>
-        <h1>POKÉDEX PRO</h1>
+        <div class="header-top">
+            <h1 id="app-title">POKÉDEX PRO</h1>
+            <button class="lang-btn" id="lang-toggle">
+                <span id="flag-icon">🇺🇸</span> <span id="lang-text">English</span>
+            </button>
+        </div>
         <div class="search-wrapper">
             <input type="text" id="search" placeholder="חפש פוקימון (שם או מספר)..." autocomplete="off">
         </div>
@@ -303,19 +311,99 @@
     </div>
 
     <script>
+        // --- 1. Translation Data ---
+        const translations = {
+            he: {
+                title: "POKÉDEX PRO",
+                placeholder: "חפש פוקימון (שם או מספר)...",
+                loadMore: "טען עוד פוקימונים ✨",
+                loading: "טוען...",
+                langBtn: "English",
+                flag: "🇺🇸",
+                height: "גובה",
+                weight: "משקל",
+                types: {
+                    normal: "רגיל", fire: "אש", water: "מים", electric: "חשמל", grass: "עשב", ice: "קרח",
+                    fighting: "לחימה", poison: "רעל", ground: "אדמה", flying: "תעופה", psychic: "על-חושי",
+                    bug: "חרק", rock: "אבן", ghost: "רוח", dragon: "דרקון", steel: "מתכת", fairy: "פיה"
+                },
+                stats: {
+                    hp: "חיים", attack: "התקפה", defense: "הגנה",
+                    "special-attack": "התקפה מיוחדת", "special-defense": "הגנה מיוחדת", speed: "מהירות"
+                },
+                error: "😕 לא מצאנו פוקימון כזה"
+            },
+            en: {
+                title: "POKÉDEX PRO",
+                placeholder: "Search Pokémon (Name or ID)...",
+                loadMore: "Load More Pokémon ✨",
+                loading: "Loading...",
+                langBtn: "עברית",
+                flag: "🇮🇱",
+                height: "Height",
+                weight: "Weight",
+                types: {
+                    normal: "Normal", fire: "Fire", water: "Water", electric: "Electric", grass: "Grass", ice: "Ice",
+                    fighting: "Fighting", poison: "Poison", ground: "Ground", flying: "Flying", psychic: "Psychic",
+                    bug: "Bug", rock: "Rock", ghost: "Ghost", dragon: "Dragon", steel: "Steel", fairy: "Fairy"
+                },
+                stats: {
+                    hp: "HP", attack: "Attack", defense: "Defense",
+                    "special-attack": "Sp. Atk", "special-defense": "Sp. Def", speed: "Speed"
+                },
+                error: "😕 No Pokémon found"
+            }
+        };
+
+        // --- 2. State Management ---
+        let currentLang = 'he'; // Default Language
+        let offset = 1;
+        const limit = 20;
+        let allPokemons = []; // Cache loaded pokemons
+        
+        // --- 3. DOM Elements ---
         const grid = document.getElementById('grid');
         const loadMoreBtn = document.getElementById('load-more');
         const searchInput = document.getElementById('search');
         const modal = document.getElementById('modal');
         const modalContent = document.getElementById('modal-content');
+        const langToggle = document.getElementById('lang-toggle');
 
-        let offset = 1; 
-        const limit = 20; 
-        let isSearching = false;
+        // --- 4. Language Logic ---
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
 
+            // Update Direction and UI
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            document.getElementById('app-title').innerText = t.title;
+            searchInput.placeholder = t.placeholder;
+            loadMoreBtn.innerText = t.loadMore;
+            document.getElementById('lang-text').innerText = t.langBtn;
+            document.getElementById('flag-icon').innerText = t.flag;
+
+            // Re-render grid to apply translations
+            renderGrid(allPokemons);
+        }
+
+        langToggle.addEventListener('click', () => {
+            setLanguage(currentLang === 'he' ? 'en' : 'he');
+        });
+
+        // Helper to translate type
+        function getTranslatedType(type) {
+            return translations[currentLang].types[type] || type;
+        }
+
+        // Helper to translate stats
+        function getTranslatedStat(statName) {
+            return translations[currentLang].stats[statName] || statName;
+        }
+
+        // --- 5. Fetch Logic ---
         async function fetchPokemons() {
-            // הוספת אפקט טעינה לכפתור
-            loadMoreBtn.innerText = 'טוען...';
+            const t = translations[currentLang];
+            loadMoreBtn.innerText = t.loading;
             loadMoreBtn.disabled = true;
 
             const promises = [];
@@ -324,24 +412,31 @@
             }
 
             const results = await Promise.all(promises);
-            results.forEach(pokemon => createPokemonCard(pokemon));
+            allPokemons = [...allPokemons, ...results]; // Add to cache
+            renderGrid(results, true); // Append new ones
             
             offset += limit;
-            loadMoreBtn.innerText = 'טען עוד פוקימונים ✨';
+            loadMoreBtn.innerText = translations[currentLang].loadMore;
             loadMoreBtn.disabled = false;
+        }
+
+        function renderGrid(pokemons, append = false) {
+            if (!append) grid.innerHTML = ''; // Clear if full re-render
+            
+            pokemons.forEach(pokemon => {
+                const card = createPokemonCard(pokemon);
+                grid.appendChild(card);
+            });
         }
 
         function createPokemonCard(pokemon) {
             const card = document.createElement('div');
-            
-            // זיהוי הסוג הראשי לצורך עיצוב
             const mainType = pokemon.types[0].type.name;
             
-            // הוספת מחלקות CSS רלוונטיות (רקע ואנימציה)
             card.classList.add('card', `bg-${mainType}`, `type-${mainType}`);
             
             const typesHtml = pokemon.types.map(t => 
-                `<span class="type-badge">${t.type.name}</span>`
+                `<span class="type-badge">${getTranslatedType(t.type.name)}</span>`
             ).join('');
 
             const imgUrl = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
@@ -354,10 +449,10 @@
             `;
 
             card.addEventListener('click', () => openModal(pokemon, mainType));
-            grid.appendChild(card);
+            return card;
         }
 
-        // --- חיפוש ---
+        // --- 6. Search Logic ---
         searchInput.addEventListener('keypress', async (e) => {
             if (e.key === 'Enter') {
                 const query = searchInput.value.toLowerCase().trim();
@@ -365,6 +460,7 @@
                 
                 if (!query) {
                     offset = 1;
+                    allPokemons = []; // Reset cache on clear search
                     fetchPokemons();
                     loadMoreBtn.style.display = 'inline-block';
                     return;
@@ -375,23 +471,23 @@
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
                     if (!res.ok) throw new Error();
                     const pokemon = await res.json();
-                    createPokemonCard(pokemon);
+                    renderGrid([pokemon]); // Render single result
                 } catch (err) {
-                    grid.innerHTML = `<h2 style="text-align:center; width:100%; grid-column: 1/-1;">😕 לא מצאנו פוקימון כזה</h2>`;
+                    grid.innerHTML = `<h2 style="text-align:center; width:100%; grid-column: 1/-1;">${translations[currentLang].error}</h2>`;
                 }
             }
         });
 
-        // --- מודל (Popup) משופר ---
+        // --- 7. Modal Logic ---
         function openModal(pokemon, type) {
             const imgUrl = pokemon.sprites.other['official-artwork'].front_default;
             
-            // צבעי הסטטיסטיקות לפי הסוג
             const colorMap = {
                 fire: '#f08030', water: '#6890f0', grass: '#78c850', electric: '#f8d030',
                 psychic: '#f85888', ghost: '#705898', dragon: '#7038f8', default: '#a8a878'
             };
             const barColor = colorMap[type] || colorMap['default'];
+            const t = translations[currentLang];
 
             const statsHtml = pokemon.stats.map(stat => {
                 const val = stat.base_stat;
@@ -399,7 +495,7 @@
                 
                 return `
                 <div class="stat-row">
-                    <div class="stat-label">${getShortStat(stat.stat.name)}</div>
+                    <div class="stat-label">${getTranslatedStat(stat.stat.name)}</div>
                     <div class="stat-num">${val}</div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${percent}%; background: ${barColor}; box-shadow: 0 0 10px ${barColor}"></div>
@@ -414,9 +510,9 @@
                 </div>
                 <h2 style="text-transform:capitalize; font-size:2.5rem; margin-bottom:5px;">${pokemon.name}</h2>
                 <div style="margin-bottom:30px; opacity:0.8;">
-                   Height: ${pokemon.height / 10}m  &bull;  Weight: ${pokemon.weight / 10}kg
+                   ${t.height}: ${pokemon.height / 10}m  &bull;  ${t.weight}: ${pokemon.weight / 10}kg
                 </div>
-                <div style="text-align:left; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px;">
+                <div style="text-align:start; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px;">
                     ${statsHtml}
                 </div>
             `;
@@ -427,13 +523,10 @@
         function closeModal() { modal.classList.remove('active'); }
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-        function getShortStat(name) {
-            const map = { 'hp': 'HP', 'attack': 'ATK', 'defense': 'DEF', 'special-attack': 'SPA', 'special-defense': 'SPD', 'speed': 'SPD' };
-            return map[name] || name;
-        }
-
         loadMoreBtn.addEventListener('click', fetchPokemons);
-        fetchPokemons(); // התחלה
+        
+        // Initial Fetch
+        fetchPokemons();
     </script>
 </body>
 </html>
